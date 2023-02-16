@@ -1,0 +1,22 @@
+{
+  "name": "tule",
+  "version": "1.0.0",
+  "description": "Dependencies for backend and maybe whole project?",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WSU-4110/tule.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WSU-4110/tule/issues"
+  },
+  "homepage": "https://github.com/WSU-4110/tule#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
