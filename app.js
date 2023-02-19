@@ -23,6 +23,7 @@ const db = client.db('Tule');
 const usersCollection = db.collection('Users')
 const tasksCollection = db.collection('Tasks')
 
+//Route to verify login information. Currently only verifies. Need to add some work on the response with session cookies?
 app.post('/LoginVerify', (req,res) => {
     usersCollection.find({Username: req.body.Username}).toArray().then(info => {
         if(info.length == 1){
@@ -38,6 +39,19 @@ app.post('/LoginVerify', (req,res) => {
         }
         else{
             res.send("Username not found")
+        }
+    })
+});
+
+//Route to create new user entry in the database
+app.post('/AccountCreate', (req,res) => {
+    usersCollection.find({Username: req.body.Username}).toArray().then(info => {
+        if(info.length == 0){
+            usersCollection.insertOne(req.body);
+            res.send("Account Created Successfully!")
+        }
+        else {
+            res.send("Username already in use")
         }
     })
 });
