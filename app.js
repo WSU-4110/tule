@@ -5,21 +5,25 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express();
 //!!!All requests made to this server must have body in json format!!!
 app.use(express.json());
+//Calling the mongodb connection string from .env so it isn't exposed on github
 const uri = process.env.MONGO_CONNECTION;
-console.log(uri);
+//Setting some standard suggested options
 const mongoOptions = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     serverApi: ServerApiVersion.v1
 };
 
+//Mongodb doc https://www.mongodb.com/docs/drivers/node/current/
+//Fundamentals section will be your friend
+
 //create mongodb client with options from above
 let client = new MongoClient(uri, mongoOptions);
-
+//establish connection with database
 client.connect();
-
-
+//select database
 const db = client.db('Tule');
+//create connection to each collection for use in routes
 const usersCollection = db.collection('Users')
 const tasksCollection = db.collection('Tasks')
 
