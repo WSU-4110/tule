@@ -7,6 +7,8 @@ export const Login = () => {
             <br></br>
             <label for="password">password</label>
             <input for="password"></input>
+            <br></br>
+            <button for="Submit">Submit</button>
         </form>
     )
 }
