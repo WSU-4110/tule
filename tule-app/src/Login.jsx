@@ -1,5 +1,9 @@
 export const Login = () => {
     return(
-        <>login</>
+        <form>
+            <h1>Login Page</h1>
+            <label for="username">username</label>
+            <input for="username"></input>
+        </form>
     )
 }
