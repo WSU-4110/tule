@@ -60,4 +60,30 @@ app.post('/AccountCreate', (req,res) => {
     })
 });
 
+app.post('/GetAllTasks', (req, res) => {
+    usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
+        // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
+        var tasksList = {};
+        
+        tasksCollection.find({  $set: { "_id": info.ActiveTasks} }).toArray().then(info => {
+            tasksList["ActiveTasks"] = info;
+        })
+
+
+        tasksCollection.find({ $set:{"_id":info.InactiveTasks} }).toArray().then(info=> {
+            tasksList["InactiveTasks"] = info;
+        })
+
+        tasksCollection.find({ $set: {"_id": info.recurringTasks} }).toArray().then(info=> {
+            tasksList["RecurringTasks"] = info; 
+        })
+        
+        tasksList["Schedules"] = info.Schedules;
+
+        res.send(tasksList);  
+    
+
+    })
+});
+
 app.listen(3000, () => console.log('Example app is listening on port 3000.'));
