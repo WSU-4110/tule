@@ -3,11 +3,15 @@ import React, { useState } from "react"
 export const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(username);
         console.log(password);
+        //fetch request
+        fetch()
     }
+    
     return(
         <form onSubmit={handleSubmit}>
             <h1>Login Page</h1>
