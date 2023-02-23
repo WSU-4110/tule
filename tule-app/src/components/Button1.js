@@ -1,4 +1,6 @@
+import { useNavigate } from "react-router-dom";
 function Button1(props){
+    
     function nextPageHandler(){
 
         console.log('Clicked');
@@ -7,10 +9,11 @@ function Button1(props){
            <props.next/> 
         );
     }
-    
+    const navigate = useNavigate();
+
     return(
         <div>
-            <button className="btn" onClick={nextPageHandler}>{props.text}</button>
+            <button className="btn" onClick={() => navigate({nextPageHandler})}>{props.text}</button>
         </div>
     );
 }

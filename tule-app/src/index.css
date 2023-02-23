@@ -88,3 +88,11 @@ h1, h2 {
   left: 0;
 }
 
+.page-header{
+  font-size: 1rem;
+  text-align: left;
+}
+
+.flex{
+  display: flex;
+}
