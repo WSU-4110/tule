@@ -60,4 +60,47 @@ app.post('/AccountCreate', (req,res) => {
     })
 });
 
+
+app.post('/GetAllTasks', (req, res) => {
+    usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
+        // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
+        var tasksList = {};
+        
+        tasksCollection.find({  $set: { "_id": info.ActiveTasks} }).toArray().then(info => {
+            tasksList["ActiveTasks"] = info;
+        })
+
+
+        tasksCollection.find({ $set:{"_id":info.InactiveTasks} }).toArray().then(info=> {
+            tasksList["InactiveTasks"] = info;
+        })
+
+        tasksCollection.find({ $set: {"_id": info.recurringTasks} }).toArray().then(info=> {
+            tasksList["RecurringTasks"] = info; 
+        })
+        
+        tasksList["Schedules"] = info.Schedules;
+
+        res.send(tasksList);  
+    
+
+
+    })
+});
+
+// iterate over all of userscollection
+// find all locations of the tasks's ID and delete them 
+// go to task collection 
+// u can use deleteOne on task collection
+// 
+
+app.post('/DeleteTask', (req, res) => { // search userCollection.find, iterate all tasks and look for ID, remove ID. do the same to taskCollection
+    usersCollection.find({ Task: req.body.Task }).toArray().then(info => {
+        if (info.length == 0) {
+            tasksCollection.deleteOne(req.body);
+            res.send("Task deleted from task collection.");
+        }
+    })
+});
+
 app.listen(3000, () => console.log('Example app is listening on port 3000.'));
