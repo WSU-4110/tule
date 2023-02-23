@@ -6,18 +6,24 @@ export const SignUp = () => {
     const [password2, setPassword2] = useState('');
     const [terms, setTerms] = useState(false);
 
+    // Handles form submission.
+    // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
         if (terms) {
-            if (checkPasswordsMatch()) {
-                if (checkPasswordLength()) {
-                        console.log(username);
-                        console.log(password1);
+            if (checkForSpecialCharacters()) {
+                if (checkPasswordsMatch()) {
+                    if (checkPasswordLength()) {
+                            console.log(username);
+                            console.log(password1);
+                    } else {
+                        console.log('password too short');
+                    }
                 } else {
-                    console.log('password too short');
+                    console.log('passwords do not match');
                 }
             } else {
-                console.log('passwords do not match');
+                console.log('username/password contains special characters');
             }
         } else {
             console.log('please agree to terms and conditions');
@@ -38,6 +44,22 @@ export const SignUp = () => {
             return true;
         }
         return false;
+    }
+
+    // Checks if password or username conatin special characters.
+    function checkForSpecialCharacters() {
+        const specialCharacters = ['!', '@', '#', '$', '%', '^', '&', '*',
+            '(', ')', '-', '_', '+', '=', '{', '}', '[', ']', '|', ':', ';',
+            '"', '<', '>', '?', '/', '~', '`', '.'];
+        for (let i = 0; i < specialCharacters.length; i++) {
+            if (username.includes(specialCharacters[i])) {
+                return false;
+            }
+            if (password1.includes(specialCharacters[i])) {
+                return false;
+            }
+        }
+        return true;
     }
     
     return(
