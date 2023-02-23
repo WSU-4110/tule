@@ -113,14 +113,13 @@ function algorithm(inputTasks) {
         // it will come here and finds a place to schedule each task.
         } else {
             for (let i = 0; i < taskList.length; i++) {
-                // First we set the start and end time of the task.
-                const taskStart = taskList[i].StartTime.Time;
+                // First we set the duration time of the task.
                 if (taskList[i].taskID.InactiveTasks.BreakDuration.Active) {
-                    var taskEndTime = addTime(
+                    var taskDuration = addTime(
                         taskList[i].InactiveTasks.Duration.Time,
                         taskList[i].taskID.InactiveTasks.BreakDuration.Time)
                 } else {
-                    var taskEndTime = taskList[i].InactiveTasks.Duration.Time
+                    var taskDuration = taskList[i].InactiveTasks.Duration.Time
                 }
                 // Searches through the dailySchedule array to find a place
                 // to schedule the current task.
@@ -131,18 +130,18 @@ function algorithm(inputTasks) {
                     if (dailySchedule[x + 1] == undefined) {
                         if (compareDuration(
                                 subtractTime(schedEnd, dailySchedule[x][2]),
-                                subtractTime(taskEndTime, taskStart)) === 1) {
+                                taskDuration) === 1) {
                             dailySchedule.push(
-                                [taskStart, taskList[i].Name, taskEndTime]);
+                                [taskStart, taskList[i].Name, addTime(taskStart, taskDuration)]);
                             success = true;
                         }
                     // First fills the gap between the first task and the start of the day.
                     } else if (x < 11) {
                         if (compareDuration(
                                 subtractTime(dailySchedule[x + 1][0], schedStart),
-                                subtractTime(taskEndTime, taskStart)) === 1) {
+                                taskDuration) === 1) {
                             dailySchedule.splice(x, 0,
-                                [taskStart, taskList[i].Name, taskEndTime]);
+                                [taskStart, taskList[i].Name, addTime(taskStart, taskDuration)]);
                             success = true;
                         }
                     // If there is a next task in the schedule,
@@ -152,9 +151,9 @@ function algorithm(inputTasks) {
                         // Then procedes to fill the gaps between tasks.
                         if (compareDuration(
                                 subtractTime(dailySchedule[x + 1][0], dailySchedule[x][2]),
-                                subtractTime(taskEndTime, taskStart)) === 1) {
+                                taskDuration) === 1) {
                             dailySchedule.splice(x, 0,
-                                [taskStart, taskList[i].Name, taskEndTime]);
+                                [taskStart, taskList[i].Name, addTime(taskStart, taskDuration)]);
                             success = true;
                         }
                     }
