@@ -55,7 +55,7 @@ export const SignUp = () => {
             <input type={"checkbox"} value={terms} onChange={(t) => setTerms(!terms)}></input>
             <label style={{marginRight: '20px'}} htmlFor="terms">I agree to the terms and conditions</label>
             <br></br>
-            <button type="submit">Sign Up!</button>
+            <button type="submit">Submit</button>
         </form>
     )
 }
