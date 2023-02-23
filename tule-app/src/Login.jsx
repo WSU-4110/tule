@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-export const Login = () => {
+const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -25,3 +25,5 @@ export const Login = () => {
         </form>
     )
 }
+
+export default Login;
