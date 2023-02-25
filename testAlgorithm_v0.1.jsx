@@ -1,6 +1,6 @@
 // This is the algorithm that will be used to schedule tasks for the day.
 // 'inputTasks' is an array of tasks that will be scheduled.
-function algorithm(inputTasks) {
+export function algorithm(inputTasks) {
 
     // Creates an array to store and organize tasks in.
     var dailySchedule = new Array();
