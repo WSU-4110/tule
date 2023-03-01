@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-const Login = () => {
+const Login = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -9,7 +9,7 @@ const Login = () => {
         console.log(username);
         console.log(password);
         //fetch request
-        fetch()
+        //fetch()
     }
     
     return(
@@ -22,6 +22,7 @@ const Login = () => {
             <input value={password} onChange={(p) => setPassword(p.target.value)} type="password" placeholder="********"></input>
             <br></br>
             <button type="submit">Submit</button>
+            <button onClick={() => props.onChangeScreen('signup')}>Sign up instead</button>
         </form>
     )
 }
