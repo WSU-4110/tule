@@ -1,4 +1,3 @@
-import React from "react";
 import logo from "./alarm-clock.png";
 import "../App.css";
 

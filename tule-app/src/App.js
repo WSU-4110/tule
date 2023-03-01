@@ -14,20 +14,18 @@ function App() {
   const displayScreen = () =>{
     switch(currentScreen){
       case 'login':
-        <Login onChangeScreen={changeCurrentScreen}/>
-        break;
+        return <Login onChangeScreen={changeCurrentScreen}/>
       case 'signup':
-        <SignUp onChangeScreen={changeCurrentScreen}/>
-        break;
+        return <SignUp onChangeScreen={changeCurrentScreen}/>
       default:
-        <Init onChangeScreen={changeCurrentScreen}/>
-        break;
+        return <Init onChangeScreen={changeCurrentScreen}/>
     }
   }
   return (
     <div className="App">
       {
-        currentScreen === 'signup'? <SignUp onChangeScreen={changeCurrentScreen}/> : <Login onChangeScreen={changeCurrentScreen}/>
+        displayScreen()
+        /*currentScreen === 'signup'? <SignUp onChangeScreen={changeCurrentScreen}/> : <Login onChangeScreen={changeCurrentScreen}/>*/
       }
     </div>
   );
