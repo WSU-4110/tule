@@ -23,6 +23,8 @@ const Login = (props) => {
             <br></br>
             <button type="submit">Submit</button>
             <button onClick={() => props.onChangeScreen('signup')}>Sign up instead</button>
+            <br></br>
+            <button onClick={() => props.onChangeScreen('init')}>Go to init temp button</button>
         </form>
     )
 }
