@@ -1,6 +1,6 @@
 // This is the algorithm that will be used to schedule tasks for the day.
 // 'inputTasks' is an array of tasks that will be scheduled.
-export function algorithm(inputTasks) {
+function algorithm(inputTasks, schedStart = "08:00", schedEnd = "24:00") {
 
     // Creates an array to store and organize tasks in.
     var dailySchedule = new Array();
@@ -68,6 +68,9 @@ export function algorithm(inputTasks) {
 
     // Compare two times. This is needed to determine if a task
     // can be scheduled.
+    // Returns 1 if timeStr1 is greater than timeStr2,
+    // -1 if timeStr1 is less than timeStr2, and
+    // 0 if timeStr1 is equal to timeStr2.
     function compareDuration(timeStr1, timeStr2) {
         const scheduleHours = parseInt(timeStr1[0] + timeStr1[1]);
         const durationHours = parseInt(timeStr2[0] + timeStr2[1]);
@@ -94,48 +97,42 @@ export function algorithm(inputTasks) {
     // the longest duration get scheduled first.
     function dailyAlgorithm(taskList, first = false, schedStart = "08:00",
         schedEnd = "24:00",) {
-
         // Checks if this is the first time the algorithm is adding to
         // the dailySchedule array. If it is, it will add the first task
         // to the array, then run the rest of the algorithm.
         // Scheduled tasks need to have a duration.
         if (first) {
             for (let i = 0; i < taskList.length; i++) {
-
                 // First we set the start and duration time of the task.
                 // The end time is the duration plus the break time
                 // if it has one.
                 const taskStart = taskList[i].StartTime.Time;
-                if (taskList[i].taskID.InactiveTasks.BreakDuration.Active) {
+                if (taskList[i].BreakDuration.Active) {
                     var totalDuration = addTime(
-                        taskList[i].InactiveTasks.Duration.Time,
-                        taskList[i].InactiveTasks.BreakDuration.Time);
+                        taskList[i].Duration.Time,
+                        taskList[i].BreakDuration.Time);
                 } else {
-                    var totalDuration = taskList[i].InactiveTasks.Duration.Time;
+                    var totalDuration = taskList[i].Duration.Time;
                 }
-
                 // Then we add the task to the dailySchedule array.
                 // The end time is the task start time plus the duration.
                 dailySchedule.push(
                     [taskStart, taskList[i].Name,
                     addTime(totalDuration, taskStart)]);
             }
-        
         // If the algorithm is not adding the tasts with a start time,
         // it will come here and finds a place to schedule each task.
         } else {
             for (let i = 0; i < taskList.length; i++) {
-
                 // First we set the duration time of the task.
                 // The end time is the duration plus the break time.
-                if (taskList[i].taskID.InactiveTasks.BreakDuration.Active) {
+                if (taskList[i].BreakDuration.Active) {
                     var taskDuration = addTime(
-                        taskList[i].InactiveTasks.Duration.Time,
-                        taskList[i].taskID.InactiveTasks.BreakDuration.Time)
+                        taskList[i].Duration.Time,
+                        taskList[i].BreakDuration.Time)
                 } else {
-                    var taskDuration = taskList[i].InactiveTasks.Duration.Time
+                    var taskDuration = taskList[i].Duration.Time
                 }
-
                 // Searches through the dailySchedule array to find a place
                 // to schedule the current task.
                 var success = false;
@@ -194,10 +191,10 @@ export function algorithm(inputTasks) {
     // If the task has no start time, this organizes the task
     // based on its priority.
     for (let t = 0; t > inputTasks.length; t++) {
-        if (inputTasks[t].startTime.active) {
+        if (inputTasks[t].StartTime.Active) {
             concrete.push(inputTasks[t]);
         } else {
-            switch (inputTasks[t].priority) {
+            switch (inputTasks[t].Priority) {
                 case 3:
                     priority3.push(inputTasks[t]);
                     break;
@@ -217,11 +214,21 @@ export function algorithm(inputTasks) {
     // This organizes both the priority arrays and
     // the array that stores tasks with a start time
     // by sorting by longest duration time.
-    concrete = concrete.sort(function(a, b) { return compareDuration(b.Duration.Time, a.Duration.Time) });
-    priority3 = priority3.sort(function(a, b) { return compareDuration(b.Duration.Time, a.Duration.Time) });
-    priority2 = priority2.sort(function(a, b) { return compareDuration(b.Duration.Time, a.Duration.Time) });
-    priority1 = priority1.sort(function(a, b) { return compareDuration(b.Duration.Time, a.Duration.Time) });
-    priority0 = priority0.sort(function(a, b) { return compareDuration(b.Duration.Time, a.Duration.Time) });
+    concrete = concrete.sort(
+        function(a, b) { 
+            return compareDuration(b.Duration.Time, a.Duration.Time) });
+    priority3 = priority3.sort(
+        function(a, b) { 
+            return compareDuration(b.Duration.Time, a.Duration.Time) });
+    priority2 = priority2.sort(
+        function(a, b) { 
+            return compareDuration(b.Duration.Time, a.Duration.Time) });
+    priority1 = priority1.sort(
+        function(a, b) { 
+            return compareDuration(b.Duration.Time, a.Duration.Time) });
+    priority0 = priority0.sort(
+        function(a, b) { 
+            return compareDuration(b.Duration.Time, a.Duration.Time) });
 
     // Allocates time for tasks with a start time,
     // then allocates time for tasks with decreasing priority.
@@ -233,3 +240,53 @@ export function algorithm(inputTasks) {
 
     return dailySchedule;
 }
+
+
+// This function randomly generates a list of tasks.
+function generateTasks(count) {
+    const taskList = [];
+    for (let i = 0; i < count; i++) {
+        const task = {
+            Name: "Task " + i,
+            StartTime: {
+                Active: Math.random() >= 0.7,
+                Time: randomTime(24, 8)
+            },
+            Priority: Math.floor(Math.random() * 4),
+            Duration: {
+                Time: randomTime(4)
+            },
+            BreakDuration: {
+                Active: Math.random() >= 0.5,
+                Time: randomTime(2)
+            }
+        }
+        taskList.push(task);
+    }
+    return taskList;
+}
+
+// This function generates a random time.
+function randomTime(max, min) {
+    if (min === undefined) {
+        var hour = Math.floor(Math.random() * max);
+    } else {
+        var hour = Math.floor(Math.random() * (max - min) + min);
+    }
+    var minute = Math.floor(Math.random() * 12) * 5;
+    if (hour < 10) {
+        hour = "0" + hour.toString();
+    } else {
+        hour = hour.toString();
+    }
+    if (minute < 10) {
+        minute = "0" + minute.toString();
+    } else {
+        minute = minute.toString();
+    }
+    return hour + ":" + minute;
+}
+
+tasks = generateTasks(10);
+console.log(tasks);
+console.log(algorithm(tasks));
