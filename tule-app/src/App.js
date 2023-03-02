@@ -6,7 +6,7 @@ import {SignUp} from "./SignUp";
 
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('login');
+  const [currentScreen, setCurrentScreen] = useState('init');
   const changeCurrentScreen = (screen) =>{
     console.log(screen);
     setCurrentScreen(screen);
