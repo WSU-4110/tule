@@ -16,8 +16,8 @@ const Init = (props) => {
             <Navbar text="Tule"/>
             <div>
                 <div className="mt-5">
-                    <Button className="px-4">Login</Button>
-                    <Button className="px-3">Sign Up</Button>
+                    <Button className="px-4" onClick={() => props.onChangeScreen('login')}>Login</Button>
+                    <Button className="px-3" onClick={() => props.onChangeScreen('signup')}>Sign Up</Button>
                 </div>
             </div>
         </div>  
