@@ -150,9 +150,9 @@ function algorithm(inputTasks, schedStart = "08:00", schedEnd = "24:00") {
                                 addTime(taskStart, taskDuration)]);
                             success = true;
                         }
-                    // First fills the gap between the first task and
-                    // the start of the day.
-                    } else if (x < 1) {
+                    } else {
+                        // First tries to fill the gap between the first task
+                        // and the start of the day.
                         if (compareDuration(
                                 subtractTime(
                                     dailySchedule[x + 1][0],
@@ -163,13 +163,10 @@ function algorithm(inputTasks, schedStart = "08:00", schedEnd = "24:00") {
                                 [taskStart, taskList[i].Name,
                                 addTime(taskStart, taskDuration)]);
                             success = true;
-                        }
-                    // If there is a next task in the schedule,
-                    // this checks to see if the task can be scheduled between
-                    // other tasks.
-                    } else {
-                        // Then procedes to fill the gaps between tasks.
-                        if (compareDuration(
+                        // If the gap between the first task and
+                        // the start of the day isnt big enough, we look
+                        // for a gap between the tasks.
+                        } else if (compareDuration(
                                 subtractTime(
                                     dailySchedule[x + 1][0],
                                     dailySchedule[x][2]),
