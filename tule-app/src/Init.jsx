@@ -1,7 +1,8 @@
+import React, {useState} from "react"
 import Button from 'react-bootstrap/Button';
 //import logo from "./alarm-clock.png";
 import Navbar from './components/Navbar';
-const Init = () => {
+const Init = (props) => {
 
     return (
         
@@ -18,7 +19,7 @@ const Init = () => {
                     <Button className="px-4">Login</Button>
                     <Button className="px-3">Sign Up</Button>
                 </div>
-            </div> 
+            </div>
         </div>  
     )
 }   

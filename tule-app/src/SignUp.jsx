@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-export const SignUp = () => {
+export const SignUp = (props) => {
     const [username, setUsername] = useState('');
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
@@ -78,6 +78,7 @@ export const SignUp = () => {
             <label style={{marginRight: '20px'}} htmlFor="terms">I agree to the terms and conditions</label>
             <br></br>
             <button type="submit">Submit</button>
+            <button onClick={() => props.onChangeScreen('login')}>Login instead</button>
         </form>
     )
 }
