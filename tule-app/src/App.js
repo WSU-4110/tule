@@ -3,6 +3,7 @@ import './App.css';
 import Init from "./Init";
 import Login from "./Login";
 import {SignUp} from "./SignUp";
+import Tasks from "./Tasks";
 
 
 function App() {
@@ -17,6 +18,8 @@ function App() {
         return <Login onChangeScreen={changeCurrentScreen}/>
       case 'signup':
         return <SignUp onChangeScreen={changeCurrentScreen}/>
+      case 'tasks':
+        return <Tasks onChangeScreen={changeCurrentScreen}/>
       default:
         return <Init onChangeScreen={changeCurrentScreen}/>
     }
