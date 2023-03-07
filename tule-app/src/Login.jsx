@@ -25,6 +25,7 @@ const Login = (props) => {
             <button onClick={() => props.onChangeScreen('signup')}>Sign up instead</button>
             <br></br>
             <button onClick={() => props.onChangeScreen('init')}>Go to init temp button</button>
+            <button onClick={() => props.onChangeScreen('tasks')}>successful login temp button</button>
         </form>
     )
 }
