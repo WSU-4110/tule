@@ -19,7 +19,8 @@ const Init = (props) => {
                     <Button className="px-4" onClick={() => props.onChangeScreen('login')}>Login</Button>
                     <Button className="px-3" onClick={() => props.onChangeScreen('signup')}>Sign Up</Button>
                 </div>
-            </div>
+        </div>
+
         </div>  
     )
 }   
