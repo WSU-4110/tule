@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import TaskList from './components/TaskList'
+import React from "react"
 
-const tasklist = [
+const currentTasks = [
     {
         id: 'task0',
         taskName: 'Software Engineering class',
@@ -24,10 +25,7 @@ const Tasks = (props) => {
         <form onSubmit={handleSubmit}>
             <h1>Task list Page</h1>
             <section>
-                {tasklist.map((task) => {
-                    return <li key={task.id}>{task.taskName}</li>;
-                })
-                }
+                <TaskList ListOfTasks={currentTasks} />
             </section>
             <button type="submit">Add task</button>
             <br></br>
