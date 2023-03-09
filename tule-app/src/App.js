@@ -3,6 +3,7 @@ import './App.css';
 import Init from "./Init";
 import Login from "./Login";
 import {SignUp} from "./SignUp";
+import {EditTaskModal} from "./EditTaskModal";
 
 
 function App() {
