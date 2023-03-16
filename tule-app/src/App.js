@@ -17,7 +17,7 @@ function App() {
       case 'login':
         return <Login onChangeScreen={changeCurrentScreen}/>
       case 'signup':
-        return <SignUp onChangeScreen={changeCurrentScreen}/>
+        return <EditTaskModal onChangeScreen={changeCurrentScreen}/>
       default:
         return <Init onChangeScreen={changeCurrentScreen}/>
     }

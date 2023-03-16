@@ -4,11 +4,13 @@ import Modal from 'react-bootstrap/Modal';
 import Multiselect from 'multiselect-react-dropdown';
 import Form from 'react-bootstrap/Form';
 import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import TimeField from 'react-simple-timefield';
 import Navbar from './components/Navbar';
 import Alert from 'react-bootstrap/Alert';
+import './EditTaskModal.css'
 
 export const EditTaskModal = (props) => {
     const [taskName, setTaskName] = useState('');
@@ -155,37 +157,38 @@ export const EditTaskModal = (props) => {
                         </Row>
 
                         <Row className="mb-3">
-                            <Form.Group as={Col} controlId="formBasicPassword">
+                            <Form.Group as={Col} controlId="taskDurationGroup">
                             <Form.Label>Task Duration</Form.Label>
-                                <Row className="task duration">
-                                    <Col sm={5} >
-                                    <Form.Control
-                                    type='number'
-                                    min='0'
-                                    max='24'
-                                    value={taskDurationHours}
-                                    onChange={(u) => setTaskDurationHours(u.target.value)}
-                                    />
-                                    <Form.Text muted>
-                                        Hours
-                                    </Form.Text>
-                                    </Col>
-
-                                    <Col sm={1} >
-                                    <Form.Label>:</Form.Label>
-                                    </Col>
-
-                                    <Col sm={5} >
-                                    <Form.Control
+                                <Row className="taskDurationRow">
+                                    <Col className='durationInput' >
+                                        <Form.Control
                                         type='number'
                                         min='0'
-                                        max='60'
-                                        value={taskDurationMinutes}
-                                        onChange={(u) => setTaskDurationMinutes(u.target.value)}
+                                        max='24'
+                                        value={taskDurationHours}
+                                        onChange={(u) => setTaskDurationHours(u.target.value)}
                                         />
-                                    <Form.Text muted>
-                                        Minutes
-                                    </Form.Text>
+                                        
+                                        <Form.Text muted>
+                                            Hours
+                                        </Form.Text>
+                                    </Col>
+
+                                    <Col className='timeColon' >
+                                        <Form.Label>:</Form.Label>
+                                    </Col>
+
+                                    <Col className='durationInput' >
+                                        <Form.Control
+                                            type='number'
+                                            min='0'
+                                            max='60'
+                                            value={taskDurationMinutes}
+                                            onChange={(u) => setTaskDurationMinutes(u.target.value)}
+                                            />
+                                        <Form.Text muted>
+                                            Minutes
+                                        </Form.Text>
                                     </Col>
                                 </Row>
 
@@ -292,18 +295,11 @@ export const EditTaskModal = (props) => {
                         </Row>
 
                         <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <Dropdown>
-                                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                                    Task Priority
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => setTaskPriority("3")}>3 (Highest priority)</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("2")}>2</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("1")}>1 (Lowest priority)</Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-
+                            <DropdownButton id="dropdown-basic-button" title="Priority">
+                                <Dropdown.Item onClick={() => setTaskPriority("3")}>3 (Highest priority)</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setTaskPriority("2")}>2</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setTaskPriority("1")}>1 (Lowest priority)</Dropdown.Item>
+                            </DropdownButton>
                             <Form.Text className="text-muted">
                                 Optional
                             </Form.Text>

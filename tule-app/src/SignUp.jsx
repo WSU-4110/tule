@@ -12,34 +12,47 @@ export const SignUp = (props) => {
     const [terms, setTerms] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const [verifiedUsername, setVerifiedUsername] = useState('false');
+    const [verifiedPassword, setVerifiedPassword] = useState('false');
 
     // Handles form submission.
     // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
 
+    }
+
+    // Checks if all conditions are met.
+    const checkConditions = (password) => {
         if (terms) {
             if (checkForSpecialCharacters()) {
                 if (checkPasswordsMatch()) {
                     if (checkPasswordLength()) {
-                            console.log(username);
-                            console.log(password1);
+                        setVerifiedUsername('true');
+                        setVerifiedPassword('true');
+                        console.log(username);
+                        console.log(password1);
                     } else {
                         setErrorMessage('Password is too short');
                         setShowAlert(true);
+                        setVerifiedPassword('Password is too short');
                     }
                 } else {
                     setErrorMessage('Passwords do not match');
                     setShowAlert(true);
+                    setVerifiedPassword('Passwords do not match');
                 }
             } else {
                 setErrorMessage('Username or password contains'
                     + ' forbidden character(s)');
                 setShowAlert(true);
+                setVerifiedPassword('Username or password contains'
+                    + ' forbidden character(s)');
             }
         } else {
             setErrorMessage('You must agree to the terms and conditions');
             setShowAlert(true);
+            setVerifiedPassword('You must agree to the terms and conditions');
         }
 
     }
@@ -112,7 +125,13 @@ export const SignUp = (props) => {
                     </Form.Group>
                     <br></br>
                     <Form.Group controlId="formBasicCheckbox">
-                        <Form.Check type="checkbox" label="I agree to the terms and conditions" value={terms} onChange={(t) => setTerms(!terms)}/>
+                        <Form.Check
+                        type="checkbox"
+                        label="I agree to the terms and conditions"
+                        value={terms}
+                        onChange={(t) => setTerms(!terms)}
+                        style={{width: '280px'}}
+                        />
                     </Form.Group>
                     <br></br>
                     <Button variant="primary" type="submit" onClick={handleSubmit}>
