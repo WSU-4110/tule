@@ -18,8 +18,18 @@ const currentTasks = [
     }
 ]
 const Tasks = (props) => {
-    const handleSubmit = () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
         console.log("add a task")
+        const newTask ={
+            id: 'task' + currentTasks.length,
+            taskName: 'Default taskname',
+            startTime: '',
+            duration: '00:00:00',
+            priority: 'None'
+        };
+        currentTasks.push(newTask);
+        console.log(currentTasks);
     }
     return(
         <form onSubmit={handleSubmit}>
