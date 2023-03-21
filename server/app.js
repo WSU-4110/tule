@@ -1,6 +1,8 @@
 const express = require('express');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const TaskMod = require('./taskModifier.js');
+const taskMod = new TaskMod();
 
 const app = express();
 //!!!All requests made to this server must have body in json format!!!
@@ -119,29 +121,13 @@ app.post('/AltTask', (req,res) => {
         //Swap inactive to active
         for(var i = 0; i < newIdList.length; i++){
             if(!oldIdList.includes(newIdList[i])){
-                console.log('Found id in newlist not in oldlist');
-                let object = new ObjectId(newIdList[i]);
-                info[0]['ActiveTasks'].push(object);
-                let inactive = info[0]['InactiveTasks'];
-                var index = 0;
-                while(inactive[index].toString() != newIdList[i]){
-                    index++
-                }
-                info[0]['InactiveTasks'].splice(index,1);
+                info = taskMod.InactiveToActive(newIdList[i],info)
             }
         }
         //Swap active to inactive
         for(var i = 0; i < oldIdList.length; i++){
             if(!newIdList.includes(oldIdList[i])){
-                console.log('Found id in oldList not in newlist');
-                let object = new ObjectId(oldIdList[i]);
-                info[0]["InactiveTasks"].push(object);
-                let active = info[0]['ActiveTasks'];
-                var index = 0;
-                while(active[index].toString() != oldIdList[i]){
-                    index++
-                }
-                info[0]['ActiveTasks'].splice(index,1);
+                info = taskMod.ActivetoInactive(newIdList[i],info)
             }
         }
         //Update schedule to new schedule
