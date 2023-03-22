@@ -8,7 +8,7 @@ function TaskComponent(props) {
     return(
         <>
             {showModal && <EditTaskModal key={props.id} id={props.id[4]}
-            editTask={props.editTask}/>}
+            editTask={props.editTask} resetModal={setShowModal}/>}
             <li>
                 <div>
                     <h3>{props.taskName}</h3>
