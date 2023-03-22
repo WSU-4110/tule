@@ -2,8 +2,6 @@
 
 function LoginFetch(props){
 
-
-    
     var jsonData = {
       "users": [
           {
