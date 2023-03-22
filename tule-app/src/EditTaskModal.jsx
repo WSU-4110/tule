@@ -331,12 +331,12 @@ export function EditTaskModal(props) {
                         justifyContent: 'center',
                     }}
                     >
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={handleSubmit}>
-                    Save Changes
-                </Button>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleSubmit}>
+                        Save Changes
+                    </Button>
                 </Modal.Footer>
             </Modal>
 
