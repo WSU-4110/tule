@@ -1,15 +1,16 @@
 import React, { useState } from "react"
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
 import Col from "react-bootstrap/Col";
 import Navbar from "./components/Navbar";
 
 const Login = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [showAlert, setShowAlert] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [verifiedUsername, setVerifiedUsername] = useState(false);
+    const [usernameError, setUsernameError] = useState('');
+    const [verifiedPassword, setVerifiedPassword] = useState(false);
+    const [passwordError, setPasswordError] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -18,20 +19,24 @@ const Login = (props) => {
         if (username === 'admin' && password === 'admin') {
             props.onChangeScreen('tasks')
         } else if (username === '' && password === '') {
-            setShowAlert(true);
-            setErrorMessage('Please enter a username and password');
+            setVerifiedUsername(true);
+            setVerifiedPassword(true);
+            setUsernameError('Please enter a username');
+            setPasswordError('Please enter a password');
             return;
         } else if (username === '') {
-            setShowAlert(true);
-            setErrorMessage('Please enter a username');
+            setVerifiedUsername(true);
+            setUsernameError('Please enter a username');
             return;
         } else if (password === '') {
-            setShowAlert(true);
-            setErrorMessage('Please enter a password');
+            setVerifiedPassword(true);
+            setPasswordError('Please enter a password');
             return;
         } else {
-            setShowAlert(true);
-            setErrorMessage('Incorrect username or password');
+            setVerifiedUsername(true);
+            setVerifiedPassword(true);
+            setPasswordError('Invalid username or password');
+            return;
         }
         //fetch request
         //fetch()
@@ -47,27 +52,33 @@ const Login = (props) => {
                 width: '30%',
                 margin: 'auto',
             }}>
-                <Form>
-                    {showAlert && (
-                        <Alert
-                        variant="danger"
-                        onClose={() => setShowAlert(false)}
-                        style={{height: '90px'}}
-                        dismissible>
-                            <Alert.Heading>Sign Up Error</Alert.Heading>
-                                <p> {errorMessage} </p>
-                        </Alert>
-                    )}
+                <Form noValidate>
                     <h1>Login</h1>
                     <br></br>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Username</Form.Label>
-                        <Form.Control type="username" placeholder="Username" value={username} onChange={(u) => setUsername(u.target.value)}/>
+                        <Form.Control
+                        type="username"
+                        placeholder="Username"
+                        value={username}
+                        isInvalid={verifiedUsername}
+                        onChange={(u) => setUsername(u.target.value)}/>
+                        <Form.Control.Feedback type="invalid">
+                            {usernameError}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <br></br>
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" value={password} onChange={(p) => setPassword(p.target.value)}/>
+                        <Form.Control
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        isInvalid={verifiedPassword}
+                        onChange={(p) => setPassword(p.target.value)}/>
+                        <Form.Control.Feedback type="invalid">
+                            {passwordError}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <br></br>
                     <Col>

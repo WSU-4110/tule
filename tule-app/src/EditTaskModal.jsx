@@ -40,6 +40,7 @@ export function EditTaskModal(props) {
     const handleClose = () => {
         setShow(false);
         console.log(taskStartTime);
+        props.resetModal(false);
     }
     const onSelect = (selectedItem) => {
         reccuringDays.push(selectedItem);
@@ -82,6 +83,10 @@ export function EditTaskModal(props) {
             setErrorMessage('Please enter task name');
             setShowAlert(true);
         }
+        console.log(taskName);
+        console.log(props.id);
+        props.editTask(props.id,taskName,taskStartTime,taskDuration,taskPriority);
+        props.resetModal(false);
     }
 
     function millisecondsToString(milliseconds) {
@@ -331,12 +336,12 @@ export function EditTaskModal(props) {
                         justifyContent: 'center',
                     }}
                     >
-                <Button variant="secondary" onClick={handleClose}>
-                    Close
-                </Button>
-                <Button variant="primary" onClick={handleSubmit}>
-                    Save Changes
-                </Button>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleSubmit}>
+                        Save Changes
+                    </Button>
                 </Modal.Footer>
             </Modal>
 
