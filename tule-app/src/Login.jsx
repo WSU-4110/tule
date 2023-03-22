@@ -16,6 +16,7 @@ const Login = (props) => {
         e.preventDefault();
         console.log(username);
         console.log(password);
+        var data = {}
         try{
             const response = await fetch('http://localhost:3001/LoginVerify',{
                 method:'POST',
@@ -29,13 +30,14 @@ const Login = (props) => {
                     'Password':password
                 })
             })
-            console.log(response.body);
+            data = await response.json();
+            console.log(data);
         }
         catch(err){
             console.log(err);
         }
-        {/*if (username === 'admin' && password === 'admin') {
-            props.onChangeScreen('tasks')
+        if (data['LoginSuccess'] == "True") {
+            props.onChangeScreen('tasks');
         } else if (username === '' && password === '') {
             setVerifiedUsername(true);
             setVerifiedPassword(true);
@@ -55,7 +57,7 @@ const Login = (props) => {
             setVerifiedPassword(true);
             setPasswordError('Invalid username or password');
             return;
-        }*/}
+        }
         //fetch request
         //fetch()
     }
