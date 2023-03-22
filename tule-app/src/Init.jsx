@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+
 import Button from 'react-bootstrap/Button';
-import logo from "./alarm-clock.png";
 import Navbar from './components/Navbar';
 import Form from 'react-bootstrap/Form';
 import Col from "react-bootstrap/Col";
