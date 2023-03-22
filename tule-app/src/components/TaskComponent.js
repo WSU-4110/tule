@@ -6,8 +6,7 @@ function TaskComponent(props) {
 
     return(
         <>
-            {showModal && (
-                <EditTaskModal/> )}
+            {showModal && <EditTaskModal/>}
             <li>
                 <div>
                     <h3>{props.taskName}</h3>
