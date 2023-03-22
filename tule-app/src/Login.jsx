@@ -12,11 +12,29 @@ const Login = (props) => {
     const [verifiedPassword, setVerifiedPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
 
-    const handleSubmit = (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
         console.log(username);
         console.log(password);
-        if (username === 'admin' && password === 'admin') {
+        try{
+            const response = await fetch('http://localhost:3001/LoginVerify',{
+                method:'POST',
+                mode:'cors',
+                headers:{
+                    'Access-Control-Allow-Origin':'http://localhost:3000',
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({
+                    'Username':username,
+                    'Password':password
+                })
+            })
+            console.log(response.body);
+        }
+        catch(err){
+            console.log(err);
+        }
+        {/*if (username === 'admin' && password === 'admin') {
             props.onChangeScreen('tasks')
         } else if (username === '' && password === '') {
             setVerifiedUsername(true);
@@ -37,7 +55,7 @@ const Login = (props) => {
             setVerifiedPassword(true);
             setPasswordError('Invalid username or password');
             return;
-        }
+        }*/}
         //fetch request
         //fetch()
 

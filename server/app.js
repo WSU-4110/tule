@@ -1,13 +1,16 @@
 const express = require('express');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const cors = require('cors');
 
 const app = express();
+
 //!!!All requests made to this server must have body in json format!!!
 app.use(express.json());
+app.use(cors());
 //Calling the mongodb connection string from .env so it isn't exposed on github
 const uri = process.env.MONGO_CONNECTION;
-console.log('uri: ',uri);
+//console.log('uri: ',uri);
 //Setting some standard suggested options
 const mongoOptions = {
     useNewUrlParser: true,
@@ -30,6 +33,9 @@ const tasksCollection = db.collection('Tasks')
 
 //Route to verify login information. Currently only verifies. Need to add some work on the response with session cookies?
 app.post('/LoginVerify', (req,res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    console.log(req.body.Username);
+    console.log(req.body.Password);
     usersCollection.find({Username: req.body.Username}).toArray().then(info => {
         if(info.length == 1){
             if(info[0]['Password'] === req.body.Password){
@@ -201,4 +207,4 @@ app.post('SaveTask', (req,res) => {
     }
 })
 
-app.listen(3000, () => console.log('Example app is listening on port 3000.'));
+app.listen(3001, () => console.log('Example app is listening on port 3001.'));
