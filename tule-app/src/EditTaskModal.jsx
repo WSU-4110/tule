@@ -7,14 +7,11 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import TimeField from 'react-simple-timefield';
-import Navbar from './components/Navbar';
 import Alert from 'react-bootstrap/Alert';
 import './EditTaskModal.css'
 
-export const EditTaskModal = (props) => {
+export function EditTaskModal(props) {
     const [taskName, setTaskName] = useState('');
-    const [taskDurationBool, setTaskDurationBool] = useState(false);
     const [taskDuration, setTaskDuration] = useState('');
     const [taskDurationHours, setTaskDurationHours] = useState(0);
     const [taskDurationMinutes, setTaskDurationMinutes] = useState(0);
@@ -39,13 +36,11 @@ export const EditTaskModal = (props) => {
           { name: 'Friday', id: 5 },
           { name: 'Saturday', id: 6 },
         ];
-
-    const [show, setShow] = useState(false);
+    const [show, setShow] = useState(true);
     const handleClose = () => {
         setShow(false);
         console.log(taskStartTime);
     }
-    const handleShow = () => setShow(true);
     const onSelect = (selectedItem) => {
         reccuringDays.push(selectedItem);
     }
@@ -64,6 +59,15 @@ export const EditTaskModal = (props) => {
                 if (taskDate !== '') {
                     if (taskPriority === '') {
                         setTaskPriority(0)
+                    }
+                    if (taskStartTime !== '') {
+                        setTaskStartTimeBool(true);
+                    }
+                    if (taskBreakDuration !== '') {
+                        setTaskBreakDurationBool(true);
+                    }
+                    if (taskDate !== '') {
+                        setTaskDateBool(true);
                     }
                     setShow(false);
                 } else {
@@ -98,16 +102,11 @@ export const EditTaskModal = (props) => {
     
     return(
         <>
-            <Navbar text="Tule"/>
-            <Button variant="primary" onClick={handleShow}>
-                Edit Task
-            </Button>
-
             <Modal
                 show={show}
                 onHide={handleClose}
                 backdrop="static"
-                centered>
+                >
                 <Modal.Header
                     closeButton
                     style={{

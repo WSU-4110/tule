@@ -1,8 +1,9 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import Alert from 'react-bootstrap/Alert';
 import Navbar from "./components/Navbar";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
 
 
 export const SignUp = (props) => {
@@ -10,49 +11,44 @@ export const SignUp = (props) => {
     const [password1, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
     const [terms, setTerms] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [verifiedUsername, setVerifiedUsername] = useState('false');
-    const [verifiedPassword, setVerifiedPassword] = useState('false');
+    const [usernameError, setUsernameError] = useState('');
+    const [passwordError, setPassordError] = useState('');
+    const [verifiedUsername, setVerifiedUsername] = useState(false);
+    const [verifiedPassword, setVerifiedPassword] = useState(false);
+    const [verifiedTerms, setVerifiedTerms] = useState(false);
 
     // Handles form submission.
     // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        if (!terms) { 
+            setVerifiedTerms(true);
+        } else {
+            setVerifiedTerms(false);
+        }
+        checkPassword();
+        checkPasswordsMatch();
+        checkForSpaces();
+        checkForSpecialCharacters();
+        checkForEmptyString();
+        
     }
 
     // Checks if all conditions are met.
-    const checkConditions = (password) => {
-        if (terms) {
-            if (checkForSpecialCharacters()) {
-                if (checkPasswordsMatch()) {
-                    if (checkPasswordLength()) {
-                        setVerifiedUsername('true');
-                        setVerifiedPassword('true');
-                        console.log(username);
-                        console.log(password1);
-                    } else {
-                        setErrorMessage('Password is too short');
-                        setShowAlert(true);
-                        setVerifiedPassword('Password is too short');
-                    }
-                } else {
-                    setErrorMessage('Passwords do not match');
-                    setShowAlert(true);
-                    setVerifiedPassword('Passwords do not match');
-                }
-            } else {
-                setErrorMessage('Username or password contains'
-                    + ' forbidden character(s)');
-                setShowAlert(true);
-                setVerifiedPassword('Username or password contains'
-                    + ' forbidden character(s)');
-            }
-        } else {
-            setErrorMessage('You must agree to the terms and conditions');
-            setShowAlert(true);
-            setVerifiedPassword('You must agree to the terms and conditions');
+    function checkPassword() {
+        if ((checkForSpecialCharacters())
+            && (checkForCapitalLetters())
+            && (checkForNumbers())
+            && (checkForSpaces())
+            && (checkForRepeatedCharacters())
+            && (checkPasswordLength())
+            && (checkPasswordsMatch())
+            && (checkForEmptyString())
+            && (terms))
+            {
+            console.log(username);
+            console.log(password1);
+            props.onChangeScreen('tasks');
         }
 
     }
@@ -60,6 +56,7 @@ export const SignUp = (props) => {
     // Checks if passwords match.
     function checkPasswordsMatch() {
         if (password1 !== password2) {
+            setVerifiedPassword(true);
             return false;
         }
         return true;
@@ -70,6 +67,8 @@ export const SignUp = (props) => {
         if (password1.length > 7) {
             return true;
         }
+        setVerifiedPassword(true);
+        setPassordError('Password is too short');
         return false;
     }
 
@@ -80,9 +79,85 @@ export const SignUp = (props) => {
             '"', '<', '>', '?', '/', '~', '`', '.'];
         for (let i = 0; i < specialCharacters.length; i++) {
             if (username.includes(specialCharacters[i])) {
+                setVerifiedUsername(true);
+                setUsernameError('Username contains forbidden character(s)');
                 return false;
             }
             if (password1.includes(specialCharacters[i])) {
+                setVerifiedPassword(true);
+                setPassordError('Password contains forbidden character(s)');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Checks if password contains a capital letter.
+    function checkForCapitalLetters() {
+        const capitalLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
+            'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V',
+            'W', 'X', 'Y', 'Z'];
+        for (let i = 0; i < capitalLetters.length; i++) {
+            if (password1.includes(capitalLetters[i])) {
+                return true;
+            }
+        }
+        setVerifiedPassword(true);
+        setPassordError('Password must contain a capital letter');
+        return false;
+    }
+
+    // Checks if password contains a number.
+    function checkForNumbers() {
+        const numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        for (let i = 0; i < numbers.length; i++) {
+            if (password1.includes(numbers[i])) {
+                return true;
+            }
+        }
+        setPassordError('Password must contain a number');
+        setVerifiedPassword(true);
+        return false;
+    }
+
+    // Checks if password contains a space.
+    function checkForSpaces() {
+        if (password1.includes(' ')) {
+            setVerifiedPassword(true);
+            setPassordError('Password cannot contain spaces');
+        }
+        if (username.includes(' ')) {
+            setVerifiedUsername(true);
+            setUsernameError('Username cannot contain spaces');
+        }
+        if (password1.includes(' ') || username.includes(' ')) {
+            return false;
+        }
+        return true;
+    }
+
+    // Checks if password or username is empty.
+    function checkForEmptyString() {
+        if (password1 === '') {
+            setVerifiedPassword(true);
+            setPassordError('Password cannot be empty');
+        }
+        if (username === '') {
+            setVerifiedUsername(true);
+            setUsernameError('Username cannot be empty');
+        }
+        if (password1 === '' || username === '') {
+            return false;
+        }
+        return true;
+    }
+
+    // Checks if password contains repeated characters.
+    function checkForRepeatedCharacters() {
+        for (let i = 0; i < password1.length; i++) {
+            if (password1[i] === password1[i + 1]) {
+                setVerifiedPassword(true);
+                setPassordError('Password cannot contain repeated characters');
                 return false;
             }
         }
@@ -96,10 +171,9 @@ export const SignUp = (props) => {
             style={{
                 width: '30%',
                 margin: 'auto',
-            }}
-            centered>
-                <Form>
-                    {showAlert && (
+            }}>
+                <Form noValidate>
+                    {/* {showAlert && (
                         <Alert
                         variant="danger"
                         onClose={() => setShowAlert(false)}
@@ -108,35 +182,70 @@ export const SignUp = (props) => {
                             <Alert.Heading>Sign Up Error</Alert.Heading>
                                 <p> {errorMessage} </p>
                         </Alert>
-                    )}
+                    )} */}
+                    <h1>Sign Up</h1>
+                    <br></br>
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Username</Form.Label>
-                        <Form.Control type="username" placeholder="Username" value={username} onChange={(u) => setUsername(u.target.value)}/>
+                        <Form.Control
+                            isInvalid={verifiedUsername}
+                            type="username"
+                            placeholder="Username"
+                            value={username}
+                            onChange={(u) => setUsername(u.target.value)}/>
+                        <Form.Control.Feedback type="invalid">
+                            {usernameError}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <br></br>
-                    <Form.Group controlId="formBasicPassword">
+                    <Form.Group controlId="formBasicPassword1">
                         <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" value={password1} onChange={(p) => setPassword1(p.target.value)}/>
+                        <Form.Control
+                            isInvalid={verifiedPassword}
+                            type="password"
+                            placeholder="Password"
+                            value={password1}
+                            onChange={(p) => setPassword1(p.target.value)}/>
+                        <Form.Control.Feedback type="invalid">
+                            {passwordError}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <br></br>
-                    <Form.Group controlId="formBasicPassword">
+                    <Form.Group controlId="formBasicPassword2">
                         <Form.Label>Confirm Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" value={password2} onChange={(p) => setPassword2(p.target.value)}/>
+                        <Form.Control
+                            isInvalid={verifiedPassword}
+                            type="password"
+                            placeholder="Password"
+                            value={password2}
+                            onChange={(p) => setPassword2(p.target.value)}/>
+                        <Form.Control.Feedback type="invalid">
+                            {passwordError}
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <br></br>
                     <Form.Group controlId="formBasicCheckbox">
                         <Form.Check
                         type="checkbox"
+                        isInvalid={verifiedTerms}
                         label="I agree to the terms and conditions"
                         value={terms}
-                        onChange={(t) => setTerms(!terms)}
+                        onChange={() => setTerms(!terms)}
                         style={{width: '280px'}}
                         />
+                        <Form.Control.Feedback type="invalid">
+                            You must agree to the terms and conditions
+                        </Form.Control.Feedback>
                     </Form.Group>
                     <br></br>
-                    <Button variant="primary" type="submit" onClick={handleSubmit}>
-                        Sign Up
-                    </Button>
+                    <Col>
+                        <Button variant="secondary" onClick={() => props.onChangeScreen('login')}>
+                            Login Instead
+                        </Button>
+                        <Button variant="primary" type="submit" onClick={handleSubmit}>
+                            Sign Up
+                        </Button>
+                    </Col>
                 </Form>
             </div>
         </div>
