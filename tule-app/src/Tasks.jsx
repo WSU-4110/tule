@@ -17,6 +17,13 @@ const currentTasks = [
         priority: 'Medium'
     }
 ]
+const editTask = (index, newName, newStartTime, newDuration, newPriority) =>{
+    console.log("test");
+    currentTasks[index].taskName = newName;
+    currentTasks[index].startTime = newStartTime;
+    currentTasks[index].duration = newDuration;
+    currentTasks[index].priority = newPriority;
+}
 const Tasks = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -35,7 +42,7 @@ const Tasks = (props) => {
         <form onSubmit={handleSubmit}>
             <h1>Task list Page</h1>
             <section>
-                <TaskList ListOfTasks={currentTasks} />
+                <TaskList ListOfTasks={currentTasks} editTask={editTask}/>
             </section>
             <button type="submit">Add task</button>
             <br></br>
