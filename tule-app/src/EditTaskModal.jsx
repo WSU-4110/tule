@@ -40,6 +40,7 @@ export function EditTaskModal(props) {
     const handleClose = () => {
         setShow(false);
         console.log(taskStartTime);
+        props.resetModal(false);
     }
     const onSelect = (selectedItem) => {
         reccuringDays.push(selectedItem);
@@ -82,6 +83,10 @@ export function EditTaskModal(props) {
             setErrorMessage('Please enter task name');
             setShowAlert(true);
         }
+        console.log(taskName);
+        console.log(props.id);
+        props.editTask(props.id,taskName,taskStartTime,taskDuration,taskPriority);
+        props.resetModal(false);
     }
 
     function millisecondsToString(milliseconds) {
