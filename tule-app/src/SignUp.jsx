@@ -50,8 +50,8 @@ export const SignUp = (props) => {
             } catch(err){
                 console.log(err);
             }
-            console.log(data)
-            if (data['AccountCreate'] == "True"){
+            console.log(data);
+            if (data['AccountCreate'] === "True"){
                 props.onChangeScreen('tasks'); 
             }
             else {
@@ -60,7 +60,7 @@ export const SignUp = (props) => {
             }
         }
         else {
-            setPassordError('Invalid Password. Please enter a new password.');
+            setPassordError('Invalid Username or Password');
             setVerifiedPassword(true);
         }
     }

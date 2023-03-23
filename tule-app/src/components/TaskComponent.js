@@ -15,6 +15,7 @@ function TaskComponent(props) {
                     <ul key={0}>{"Duration: " +props.duration}</ul>
                     <ul key={1}>{"Priority: "+props.priority}</ul>
                 </div>
+
                 <div className="mt-3">
                     <Button className='' type = 'reset' onClick={() => setShowModal(true)} >Edit Task</Button>
                 </div>
