@@ -3,12 +3,11 @@ import { useState } from "react";
 
 function TaskComponent(props) {
    const [showModal, setShowModal] = useState(false);
-   const [newInfo, setNewInfo] = useState('');
 
     return(
         <>
             {showModal && <EditTaskModal key={props.id} id={props.id[4]}
-            editTask={props.editTask} resetModal={setShowModal}/>}
+            editTask={props.editTask} resetModal={setShowModal} currentTasks={props.currentTasks} update={props.update}/>}
             <li>
                 <div>
                     <h3>{props.taskName}</h3>
