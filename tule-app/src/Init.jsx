@@ -10,12 +10,14 @@ const Init = (props) => {
         <div>
             {/*<img src = {logo} style={{ width: 60, height: 60 }}></img>
             <h1>Tule</h1>*/}           
-
-               <Navbar text="Tule"/>
                <div className='container'>
                     
-                    <div className='v-align'>
-                        <Navbar text="Tule"/>
+                    <div className='position-absolute top-40 right-48'>
+                        <div className='container mb-3'>
+                            <Navbar text="Tule"/>
+                            <p>Welcome</p>
+                            <p>Log in with your account to continue</p>    
+                        </div>
                         <Button onClick={() => props.onChangeScreen('login')}>
                             Login
                         </Button>

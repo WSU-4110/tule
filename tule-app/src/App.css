@@ -45,12 +45,45 @@
   align-items: center;
 }
 
-.v-align{
-  
+.cmpt-center {
   margin: 0;
   position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  top: 40%;
+  right: 48%;
+}
 
+
+.top-10{
+  top: 10%;
+}
+.top-20{
+  top: 20%;
+}
+.top-30{
+  top: 30%;
+}
+.top-40{
+  top: 40%;
+}
+.top-50{
+  top: 50%;
+}
+
+.right-10{
+  right: 10%;
+}
+.right-20{
+  right: 20%;
+}
+.right-30{
+  right: 30%;
+}
+.right-40{
+  right: 40%;
+}
+.right-48{
+  right: 48%;
+}
+.right-50{
+  right: 50%;
 }
