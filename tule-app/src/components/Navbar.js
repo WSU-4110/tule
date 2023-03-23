@@ -1,6 +1,5 @@
 import logo from "./alarm-clock.png";
 import "../App.css";
-
 function Navbar(props){
     return(<div className="mt-3 container">
             <div className="d-flex">

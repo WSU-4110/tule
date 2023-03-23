@@ -1,5 +1,9 @@
 import TaskList from './components/TaskList'
 import React, { useState } from "react"
+import Button from 'react-bootstrap/Button';
+import Navbar from './components/Navbar';
+import banner from "./pics/sky.png"
+import DropDownMenu from './components/DropDownMenu';
 
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
@@ -26,15 +30,27 @@ const Tasks = (props) => {
         console.log(currentTasks);
     }
     return(
-        <form onSubmit={handleSubmit}>
-            <h1>Task list Page</h1>
-            <section>
-                <TaskList ListOfTasks={currentTasks} editTask={editTask} currentTasks={currentTasks} update={setCurrentTasks}/>
-            </section>
-            <button type="submit">Add task</button>
-            <br></br>
-            <button onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
-        </form>
+        <div>
+            <Navbar text='Tule'/>
+            <DropDownMenu/>
+            <div className="container">
+                <img className="width-100" src={banner} />
+            </div>
+            <form className='mt-5' onSubmit={handleSubmit}>
+                <h1>Tasks</h1>
+                <section >
+                    <TaskList ListOfTasks={currentTasks} editTask={editTask} currentTasks={currentTasks} update={setCurrentTasks}/>
+                </section>
+
+                <div className=''>
+                    {/*<button className='btn btn-primary mb-5 mt-5' type="submit">Add task</button>*/}
+                    <Button variant="danger" className='mb-5 mt-5' type="submit">Add task</Button>
+                    <br />
+                    <button className='btn btn-secondary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
+                </div>
+                
+            </form>
+        </div>
     )
 }
 

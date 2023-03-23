@@ -91,6 +91,9 @@
   right: 50%;
 }
 
+.right-1{
+  right: 1%;
+}
 .left-10{
   left: 10%;
 }
@@ -111,4 +114,28 @@
 }
 .left-50{
   left: 50%;
+}
+
+.no-list-style{
+  list-style: none;
+}
+
+.width-100{
+  width: 100%;
+}
+
+.mb-10{
+  margin-bottom: 10rem;
+}
+.mb-20{
+  margin-bottom: 20rem;
+}
+.mb-30{
+  margin-bottom: 30rem;
+}
+.mb-40{
+  margin-bottom: 40rem;
+}
+.mb-50{
+  margin-bottom: 50rem;
 }

@@ -1,4 +1,3 @@
-
 import Button from 'react-bootstrap/Button';
 import Navbar from './components/Navbar';
 import Form from 'react-bootstrap/Form';
@@ -12,7 +11,7 @@ const Init = (props) => {
             <h1>Tule</h1>*/}           
                <div className='container'>
                     
-                    <div className='position-absolute top-40 right-45'>
+                    <div className='position-absolute top-40 right-40'>
                         <div className='container mb-3'>
                             
                             <div className='position-relative left-40 mb-3'><Navbar/></div>
