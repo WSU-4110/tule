@@ -38,6 +38,9 @@ const Login = (props) => {
         }
         if (data['LoginSuccess'] === "True") {
             props.onChangeScreen('tasks');
+        } else if(data['BadPass'] == "True"){
+            setPasswordError('Invalid Credentials Retry')
+            setVerifiedPassword(true);
         } else if (username === '' && password === '') {
             setVerifiedUsername(true);
             setVerifiedPassword(true);
