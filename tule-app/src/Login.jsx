@@ -36,7 +36,7 @@ const Login = (props) => {
         catch(err){
             console.log(err);
         }
-        if (data['LoginSuccess'] == "True") {
+        if (data['LoginSuccess'] === "True") {
             props.onChangeScreen('tasks');
         } else if(data['BadPass'] == "True"){
             setPasswordError('Invalid Credentials Retry')
