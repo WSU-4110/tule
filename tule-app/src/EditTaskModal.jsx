@@ -84,9 +84,18 @@ export function EditTaskModal(props) {
             setShowAlert(true);
         }
         console.log(taskName);
+        console.log(taskDuration);
+        console.log(taskDurationHours + ":" + taskDurationMinutes);
         console.log(props.id);
-        props.editTask(props.id,taskName,taskStartTime,taskDuration,taskPriority);
+        const newTask = {
+            taskName: taskName,
+            startTime: taskStartTime,
+            duration: taskDuration,
+            priority: taskPriority
+        }
+        props.editTask(props.id,taskName,taskStartTime,taskDurationHours + ":" + taskDurationMinutes,taskPriority);
         props.resetModal(false);
+        props.update([...props.currentTasks])
     }
 
     function millisecondsToString(milliseconds) {
