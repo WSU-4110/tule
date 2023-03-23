@@ -33,6 +33,7 @@ const tasksCollection = db.collection('Tasks')
 
 //Route to verify login information. Currently only verifies. Need to add some work on the response with session cookies?
 app.post('/LoginVerify', (req,res) => {
+    frontRes = {}
     res.set('Access-Control-Allow-Origin', '*');
     console.log(req.body.Username);
     console.log(req.body.Password);
@@ -58,12 +59,17 @@ app.post('/LoginVerify', (req,res) => {
 //Route to create new user entry in the database
 app.post('/AccountCreate', (req,res) => {
     usersCollection.find({Username: req.body.Username}).toArray().then(info => {
+        frontRes = {};
+        res.set({'Access-Control-Allow-Origin':'*','Content-Type':'application/json'});
         if(info.length == 0){
             usersCollection.insertOne(req.body);
-            res.send("Account Created Successfully!")
+            console.log(req.body);
+            frontRes['AccountCreate'] = "True";
+            res.send(frontRes)
         }
         else {
-            res.send("Username already in use")
+
+            res.send(fronRes)
         }
     })
 });

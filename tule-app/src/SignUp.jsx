@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 
+// username and possword1 are variable filled by form
 
 export const SignUp = (props) => {
     const [username, setUsername] = useState('');
@@ -19,19 +20,38 @@ export const SignUp = (props) => {
 
     // Handles form submission.
     // Checks if all conditions are met.
-    const handleSubmit = (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
         if (!terms) { 
             setVerifiedTerms(true);
         } else {
             setVerifiedTerms(false);
         }
-        checkPassword();
-        checkPasswordsMatch();
-        checkForSpaces();
-        checkForSpecialCharacters();
-        checkForEmptyString();
-        
+        {/*set pass with fetch here and variables*/}
+        var data = {};
+        if (checkPassword()){
+            try{
+                const response = await fetch("http://localhost:3001/LoginVerify",{
+                    method:'POST',
+                    mode:'cors',
+                    headers:{
+                    'Access-Control-Allow-Origin':'http://localhost:3000',
+                    'Content-Type':'application/json' 
+                    },
+                    body:JSON.stringify({
+                        'Username':username,
+                        'Password':password1   
+                    })
+                })
+                data = await response.json();
+                console.log(data);
+            } catch(err){
+                console.log(err);
+            }
+            if (data['AccountCreate'] == "True"){
+                props.onChangeScreen('tasks'); 
+            }
+        }
     }
 
     // Checks if all conditions are met.
@@ -48,9 +68,9 @@ export const SignUp = (props) => {
             {
             console.log(username);
             console.log(password1);
-            props.onChangeScreen('tasks');
+            return True
         }
-
+        return False
     }
 
     // Checks if passwords match.
@@ -206,6 +226,7 @@ export const SignUp = (props) => {
                             placeholder="Password"
                             value={password1}
                             onChange={(p) => setPassword1(p.target.value)}/>
+                        {/* use setPasswordError to throw error here and setVerifiedPassword(True)*/}
                         <Form.Control.Feedback type="invalid">
                             {passwordError}
                         </Form.Control.Feedback>
