@@ -22,6 +22,8 @@ export const SignUp = (props) => {
     // Checks if all conditions are met.
     async function handleSubmit(e) {
         e.preventDefault();
+        console.log(username);
+        console.log(password1);
         if (!terms) { 
             setVerifiedTerms(true);
         } else {
@@ -31,16 +33,16 @@ export const SignUp = (props) => {
         var data = {};
         if (checkPassword()){
             try{
-                const response = await fetch("http://localhost:3001/LoginVerify",{
+                const response = await fetch("http://localhost:3001/AccountCreate",{
                     method:'POST',
                     mode:'cors',
                     headers:{
-                    'Access-Control-Allow-Origin':'http://localhost:3000',
-                    'Content-Type':'application/json' 
+                    "Access-Control-Allow-Origin":'http://localhost:3000',
+                    "Content-Type":'application/json' 
                     },
                     body:JSON.stringify({
-                        'Username':username,
-                        'Password':password1   
+                        "Username":username,
+                        "Password":password1   
                     })
                 })
                 data = await response.json();
@@ -48,9 +50,18 @@ export const SignUp = (props) => {
             } catch(err){
                 console.log(err);
             }
+            console.log(data)
             if (data['AccountCreate'] == "True"){
                 props.onChangeScreen('tasks'); 
             }
+            else {
+                setUsernameError('Username already in use. Select new username.');
+                setVerifiedUsername(true);
+            }
+        }
+        else {
+            setPassordError('Invalid Password. Please enter a new password.');
+            setVerifiedPassword(true);
         }
     }
 
@@ -60,7 +71,6 @@ export const SignUp = (props) => {
             && (checkForCapitalLetters())
             && (checkForNumbers())
             && (checkForSpaces())
-            && (checkForRepeatedCharacters())
             && (checkPasswordLength())
             && (checkPasswordsMatch())
             && (checkForEmptyString())
@@ -68,9 +78,9 @@ export const SignUp = (props) => {
             {
             console.log(username);
             console.log(password1);
-            return True
+            return true
         }
-        return False
+        return false
     }
 
     // Checks if passwords match.
@@ -171,18 +181,6 @@ export const SignUp = (props) => {
         }
         return true;
     }
-
-    // Checks if password contains repeated characters.
-    function checkForRepeatedCharacters() {
-        for (let i = 0; i < password1.length; i++) {
-            if (password1[i] === password1[i + 1]) {
-                setVerifiedPassword(true);
-                setPassordError('Password cannot contain repeated characters');
-                return false;
-            }
-        }
-        return true;
-    }
     
     return(
         <div>
@@ -226,7 +224,6 @@ export const SignUp = (props) => {
                             placeholder="Password"
                             value={password1}
                             onChange={(p) => setPassword1(p.target.value)}/>
-                        {/* use setPasswordError to throw error here and setVerifiedPassword(True)*/}
                         <Form.Control.Feedback type="invalid">
                             {passwordError}
                         </Form.Control.Feedback>

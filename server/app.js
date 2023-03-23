@@ -59,17 +59,19 @@ app.post('/LoginVerify', (req,res) => {
 //Route to create new user entry in the database
 app.post('/AccountCreate', (req,res) => {
     usersCollection.find({Username: req.body.Username}).toArray().then(info => {
+        console.log('test')
+        console.log(info);
         frontRes = {};
-        res.set({'Access-Control-Allow-Origin':'*','Content-Type':'application/json'});
+        res.set({"Access-Control-Allow-Origin":"*","Content-Type":'application/json'});
         if(info.length == 0){
             usersCollection.insertOne(req.body);
             console.log(req.body);
-            frontRes['AccountCreate'] = "True";
+            frontRes["AccountCreate"] = "True";
             res.send(frontRes)
         }
         else {
-
-            res.send(fronRes)
+            frontRes["AccountCreate"] = "False";
+            res.send(frontRes)
         }
     })
 });
