@@ -1,5 +1,9 @@
 import TaskList from './components/TaskList'
 import React, { useState } from "react"
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import Col from "react-bootstrap/Col";
+import Navbar from "./components/Navbar";
 
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
@@ -26,15 +30,31 @@ const Tasks = (props) => {
         console.log(currentTasks);
     }
     return(
-        <form onSubmit={handleSubmit}>
-            <h1>Task list Page</h1>
-            <section>
-                <TaskList ListOfTasks={currentTasks} editTask={editTask} currentTasks={currentTasks} update={setCurrentTasks}/>
-            </section>
-            <button type="submit">Add task</button>
-            <br></br>
-            <button onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
-        </form>
+        <div>
+            <Navbar text="Tule"/>
+            <Form onSubmit={handleSubmit}>
+                <h1>My Tasks</h1>
+                <Col>
+                    <TaskList ListOfTasks={currentTasks} editTask={editTask} currentTasks={currentTasks} update={setCurrentTasks}/>
+                    <Button type="submit">
+                        Add Task
+                    </Button>
+                    <Button onClick={() => props.onChangeScreen('schedule')}>
+                        Create Schedule
+                    </Button>
+                </Col>
+            </Form>
+        </div>
+
+        // <form onSubmit={handleSubmit}>
+        //     <h1>Task list Page</h1>
+        //     <section>
+        //         <TaskList ListOfTasks={currentTasks} editTask={editTask} currentTasks={currentTasks} update={setCurrentTasks}/>
+        //     </section>
+        //     <button type="submit">Add task</button>
+        //     <br></br>
+        //     <button onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
+        // </form>
     )
 }
 
