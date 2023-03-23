@@ -37,12 +37,13 @@ app.post('/LoginVerify', (req,res) => {
     console.log(req.body.Username);
     console.log(req.body.Password);
     usersCollection.find({Username: req.body.Username}).toArray().then(info => {
+        res.set({'Content-Type':'application/json'});
         if(info.length == 1){
-            if(info[0]['Password'] === req.body.Password){
-                res.send("Login Success")
+            if(info[0]['Password'] === req.body.Password){                
+                res.send({"LoginSuccess":"True"});
             }
             else{
-                res.send("Invalid Password")
+                res.send({"LoginSuccess":"False"});
             }
         }
         else if(info.length > 1){
