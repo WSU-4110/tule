@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 
+// username and possword1 are variable filled by form
 
 export const SignUp = (props) => {
     const [username, setUsername] = useState('');
@@ -19,19 +20,49 @@ export const SignUp = (props) => {
 
     // Handles form submission.
     // Checks if all conditions are met.
-    const handleSubmit = (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
+        console.log(username);
+        console.log(password1);
         if (!terms) { 
             setVerifiedTerms(true);
         } else {
             setVerifiedTerms(false);
         }
-        checkPassword();
-        checkPasswordsMatch();
-        checkForSpaces();
-        checkForSpecialCharacters();
-        checkForEmptyString();
-        
+        {/*set pass with fetch here and variables*/}
+        var data = {};
+        if (checkPassword()){
+            try{
+                const response = await fetch("http://localhost:3001/AccountCreate",{
+                    method:'POST',
+                    mode:'cors',
+                    headers:{
+                    "Access-Control-Allow-Origin":'http://localhost:3000',
+                    "Content-Type":'application/json' 
+                    },
+                    body:JSON.stringify({
+                        "Username":username,
+                        "Password":password1   
+                    })
+                })
+                data = await response.json();
+                console.log(data);
+            } catch(err){
+                console.log(err);
+            }
+            console.log(data)
+            if (data['AccountCreate'] == "True"){
+                props.onChangeScreen('tasks'); 
+            }
+            else {
+                setUsernameError('Username already in use. Select new username.');
+                setVerifiedUsername(true);
+            }
+        }
+        else {
+            setPassordError('Invalid Password. Please enter a new password.');
+            setVerifiedPassword(true);
+        }
     }
 
     // Checks if all conditions are met.
@@ -40,7 +71,6 @@ export const SignUp = (props) => {
             && (checkForCapitalLetters())
             && (checkForNumbers())
             && (checkForSpaces())
-            && (checkForRepeatedCharacters())
             && (checkPasswordLength())
             && (checkPasswordsMatch())
             && (checkForEmptyString())
@@ -48,9 +78,9 @@ export const SignUp = (props) => {
             {
             console.log(username);
             console.log(password1);
-            props.onChangeScreen('tasks');
+            return true
         }
-
+        return false
     }
 
     // Checks if passwords match.
@@ -148,18 +178,6 @@ export const SignUp = (props) => {
         }
         if (password1 === '' || username === '') {
             return false;
-        }
-        return true;
-    }
-
-    // Checks if password contains repeated characters.
-    function checkForRepeatedCharacters() {
-        for (let i = 0; i < password1.length; i++) {
-            if (password1[i] === password1[i + 1]) {
-                setVerifiedPassword(true);
-                setPassordError('Password cannot contain repeated characters');
-                return false;
-            }
         }
         return true;
     }
