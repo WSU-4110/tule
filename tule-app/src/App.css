@@ -81,9 +81,34 @@
 .right-40{
   right: 40%;
 }
+.right-45{
+  right: 45%;
+}
 .right-48{
   right: 48%;
 }
 .right-50{
   right: 50%;
+}
+
+.left-10{
+  left: 10%;
+}
+.left-20{
+  left: 20%;
+}
+.left-30{
+  left: 30%;
+}
+.left-40{
+  left: 40%;
+}
+.left-45{
+  left: 45%;
+}
+.left-48{
+  left: 48%;
+}
+.left-50{
+  left: 50%;
 }

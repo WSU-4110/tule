@@ -105,7 +105,7 @@ const Login = (props) => {
                     </Form.Group>
                     <br></br>
                     <Col>
-                        <Button variant="primary" onClick={() => props.onChangeScreen('signup')}>
+                        <Button variant="primary" onClick={() => props.onChangeScreen('')}>
                             Back
                         </Button>
                         <Button variant="primary" type="submit" onClick={handleSubmit}>
