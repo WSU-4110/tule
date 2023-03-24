@@ -1,6 +1,5 @@
 import { EditTaskModal } from "../EditTaskModal";
 import { useState } from "react";
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 function TaskComponent(props) {
@@ -10,24 +9,25 @@ function TaskComponent(props) {
         <>
             {showModal && <EditTaskModal key={props.id} id={props.id[4]}
             editTask={props.editTask} resetModal={setShowModal} currentTasks={props.currentTasks} update={props.update}/>}
-            <li>
-                <Form>
-                    <Form.Group controlId="tasksList">
-                        <Form.Label>{props.taskName}</Form.Label>
-                        <Form.Label>{"Duration: " +props.duration}</Form.Label>
-                        <Form.Label>{"Priority: "+props.priority}</Form.Label>
-                    </Form.Group>
-                    <Button type = 'reset' onClick={() => setShowModal(true)} >Edit Task</Button>
-                </Form>
-                {/* <div>
+            {/*<li className="mb-2 mt-5 no-list-style">
+                <div>
                     <h3>{props.taskName}</h3>
                     <ul key={0}>{"Duration: " +props.duration}</ul>
                     <ul key={1}>{"Priority: "+props.priority}</ul>
                 </div>
-                <div>
-                    <button type = 'reset' onClick={() => setShowModal(true)} >Edit Task</button>
-                </div> */}
-            </li>
+
+                <div className="mt-3">
+                    <Button className='' type = 'reset' onClick={() => setShowModal(true)} >Edit Task</Button>
+                </div>
+    /li>*/}
+                <div className="mb-2 mt-5">
+                    <h3>{props.taskName}</h3>
+                    <p key={0}>{"Duration: " +props.duration}</p>
+                    <p key={1}>{"Priority: "+props.priority}</p>
+                </div>
+                <div className="mt-3 position-relative right-1">
+                    <Button className='' type = 'reset' onClick={() => setShowModal(true)} >Edit Task</Button>
+                </div>
         </>
     )
 }

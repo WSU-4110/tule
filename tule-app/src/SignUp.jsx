@@ -261,8 +261,8 @@ export const SignUp = (props) => {
                     </Form.Group>
                     <br></br>
                     <Col>
-                        <Button variant="secondary" onClick={() => props.onChangeScreen('login')}>
-                            Login Instead
+                        <Button variant="primary" onClick={() => props.onChangeScreen('')}>
+                            Back
                         </Button>
                         <Button variant="primary" type="submit" onClick={handleSubmit}>
                             Sign Up
