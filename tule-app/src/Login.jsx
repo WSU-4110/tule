@@ -63,6 +63,8 @@ const Login = (props) => {
         }
         //fetch request
         //fetch()
+
+        
     }
     
     return(
@@ -103,8 +105,8 @@ const Login = (props) => {
                     </Form.Group>
                     <br></br>
                     <Col>
-                        <Button variant="secondary" onClick={() => props.onChangeScreen('signup')}>
-                            Sign Up Instead
+                        <Button variant="primary" onClick={() => props.onChangeScreen('')}>
+                            Back
                         </Button>
                         <Button variant="primary" type="submit" onClick={handleSubmit}>
                             Login

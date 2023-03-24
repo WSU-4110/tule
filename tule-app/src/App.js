@@ -5,6 +5,7 @@ import Login from "./Login";
 import {SignUp} from "./SignUp";
 import Tasks from "./Tasks";
 import { EditTaskModal } from './EditTaskModal';
+import Schedule from './Schedule';
 
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
         return <Tasks onChangeScreen={changeCurrentScreen}/>
       case 'editTask':
         return <EditTaskModal onChangeScreen={changeCurrentScreen}/>
+        case 'schedule':
+        return <Schedule onChangeScreen={changeCurrentScreen}/>
       default:
         return <Init onChangeScreen={changeCurrentScreen}/>
     }
