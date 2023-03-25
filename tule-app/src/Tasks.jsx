@@ -16,6 +16,26 @@ const Tasks = (props) => {
         currentTasks[index].duration = newDuration;
         currentTasks[index].priority = newPriority;
     }
+    //Should return all of the tasks from database associated with the user.
+    async function getAllTasks(){
+        try{
+            const repsonse = await fetch("http://localhost:3001/GetAllTasks",{
+                method:'POST',
+                mode:'cors',
+                headers:{
+                "Access-Control-Allow-Origin":'http://localhost:3000',
+                "Content-Type":'application/json' 
+                },
+                body:JSON.stringify({
+                    //Need to pass in the username or authentication stuff here 
+                })
+            })
+        }
+        catch(err){
+            console.log(err);
+        }
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("add a task")
