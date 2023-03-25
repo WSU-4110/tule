@@ -42,7 +42,11 @@ export const SignUp = (props) => {
                     },
                     body:JSON.stringify({
                         "Username":username,
-                        "Password":password1   
+                        "Password":password1,
+                        "RecurringTasks":[],
+                        "ActiveTasks":[],
+                        "Schedules":{},
+                        "TaskArchive":[]   
                     })
                 })
                 data = await response.json();
@@ -50,8 +54,8 @@ export const SignUp = (props) => {
             } catch(err){
                 console.log(err);
             }
-            console.log(data);
-            if (data['AccountCreate'] === "True"){
+            console.log(data)
+            if (data['AccountCreate'] == "True"){
                 props.onChangeScreen('tasks'); 
             }
             else {
@@ -60,7 +64,7 @@ export const SignUp = (props) => {
             }
         }
         else {
-            setPassordError('Invalid Username or Password');
+            setPassordError('Invalid Password. Please enter a new password.');
             setVerifiedPassword(true);
         }
     }
