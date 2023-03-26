@@ -92,6 +92,9 @@ export function AddTaskModal(props) {
             taskName: taskName,
             startTime: taskStartTime,
             duration: taskDurationHours + ":" + taskDurationMinutes,
+            break: taskBreakDurationHours + ":" + taskBreakDurationMinutes,
+            date: taskDate,
+            days: reccuringDays,
             priority: taskPriority
         }
         props.resetModal(false);
