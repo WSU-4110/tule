@@ -88,14 +88,15 @@ export function AddTaskModal(props) {
         console.log(taskDurationHours + ":" + taskDurationMinutes);
         console.log(props.id);
         const newTask = {
+            id: props.id,
             taskName: taskName,
             startTime: taskStartTime,
-            duration: taskDuration,
+            duration: taskDurationHours + ":" + taskDurationMinutes,
             priority: taskPriority
         }
-        props.editTask(props.id,taskName,taskStartTime,taskDurationHours + ":" + taskDurationMinutes,taskPriority);
         props.resetModal(false);
-        props.update([...props.currentTasks])
+        props.update([...props.currentTasks, newTask])
+        console.log(props.currentTasks);
     }
 
     function millisecondsToString(milliseconds) {

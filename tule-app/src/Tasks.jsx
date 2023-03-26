@@ -1,4 +1,5 @@
 import TaskList from './components/TaskList'
+import { AddTaskModal } from './AddTaskModal';
 import React, { useState } from "react"
 import Button from 'react-bootstrap/Button';
 import Navbar from './components/Navbar';
@@ -7,6 +8,7 @@ import DropDownMenu from './components/DropDownMenu';
 
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
+    const [showModal, setShowModal] = useState(false);
 
     const editTask = (index, newName, newStartTime, newDuration, newPriority) =>{
     
@@ -39,17 +41,11 @@ const Tasks = (props) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("add a task")
-        const newTask ={
-            id: 'task' + currentTasks.length,
-            taskName: 'Default taskname',
-            startTime: '',
-            duration: '00:00:00',
-            priority: 'None'
-        };
-        setCurrentTasks([...currentTasks,newTask]);
-        console.log(currentTasks);
+        setShowModal(true);
     }
     return(
+        <>
+        {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} editTask={editTask} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}
         <div>
             <Navbar text='Tule'/>
             <DropDownMenu/>
@@ -64,13 +60,15 @@ const Tasks = (props) => {
 
                 <div className=''>
                     {/*<button className='btn btn-primary mb-5 mt-5' type="submit">Add task</button>*/}
-                    <Button variant="danger" className='mb-5 mt-5' type="submit">Add task</Button>
+                    <Button variant="danger" className='mb-5 mt-5' type="submit" >Add task</Button>
+                    
                     <br />
                     <button className='btn btn-secondary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
                 </div>
                 
             </form>
         </div>
+        </>
     )
 }
 
