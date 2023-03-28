@@ -11,19 +11,19 @@ import Alert from 'react-bootstrap/Alert';
 import './EditTaskModal.css'
 
 export function EditTaskModal(props) {
-    const [taskName, setTaskName] = useState('');
-    const [taskDuration, setTaskDuration] = useState('');
-    const [taskDurationHours, setTaskDurationHours] = useState(0);
-    const [taskDurationMinutes, setTaskDurationMinutes] = useState(0);
+    const [taskName, setTaskName] = useState(props.currentTasks[props.id].taskName);
+    const [taskDuration, setTaskDuration] = useState(props.currentTasks[props.id].duration);
+    const [taskDurationHours, setTaskDurationHours] = useState(props.currentTasks[props.id].duration.split(':')[0]);
+    const [taskDurationMinutes, setTaskDurationMinutes] = useState(props.currentTasks[props.id].duration.split(':')[1]);
     const [taskBreakDurationBool, setTaskBreakDurationBool] = useState(false);
     const [taskBreakDuration, setTaskBreakDuration] = useState('');
     const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(0);
     const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(0);
     const [taskDateBool, setTaskDateBool] = useState(false);
-    const [taskDate, setTaskDate] = useState('');
+    const [taskDate, setTaskDate] = useState(props.currentTasks[props.id].date);
     const [taskStartTimeBool, setTaskStartTimeBool] = useState(false);
-    const [taskStartTime, setTaskStartTime] = useState('');
-    const [taskPriority, setTaskPriority] = useState('');
+    const [taskStartTime, setTaskStartTime] = useState(props.currentTasks[props.id].startTime);
+    const [taskPriority, setTaskPriority] = useState(props.currentTasks[props.id].priority);
     const [reccuringDays, setReccuringDays] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -90,7 +90,10 @@ export function EditTaskModal(props) {
         const newTask = {
             taskName: taskName,
             startTime: taskStartTime,
-            duration: taskDuration,
+            duration: taskDurationHours + ":" + taskDurationMinutes,
+            break: taskBreakDurationHours + ":" + taskBreakDurationMinutes,
+            date: taskDate,
+            days: reccuringDays,
             priority: taskPriority
         }
         props.editTask(props.id,taskName,taskStartTime,taskDurationHours + ":" + taskDurationMinutes,taskPriority);
@@ -144,6 +147,7 @@ export function EditTaskModal(props) {
                             <Form.Group as={Col} controlId="formBasicEmail">
                                 <Form.Label>Task Name</Form.Label>
                                 <Form.Control
+                                    defaultValue = {props.currentTasks[props.id].taskName}
                                     type="text"
                                     placeholder="Enter task name"
                                     onChange={(u) => setTaskName(u.target.value)}
@@ -158,8 +162,9 @@ export function EditTaskModal(props) {
                                 >
                                 <Form.Label>Start Time</Form.Label>
                                 <Form.Control
+                                    defaultValue = {props.currentTasks[props.id].startTime}
                                     type="time"
-                                    value={taskStartTime}
+                                    
                                     onChange={(u) => setTaskStartTime(u.target.value)}
                                     required
                                     />
@@ -175,10 +180,10 @@ export function EditTaskModal(props) {
                                 <Row className="taskDurationRow">
                                     <Col className='durationInput' >
                                         <Form.Control
+                                        defaultValue = {props.currentTasks[props.id].duration.split(':')[0]}
                                         type='number'
                                         min='0'
                                         max='24'
-                                        value={taskDurationHours}
                                         onChange={(u) => setTaskDurationHours(u.target.value)}
                                         />
                                         
@@ -193,10 +198,10 @@ export function EditTaskModal(props) {
 
                                     <Col className='durationInput' >
                                         <Form.Control
+                                            defaultValue = {props.currentTasks[props.id].duration.split(':')[1]}
                                             type='number'
                                             min='0'
                                             max='60'
-                                            value={taskDurationMinutes}
                                             onChange={(u) => setTaskDurationMinutes(u.target.value)}
                                             />
                                         <Form.Text muted>
@@ -252,7 +257,6 @@ export function EditTaskModal(props) {
                                     type='number'
                                     min='0'
                                     max='24'
-                                    value={taskBreakDurationHours}
                                     onChange={(u) => setTaskBreakDurationHours(u.target.value)}
                                     />
                                     <Form.Text muted>
@@ -269,7 +273,6 @@ export function EditTaskModal(props) {
                                         type='number'
                                         min='0'
                                         max='60'
-                                        value={taskBreakDurationMinutes}
                                         onChange={(u) => setTaskBreakDurationMinutes(u.target.value)}
                                         />
                                     <Form.Text muted>
