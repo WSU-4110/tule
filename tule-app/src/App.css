@@ -139,3 +139,17 @@
 .mb-50{
   margin-bottom: 50rem;
 }
+
+.grid{
+  height: 50%;
+  display: grid;
+  grid-template-columns:repeat(7, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.gridHeader{
+  height: 100%;
+  display: grid;
+  text-align: center;
+  align-items: center;
+}
