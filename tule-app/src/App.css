@@ -146,10 +146,20 @@
   grid-template-columns:repeat(7, 1fr);
   grid-template-rows: repeat(2, 1fr);
 }
+.grid2{
+  display: grid;
+  grid-template-columns:[first] 10% repeat(1, 1fr);
+  grid-template-rows: repeat(12, 20%);
+}
 
 .gridHeader{
   height: 100%;
   display: grid;
   text-align: center;
   align-items: center;
+}
+
+.gridSide{
+  height: 100%;
+  display: grid;
 }
