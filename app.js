@@ -84,9 +84,9 @@ app.post('/GetAllTasks', (req, res) => {
         res.send(tasksList);  
     
 
-
     })
 });
+
 
 // iterate over all of userscollection
 // find all locations of the tasks's ID and delete them 
@@ -94,13 +94,37 @@ app.post('/GetAllTasks', (req, res) => {
 // u can use deleteOne on task collection
 // 
 
-app.post('/DeleteTask', (req, res) => { // search userCollection.find, iterate all tasks and look for ID, remove ID. do the same to taskCollection
-    usersCollection.find({ Task: req.body.Task }).toArray().then(info => {
-        if (info.length == 0) {
-            tasksCollection.deleteOne(req.body);
-            res.send("Task deleted from task collection.");
-        }
+app.post('/DeleteTask', (req, res) = > { // search userCollection.find, iterate all tasks and look for ID, remove ID. do the same to taskCollection
+    usersCollection.find({ Username: req.body.Username }).toArray().then(info = > {
+        // POSTman
+        //splice?
+
+        for (int i = 0; i < info["ActiveTasks"].length; i++) {
+            if info[i]["ActiveTasks"] = (req.body.Id);
+            info["ActiveTasks"]
+       
+    }
+
+        info.["InactiveTasks"]
+
+        info.["RecurringTasks"]
+
+        info.["Schedules"]
+
+        ({ _id: new mongodb.ObjectID('_id') });
+
+
+
+        tasksCollection.deleteOne({ _id: new mongodb.ObjectID('_id') });
+
+        res.send("Task deleted from task collection.");
+
     })
+
+
+        tasksCollection.find
 });
+
+
 
 app.listen(3000, () => console.log('Example app is listening on port 3000.'));
