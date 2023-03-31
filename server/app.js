@@ -275,7 +275,7 @@ app.post('/DeleteTask', (req, res) => { // search userCollection.find, iterate a
             }
         }
 
-        tasksCollection.deleteOne(deletedTask);
+        tasksCollection.deleteOne(tasktobeDeleted);
 
         })
     });
