@@ -3,28 +3,28 @@ import React, {useState} from "react"
 import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
 function Schedule(props){
-const [activeHours, setActiveHours] = useState([1, 2, 3, 4, 5, 6 ,7, 8, 9, 10, 11, 12]);
+const [activeHours, setActiveHours] = useState([11, 12, 13, 14, 15, 16, 17, 18 ,19, 20, 21, 22, 23, 0]);
 const [columnIndex, setColumnIndex] = useState([0, 1]);
 const DAYS = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const exampleTasks = [{
     taskName: "example task",
     duration: 2,
     priority: 3,
-    startTime: 3,
+    startTime: 3+12,
     day: 'Mon'
 },
 {
     taskName: "test same date task",
     duration: 3,
     priority: 1,
-    startTime: 6,
+    startTime: 6+12,
     day: 'Mon'
 },
 {
     taskName: "example task 2",
     duration: 1,
     priority: 2,
-    startTime: 2,
+    startTime: 2+12,
     day: 'Fri'
 }]
 
@@ -44,6 +44,18 @@ const checkTime =(compareTime, time) => {
     return(
         compareTime === time
     )
+}
+const changeTime12hr =(time24) =>{
+    if(time24 == 0){
+        return(12+"am")
+    }
+    if(time24<12){
+        return(time24+"am")
+    }
+    if(time24 == 12){
+        return(12+"pm")
+    }
+    return(time24%12 + "pm")
 }
     return(
         <>
@@ -70,7 +82,7 @@ const checkTime =(compareTime, time) => {
             <h1>Day view</h1>
             <div className="grid3">
             <div className="grid2">
-                {activeHours.map((time) => <div className="gridSide" key={time}>{time}</div>)}
+                {activeHours.map((time) => <div className="gridSide" key={time}>{changeTime12hr(time)}</div>)}
             </div>
             <div className="grid2">
                 {activeHours.map((time) => <div className="gridSide" key={time}>

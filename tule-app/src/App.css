@@ -149,7 +149,7 @@
 .grid2{
   display: grid;
   grid-template-columns:repeat(1, 100%);
-  grid-template-rows: repeat(12, 100%);
+  grid-template-rows: repeat(24, 100%);
 }
 .grid3{
   display: grid;
