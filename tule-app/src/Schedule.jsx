@@ -10,24 +10,39 @@ const exampleTasks = [{
     taskName: "example task",
     duration: 2,
     priority: 3,
+    startTime: 3,
     day: 'Mon'
 },
 {
     taskName: "test same date task",
-    duration: 2,
-    priority: 3,
+    duration: 3,
+    priority: 1,
+    startTime: 6,
     day: 'Mon'
 },
 {
     taskName: "example task 2",
-    duration: 4,
+    duration: 1,
     priority: 2,
+    startTime: 2,
     day: 'Fri'
 }]
 
+const castDuration=(task) =>{
+    var arrayOfDuration =[];
+    for(var i = task.startTime; i< (task.duration + task.startTime); i++){
+        arrayOfDuration = [...arrayOfDuration, i];
+    }
+    return(arrayOfDuration)
+}
 const checkDate =(compareDate, date) => {
     return(
-        compareDate == date
+        compareDate === date
+    )
+}
+const checkTime =(compareTime, time) => {
+    return(
+        compareTime === time
     )
 }
     return(
@@ -53,14 +68,25 @@ const checkDate =(compareDate, date) => {
                 
             </div>
             <h1>Day view</h1>
+            <div className="grid3">
             <div className="grid2">
-                {columnIndex.map((index) => index%2==0&&<div>
-                    {activeHours.map((time) => <div className="gridSide" key={time}>{time}</div>)}
-                </div>||
-                <div>
-                    {exampleTasks.map((task) => <div className="gridSide" key={task.taskName}>{task.taskName}</div>)}
-                    </div>)
-                }
+                {activeHours.map((time) => <div className="gridSide" key={time}>{time}</div>)}
+            </div>
+            <div className="grid2">
+                {activeHours.map((time) => <div className="gridSide" key={time}>
+                    {exampleTasks.map((task) => (checkTime(task.startTime, time) && <div className={"task" + task.priority}>
+                    {castDuration(task).map((index) => (
+                        index===castDuration(task)[0] &&
+                        <div className={"task" +task.priority}>
+                            <Button className="taskButton" variant="outline-dark" vertical="true" key={task.taskName}>{task.taskName}</Button>
+                        </div>
+                        ||
+                        <div className={"task" +task.priority}>
+                        </div>))}
+                    </div>))}
+                </div>)}
+                
+            </div>
             </div>
         </>
     );
