@@ -78,27 +78,30 @@ app.post('/AccountCreate', (req,res) => {
 
 app.post('/GetAllTasks', (req, res) => {
     usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
+        tempInfo = info;
+        console.log('passed find operation', info);
+        console.log('active tasks', info[0].ActiveTasks);
+        console.log('inactive tasks', info[0].InactiveTasks);
+        console.log('recurring', info[0].RecurringTasks);
+        console.log('schedules: ', info[0].Schedules);
         // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
         var tasksList = {};
-        
-        tasksCollection.find({  $set: { "_id": info.ActiveTasks} }).toArray().then(info => {
+       
+        tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {
+            console.log('tasksCollection return active', info);
             tasksList["ActiveTasks"] = info;
+            tasksCollection.find({"_id": {$in: tempInfo[0].InactiveTasks} }).toArray().then(info=> {
+                console.log('tasksCollection return inactive', info);
+                tasksList["InactiveTasks"] = info;
+                tasksCollection.find({"_id": {$in: tempInfo[0].RecurringTasks} }).toArray().then(info=> {
+                    console.log('tasksCollection return recurring', info);
+                    tasksList["RecurringTasks"] = info; 
+                    tasksList["Schedules"] = tempInfo[0].Schedules;
+                    console.log('Final List:', tasksList)
+                    res.send(tasksList);  
+                })           
+            })
         })
-
-
-        tasksCollection.find({ $set:{"_id":info.InactiveTasks} }).toArray().then(info=> {
-            tasksList["InactiveTasks"] = info;
-        })
-
-        tasksCollection.find({ $set: {"_id": info.recurringTasks} }).toArray().then(info=> {
-            tasksList["RecurringTasks"] = info; 
-        })
-        
-        tasksList["Schedules"] = info.Schedules;
-
-        res.send(tasksList);  
-    
-
     })
 });
 

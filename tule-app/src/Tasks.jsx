@@ -1,6 +1,6 @@
 import TaskList from './components/TaskList'
 import { AddTaskModal } from './AddTaskModal';
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import Button from 'react-bootstrap/Button';
 import Navbar from './components/Navbar';
 import banner from "./pics/sky.png"
@@ -25,7 +25,7 @@ const Tasks = (props) => {
     //Should return all of the tasks from database associated with the user.
     async function getAllTasks(){
         try{
-            const repsonse = await fetch("http://localhost:3001/GetAllTasks",{
+            const response = await fetch("http://localhost:3001/GetAllTasks",{
                 method:'POST',
                 mode:'cors',
                 headers:{
@@ -33,9 +33,11 @@ const Tasks = (props) => {
                 "Content-Type":'application/json' 
                 },
                 body:JSON.stringify({
-                    //Need to pass in the username or authentication stuff here 
+                    "Username":sessionStorage["Username"],
+                    "Password":sessionStorage["Password"]
                 })
             })
+            return await response.json();
         }
         catch(err){
             console.log(err);
@@ -43,10 +45,17 @@ const Tasks = (props) => {
     }
 
     const handleSubmit = (e) => {
+        console.log('Session Username: ', sessionStorage['Username']);
+        console.log('Session Password: ', sessionStorage['Password']);
         e.preventDefault();
         console.log("add a task")
         setShowModal(true);
     }
+
+    useEffect(() => {
+        console.log(getAllTasks());
+    })
+
     return(
         <>
         {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} editTask={editTask} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}
