@@ -216,4 +216,49 @@ app.post('SaveTask', (req,res) => {
     }
 })
 
+
+app.post('/DeleteTask', (req, res) => { // search userCollection.find, iterate all tasks and look for ID, remove ID. do the same to taskCollection
+    usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
+
+
+        var tasktobeDeleted = req.body.Task;
+
+        // use POSTman
+
+
+
+        for (var i = 0; i < user[InactiveTasks].length; i++) {
+            if (user['InactiveTasks'][i] === tasktobeDeleted) { // how to compare only the "_id" info from the Task passed in the req?
+                user['InactiveTasks'].splice(i, 1);
+            }
+        }
+
+
+        for (var i = 0; i < user[ActiveTasks].length; i++) {
+            if (user['ActiveTasks'][i] === tasktobeDeleted) {
+                user['ActiveTasks'].splice(i, 1);
+            }
+        }
+
+
+        for (var i = 0; i < user[RecurringTasks].length; i++) {
+            if (user['RecurringTasks'][i] === tasktobeDeleted) {
+                user['RecurringTasks'].splice(i, 1);
+            }
+        }
+
+
+        for (var i = 0; i < user[Schedules].length; i++) {
+            if (user['Schedules'][i] === tasktobeDeleted) {
+                user['Schedules'].splice(i, 1);
+            }
+        }
+
+        tasksCollection.deleteOne(deletedTask);
+
+        })
+    });
+
+
+
 app.listen(3001, () => console.log('Example app is listening on port 3001.'));
