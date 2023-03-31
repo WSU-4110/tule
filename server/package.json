@@ -1,0 +1,27 @@
+{
+  "name": "tule",
+  "version": "1.0.0",
+  "description": "Dependencies for backend and maybe whole project?",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WSU-4110/tule.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WSU-4110/tule/issues"
+  },
+  "homepage": "https://github.com/WSU-4110/tule#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongo": "^0.1.0",
+    "mongodb": "^5.0.1"
+  }
+}
