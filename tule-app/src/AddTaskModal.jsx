@@ -10,6 +10,28 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import './EditTaskModal.css'
 
+async function saveTask(task){
+    try{
+        const response = await fetch('http://localhost:3001/SaveTask',{
+            method:'POST',
+            mode:'cors',
+            headers:{
+                'Access-Control-Allow-Origin':'http://localhost:3000',
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                "Username":sessionStorage['Username'],
+                "Password":sessionStorage['Password'],
+                "Task":task
+            })
+        })
+        return await response;
+    }
+    catch(err){
+        console.log(err);
+        return false;
+    }
+}
 export function AddTaskModal(props) {
     const [taskName, setTaskName] = useState('');
     const [taskDuration, setTaskDuration] = useState('');
@@ -84,22 +106,26 @@ export function AddTaskModal(props) {
             setShowAlert(true);
         }
         console.log(taskName);
-        console.log(taskDuration);
+        
+        console.log(taskDuration);        
         console.log(taskDurationHours + ":" + taskDurationMinutes);
         console.log(props.id);
         const newTask = {
-            id: props.id,
-            taskName: taskName,
-            startTime: taskStartTime,
-            duration: taskDurationHours + ":" + taskDurationMinutes,
-            break: taskBreakDurationHours + ":" + taskBreakDurationMinutes,
-            date: taskDate,
-            days: reccuringDays,
-            priority: taskPriority
+            Id: "",
+            TaskName: taskName,
+            StartTime: taskStartTime,
+            Duration: taskDurationHours + ":" + taskDurationMinutes,
+            Break: taskBreakDurationHours + ":" + taskBreakDurationMinutes,
+            Date: taskDate,
+            Days: reccuringDays,
+            Priority: taskPriority,
+            Recurrence: ""
         }
+        console.log(newTask);
+        saveTask(newTask);
         props.resetModal(false);
         props.update([...props.currentTasks, newTask])
-        console.log(props.currentTasks);
+        //console.log(props.currentTasks);
     }
 
     function millisecondsToString(milliseconds) {
