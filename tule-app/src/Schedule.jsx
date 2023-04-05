@@ -2,8 +2,10 @@ import Banner from "./components/Banner";
 import React, {useState} from "react"
 import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
+import ActiveHoursModal from './ActiveHoursModal';
 function Schedule(props){
-const [activeHours, setActiveHours] = useState([11, 12, 13, 14, 15, 16, 17, 18 ,19, 20, 21, 22, 23, 0]);
+const [showAHModal, setShowAHModal] = useState(false);
+const [activeHours, setActiveHours] = useState(Array.from({length: (24-9)}, (_,i) => 9+i));
 const [columnIndex, setColumnIndex] = useState([0, 1]);
 const [timeScale, setTimeScale] = useState(60);
 const DAYS = ['Sat', 'Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri'];
@@ -70,8 +72,12 @@ const prevDay = () =>{
     tempDate.setUTCDate(displayedDay.getUTCDay() + 1)
     setDisplayedDay(tempDate);
 }
+const resetModal = () =>{
+    setShowAHModal(false) 
+}
     return(
         <>
+            {showAHModal && <ActiveHoursModal resetModal={resetModal} setActiveHours={setActiveHours} activeHours ={activeHours}/>}
             <div>
             <Navbar text='Tule'/>
             
@@ -80,6 +86,9 @@ const prevDay = () =>{
             </button>
             <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
                logout
+            </button>
+            <button className="btn btn-primary mt-5" onClick={() => setShowAHModal(true)}>
+               change active hours
             </button>
             </div>
             <div className="dayDisplay">
