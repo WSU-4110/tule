@@ -5,20 +5,23 @@ import Button from 'react-bootstrap/Button';
 function Schedule(props){
 const [activeHours, setActiveHours] = useState([11, 12, 13, 14, 15, 16, 17, 18 ,19, 20, 21, 22, 23, 0]);
 const [columnIndex, setColumnIndex] = useState([0, 1]);
-const DAYS = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+const [timeScale, setTimeScale] = useState(60);
+const DAYS = ['Sat', 'Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri'];
+const [today, setToday] = useState(new Date());
+const [displayedDay, setDisplayedDay] = useState(today);
 const exampleTasks = [{
     taskName: "example task",
     duration: 2,
     priority: 3,
     startTime: 3+12,
-    day: 'Mon'
+    day: 'Tues'
 },
 {
     taskName: "test same date task",
     duration: 3,
     priority: 1,
     startTime: 6+12,
-    day: 'Mon'
+    day: 'Tues'
 },
 {
     taskName: "example task 2",
@@ -57,6 +60,16 @@ const changeTime12hr =(time24) =>{
     }
     return(time24%12 + "pm")
 }
+const nextDay = () =>{
+    const tempDate = new Date();
+    tempDate.setUTCDate(displayedDay.getUTCDay()+3)
+    setDisplayedDay(tempDate);
+}
+const prevDay = () =>{
+    const tempDate = new Date();
+    tempDate.setUTCDate(displayedDay.getUTCDay() + 1)
+    setDisplayedDay(tempDate);
+}
     return(
         <>
             <div>
@@ -69,24 +82,19 @@ const changeTime12hr =(time24) =>{
                logout
             </button>
             </div>
-            <h1>Week view</h1>
-            <div className="grid">
-                {DAYS.map((day) => <div className="gridHeader" key={day}>{day}</div>)}
-                {(DAYS).map((day) => (
-                    <div>
-                        {exampleTasks.map((task) => (checkDate(task.day, day) && <Button key={task.taskName}>{task.taskName}</Button>))}
-                    </div>
-                ))}
-                
+            <div className="dayDisplay">
+            <Button onClick={() =>prevDay()}>{String.fromCharCode(8592)}</Button>
+            {(!checkDate(displayedDay.getUTCDay(), today.getUTCDay()) && <h1>{DAYS[displayedDay.getUTCDay()]}</h1>) 
+            || (checkDate(displayedDay.getUTCDay(), today.getUTCDay()) && <h1>Today</h1>)}
+            <Button onClick={() =>nextDay()}>{String.fromCharCode(8594)}</Button>
             </div>
-            <h1>Day view</h1>
             <div className="grid3">
             <div className="grid2">
                 {activeHours.map((time) => <div className="gridSide" key={time}>{changeTime12hr(time)}</div>)}
             </div>
             <div className="grid2">
                 {activeHours.map((time) => <div className="gridSide" key={time}>
-                    {exampleTasks.map((task) => (checkTime(task.startTime, time) && <div className={"task" + task.priority}>
+                    {exampleTasks.map((task) => (checkDate(task.day, DAYS[displayedDay.getUTCDay()]) && checkTime(task.startTime, time) && <div className={"task" + task.priority}>
                     {castDuration(task).map((index) => (
                         index===castDuration(task)[0] &&
                         <div className={"task" +task.priority}>

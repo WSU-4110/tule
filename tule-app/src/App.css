@@ -155,6 +155,8 @@
   display: grid;
   grid-template-columns:[first] 10% repeat(1, 30%);
   grid-template-rows: repeat(1, 20%);
+  align-tracks: center;
+  justify-content: center;
 }
 
 .gridHeader{
@@ -188,4 +190,9 @@
 }
 .taskButton{
   height:fit-content;
+}
+.dayDisplay{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
