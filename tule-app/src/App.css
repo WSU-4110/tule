@@ -149,7 +149,7 @@
 .grid2{
   display: grid;
   grid-template-columns:repeat(1, 100%);
-  grid-template-rows: repeat(24, 100%);
+  grid-template-rows: repeat(96, 70%);
 }
 .grid3{
   display: grid;
@@ -171,6 +171,17 @@
   display: grid;
   align-items: auto;
   outline: auto;
+}
+.gridData{
+  height: 100%;
+  align-items: auto;
+  transform:initial;
+  outline:auto;
+}
+.gridDataHeader{
+  height: 25%;
+  align-items: auto;
+  transform:initial;
 }
 
 .task3{

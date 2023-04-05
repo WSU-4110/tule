@@ -12,7 +12,7 @@ export function ActiveHoursModal(props) {
     const [end, setEnd] = useState(props.activeHours[props.activeHours.length - 1]);
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(end-start >1){
+        if(end-start >5){
             props.setActiveHours(Array.from({length:(end-start+ 1)}, (_,i) => start+i))
             props.resetModal();
         }
@@ -66,7 +66,7 @@ export function ActiveHoursModal(props) {
                                 <Dropdown.Item onClick={() => setStart(15)}>3pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setStart(16)}>4pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setStart(17)}>5pm</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setStart(18)}>6pam</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setStart(18)}>6pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setStart(19)}>7pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setStart(20)}>8pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setStart(21)}>9pm</Dropdown.Item>
@@ -95,7 +95,7 @@ export function ActiveHoursModal(props) {
                                 <Dropdown.Item onClick={() => setEnd(15)}>3pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setEnd(16)}>4pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setEnd(17)}>5pm</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setEnd(18)}>6pam</Dropdown.Item>
+                                <Dropdown.Item onClick={() => setEnd(18)}>6pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setEnd(19)}>7pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setEnd(20)}>8pm</Dropdown.Item>
                                 <Dropdown.Item onClick={() => setEnd(21)}>9pm</Dropdown.Item>
