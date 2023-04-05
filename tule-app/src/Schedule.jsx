@@ -3,9 +3,11 @@ import React, {useState} from "react"
 import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
 import ActiveHoursModal from './ActiveHoursModal';
+import { ScheduleModal } from "./ScheduleModal";
 
 function Schedule(props){
 const [showAHModal, setShowAHModal] = useState(false);
+const {showSCModal, setShowSCModal} = useState(false);
 const [activeHours, setActiveHours] = useState(Array.from({length: (24-9)}, (_,i) => 9+i));
 const DAYS = ['Sat', 'Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri'];
 const [today] = useState(new Date());
@@ -90,6 +92,7 @@ const resetModal = () =>{
 }
     return(
         <>
+            <ScheduleModal />
             {showAHModal && <ActiveHoursModal resetModal={resetModal} setActiveHours={setActiveHours} activeHours ={activeHours}/>}
             <div>
             <Navbar text='Tule'/>
