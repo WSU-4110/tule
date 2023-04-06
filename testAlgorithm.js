@@ -3,7 +3,7 @@
 function algorithm(inputTasks, schedStart = "08:00", schedEnd = "24:00") {
 
     // Creates an array to store and organize tasks in.
-    var dailySchedule = new Array();
+    const dailySchedule = new Array();
 
     // Creates arrays to store tasks with a start time.
     const concrete = new Array();
