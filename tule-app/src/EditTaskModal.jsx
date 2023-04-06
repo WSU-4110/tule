@@ -209,44 +209,6 @@ export function EditTaskModal(props) {
                                         </Form.Text>
                                     </Col>
                                 </Row>
-
-                                {/* <Stack direction='horizontal' gap={3}>
-                                    <Form.Group controlId='formBasicCheckbox'>
-                                        <Form.Control type='number' min='0' max='24' value={taskDuration} onChange={(u) => setTaskDurationHours(u.target.value)} required />
-                                        <Form.Text muted>
-                                            Hours
-                                        </Form.Text>
-                                    </Form.Group>
-
-                                    <Form.Control plaintext readOnly defaultValue=":" />
-                                    
-                                    <Form.Group controlId='formBasicCheckbox'>
-                                        <Form.Control type='number' min='0' max='60' value={taskDuration} onChange={(u) => setTaskDurationMinutes(u.target.value)} required />
-                                        <Form.Text muted>
-                                            Minutes
-                                        </Form.Text>
-                                    </Form.Group>
-                                </Stack> */}
-
-                                {/* <Row className="duration">
-                                    <Col sm={5} >
-                                    <Form.Control type='number' min='0' max='24' value={taskDuration} onChange={(u) => setTaskDurationHours(u.target.value)} required />
-                                    <Form.Text muted>
-                                        Hours
-                                    </Form.Text>
-                                    </Col>
-
-                                    <Col xs={1} sm={1} lg={1} >
-                                    <Form.Label>:</Form.Label>
-                                    </Col>
-
-                                    <Col sm={5} >
-                                    <Form.Control type='number' min='0' max='60' value={taskDuration} onChange={(u) => setTaskDurationMinutes(u.target.value)} required />
-                                    <Form.Text muted>
-                                        Minutes
-                                    </Form.Text>
-                                    </Col>
-                                </Row> */}
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formBasicPassword">
@@ -323,20 +285,6 @@ export function EditTaskModal(props) {
                         </Form.Group>
 
                     </Form>
-
-                    {/* <label style={{marginRight: '20px'}} htmlFor="taskName">Task Name</label>
-                    <input value={taskName} onChange={(u) => setTaskName(u.target.value)} type="username"></input>
-                    <br></br>
-                    <label style={{marginRight: '20px'}} htmlFor="password">Password</label>
-                    <input value={taskStartTime} onChange={(p) => setTaskStartTime(p.target.value)} type="password" placeholder="********"></input>
-                    <br></br>
-                    <label style={{marginRight: '20px'}} htmlFor="password">Confirm password</label>
-                    <input value={taskDuration} onChange={(p) => setTaskDuration(p.target.value)} type="password" placeholder="********"></input>
-                    <br></br>
-                    <input type={"checkbox"} value={terms} onChange={(t) => setTerms(!terms)}></input>
-                    <label style={{marginRight: '20px'}} htmlFor="terms">I agree to the terms and conditions</label>
-                    <br></br> */}
-
 
 
                 </Modal.Body>

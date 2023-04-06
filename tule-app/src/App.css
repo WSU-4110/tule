@@ -139,3 +139,71 @@
 .mb-50{
   margin-bottom: 50rem;
 }
+
+.grid{
+  height: 50%;
+  display: grid;
+  grid-template-columns:repeat(7, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+.grid2{
+  display: grid;
+  grid-template-columns:repeat(1, 100%);
+  grid-template-rows: repeat(96, 70%);
+}
+.grid3{
+  display: grid;
+  grid-template-columns:[first] 10% repeat(1, 30%);
+  grid-template-rows: repeat(1, 20%);
+  align-tracks: center;
+  justify-content: center;
+}
+
+.gridHeader{
+  height: 100%;
+  display: grid;
+  text-align: center;
+  align-items: center;
+}
+
+.gridSide{
+  height: 100%;
+  display: grid;
+  align-items: auto;
+  outline: auto;
+}
+.gridData{
+  height: 100%;
+  align-items: auto;
+  transform:initial;
+  outline:auto;
+}
+.gridDataHeader{
+  height: 25%;
+  align-items: auto;
+  transform:initial;
+}
+
+.task3{
+  height: 100%;
+  background-color:red;
+  align-items: auto;
+}
+.task2{
+  height: 100%;
+  background-color:orange;
+  align-items: auto;
+}
+.task1{
+  height: 100%;
+  background-color:yellow;
+  align-items: auto;
+}
+.taskButton{
+  height:fit-content;
+}
+.dayDisplay{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
