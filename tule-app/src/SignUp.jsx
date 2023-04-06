@@ -45,6 +45,7 @@ export const SignUp = (props) => {
                         "Password":password1,
                         "RecurringTasks":[],
                         "ActiveTasks":[],
+                        "InactiveTasks":[],
                         "Schedules":{},
                         "TaskArchive":[]   
                     })
