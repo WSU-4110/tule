@@ -35,8 +35,8 @@ const tasksCollection = db.collection('Tasks')
 app.post('/LoginVerify', (req,res) => {
     frontRes = {}
     res.set('Access-Control-Allow-Origin', '*');
-    console.log(req.body.Username);
-    console.log(req.body.Password);
+    //console.log(req.body.Username);
+    //console.log(req.body.Password);
     usersCollection.find({Username: req.body.Username}).toArray().then(info => {
         res.set({'Content-Type':'application/json'});
         if(info.length == 1){
@@ -58,6 +58,7 @@ app.post('/LoginVerify', (req,res) => {
 
 //Route to create new user entry in the database
 app.post('/AccountCreate', (req,res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     usersCollection.find({Username: req.body.Username}).toArray().then(info => {
         console.log('test')
         console.log(info);
@@ -79,25 +80,25 @@ app.post('/AccountCreate', (req,res) => {
 app.post('/GetAllTasks', (req, res) => {
     usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
         tempInfo = info;
-        console.log('passed find operation', info);
-        console.log('active tasks', info[0].ActiveTasks);
-        console.log('inactive tasks', info[0].InactiveTasks);
-        console.log('recurring', info[0].RecurringTasks);
-        console.log('schedules: ', info[0].Schedules);
+        //console.log('passed find operation', info);
+        //console.log('active tasks', info[0].ActiveTasks);
+        //console.log('inactive tasks', info[0].InactiveTasks);
+        //console.log('recurring', info[0].RecurringTasks);
+        //console.log('schedules: ', info[0].Schedules);
         // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
         var tasksList = {};
        
         tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {
-            console.log('tasksCollection return active', info);
+            //console.log('tasksCollection return active', info);
             tasksList["ActiveTasks"] = info;
             tasksCollection.find({"_id": {$in: tempInfo[0].InactiveTasks} }).toArray().then(info=> {
-                console.log('tasksCollection return inactive', info);
+                //console.log('tasksCollection return inactive', info);
                 tasksList["InactiveTasks"] = info;
                 tasksCollection.find({"_id": {$in: tempInfo[0].RecurringTasks} }).toArray().then(info=> {
-                    console.log('tasksCollection return recurring', info);
+                    //console.log('tasksCollection return recurring', info);
                     tasksList["RecurringTasks"] = info; 
                     tasksList["Schedules"] = tempInfo[0].Schedules;
-                    console.log('Final List:', tasksList)
+                    //console.log('Final List:', tasksList)
                     res.send(tasksList);  
                 })           
             })
@@ -174,11 +175,13 @@ app.post('/AltTask', (req,res) => {
 //If new task then pass "" as "Id" field
 //body.Username, and body.Password fields need to be provided as well. 
 //Probably need to generate a new schedule after this.
-app.post('SaveTask', (req,res) => {
+app.post('/SaveTask', (req,res) => {
+    res.set('Access-Control-Allow-Origin', '*');
     var task = req.body.Task;
+    console.log('savetask ', task);
     if (task.Id != ""){
         var tempId = new ObjectId(task.Id)
-        tasksCollection.replaceOne({"_id":tempId},task).toArray().then(info => {
+        tasksCollection.replaceOne({"_id":tempId},task).then(info => {
             usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
                 let recKeyList = Object.keys(task['Recurrence']);
                 let recFlag = false;
@@ -212,10 +215,20 @@ app.post('SaveTask', (req,res) => {
         res.json(task);
     }
     else {
+        delete task["Id"];
         tasksCollection.insertOne(task).then(info => {
-            task.Id = String(info.Id);
+            task["Id"] = String(info.insertedId);
+            console.log('debug info', info)
+            console.log('debug', task["_id"]);
+            usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
+                console.log('debug user', user);
+                user[0]['InactiveTasks'].push(task["_id"]);
+                console.log('user debug 2', user);
+                usersCollection.replaceOne({"_id":user[0]["_id"]},user[0]);
+            })
             res.json(task);
         })
+        
     }
 })
 
