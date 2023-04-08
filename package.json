@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@testing-library/react": "^14.0.0",
     "bootstrap": "^5.2.3",
     "react-bootstrap": "^2.7.2",
     "react-bootstrap-validation": "^0.1.11",
