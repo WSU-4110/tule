@@ -94,24 +94,24 @@ const resetModal = () =>{
             <div>
             <Navbar text='Tule'/>
             
-            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('tasks')}>
+            <button data-testid="backBtn" className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('tasks')}>
                 Back
             </button>
-            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
+            <button data-testid="logBtn" className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
                logout
             </button>
-            <button className="btn btn-primary mt-5" onClick={() => setShowAHModal(true)}>
+            <button data-testid="activeBtn" className="btn btn-primary mt-5" onClick={() => setShowAHModal(true)}>
                change active hours
             </button>
             </div>
-            <div className="dayDisplay">
+            <div data-testid="dayDisplay" className="dayDisplay">
             <Button onClick={() =>prevDay()}>{String.fromCharCode(8592)}</Button>
             {(!checkDate(displayedDay.getUTCDay(), today.getUTCDay()) && <h1>{DAYS[displayedDay.getUTCDay()]}</h1>) 
             || (checkDate(displayedDay.getUTCDay(), today.getUTCDay()) && <h1>Today</h1>)}
             <Button onClick={() =>nextDay()}>{String.fromCharCode(8594)}</Button>
             </div>
             <div className="grid3">
-            <div className="grid2">
+            <div data-testid="timeScale" className="grid2">
                 {activeHours.map((time) =>
                     <div className="gridSide" key={time}>
                         {[0, 15, 30, 45].map((minute) => <div  className="gridSide" key={"h"+time+minute}>
@@ -119,7 +119,7 @@ const resetModal = () =>{
                         </div>)}
                     </div>)}
             </div>
-            <div className="grid2">
+            <div data-testid="taskEntries" className="grid2">
                 {activeHours.map((time) => <div className="gridData" key={"d"+time}>
                     {[0, 15, 30, 45].map((minute) => <div  className="gridDataHeader" key={"d"+time+minute}>
                         {exampleTasks.map((task) => (checkDate(task.day, DAYS[displayedDay.getUTCDay()]) && checkTime(changeToMinutes(task.startTime, 0), changeToMinutes(time, minute)) && <div className={"task" + task.priority} key={task.taskName + task.priority}>
