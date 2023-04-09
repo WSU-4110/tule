@@ -1,109 +1,32 @@
 const express = require('express');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const cors = require('cors');
+const TaskHandler = require('./TaskHandler');
+const DbHandler = require('./DbHandler')
 
 const app = express();
-
+const taskHandler = new TaskHandler();
+const dbHandler = new DbHandler();
 //!!!All requests made to this server must have body in json format!!!
 app.use(express.json());
 app.use(cors());
-//Calling the mongodb connection string from .env so it isn't exposed on github
-const uri = process.env.MONGO_CONNECTION;
-//console.log('uri: ',uri);
-//Setting some standard suggested options
-const mongoOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverApi: ServerApiVersion.v1
-};
-
-//Mongodb doc https://www.mongodb.com/docs/drivers/node/current/
-//Fundamentals section will be your friend
-
-//create mongodb client with options from above
-let client = new MongoClient(uri, mongoOptions);
-//establish connection with database
-client.connect();
-//select database
-const db = client.db('Tule');
-//create connection to each collection for use in routes
-const usersCollection = db.collection('Users')
-const tasksCollection = db.collection('Tasks')
+app.use((req, res, next) =>{
+    res.set({"Access-Control-Allow-Origin":"*","Content-Type":'application/json'});
+    next();
+})
 
 //Route to verify login information. Currently only verifies. Need to add some work on the response with session cookies?
-app.post('/LoginVerify', (req,res) => {
-    frontRes = {}
-    res.set('Access-Control-Allow-Origin', '*');
-    //console.log(req.body.Username);
-    //console.log(req.body.Password);
-    usersCollection.find({Username: req.body.Username}).toArray().then(info => {
-        res.set({'Content-Type':'application/json'});
-        if(info.length == 1){
-            if(info[0]['Password'] === req.body.Password){                
-                res.send({"LoginSuccess":"True"});
-            }
-            else{
-                res.send({"LoginSuccess":"False"});
-            }
-        }
-        else if(info.length > 1){
-            res.send("Warning!! Duplicate usernames exist")
-        }
-        else{
-            res.send("Username not found")
-        }
-    })
+app.post('/LoginVerify', async (req,res) => {
+    res.send(await dbHandler.loginVerify(req));
 });
 
 //Route to create new user entry in the database
-app.post('/AccountCreate', (req,res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    usersCollection.find({Username: req.body.Username}).toArray().then(info => {
-        console.log('test')
-        console.log(info);
-        frontRes = {};
-        res.set({"Access-Control-Allow-Origin":"*","Content-Type":'application/json'});
-        if(info.length == 0){
-            usersCollection.insertOne(req.body);
-            console.log(req.body);
-            frontRes["AccountCreate"] = "True";
-            res.send(frontRes)
-        }
-        else {
-            frontRes["AccountCreate"] = "False";
-            res.send(frontRes)
-        }
-    })
+app.post('/AccountCreate', async (req,res) => {
+    res.send(await dbHandler.accountCreate(req));
 });
 
-app.post('/GetAllTasks', (req, res) => {
-    usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
-        tempInfo = info;
-        //console.log('passed find operation', info);
-        //console.log('active tasks', info[0].ActiveTasks);
-        //console.log('inactive tasks', info[0].InactiveTasks);
-        //console.log('recurring', info[0].RecurringTasks);
-        //console.log('schedules: ', info[0].Schedules);
-        // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
-        var tasksList = {};
-       
-        tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {
-            console.log('tasksCollection return active', info);
-            tasksList["ActiveTasks"] = info;
-            tasksCollection.find({"_id": {$in: tempInfo[0].InactiveTasks} }).toArray().then(info=> {
-                console.log('tasksCollection return inactive', info);
-                tasksList["InactiveTasks"] = info;
-                tasksCollection.find({"_id": {$in: tempInfo[0].RecurringTasks} }).toArray().then(info=> {
-                    console.log('tasksCollection return recurring', info);
-                    tasksList["RecurringTasks"] = info; 
-                    tasksList["Schedules"] = tempInfo[0].Schedules;
-                    console.log('Final List:', tasksList)
-                    res.send(tasksList);  
-                })           
-            })
-        })
-    })
+app.post('/GetAllTasks', async (req, res) => {
+    res.send(await dbHandler.getAllTasksForUser(req));
 });
 
 //This route needs to be sent the new schedule in body.Schedule according to the format:
@@ -232,6 +155,11 @@ app.post('/SaveTask', (req,res) => {
     }
 })
 
+app.post('/CreateSchedule', async (req,res) =>{
+    const tasks = dbHandler.getUserTasksVerbose(req);
+    const newSchedule = taskHandler.generateSchedule(await tasks, req)
+})
+
 
 app.post('/DeleteTask', (req, res) => { // search userCollection.find, iterate all tasks and look for ID, remove ID. do the same to taskCollection
     usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
@@ -275,6 +203,9 @@ app.post('/DeleteTask', (req, res) => { // search userCollection.find, iterate a
         })
     });
 
+    app.post('/CreateSchedule', (req,res) =>{
+
+    })
 
 
 app.listen(3001, () => console.log('Example app is listening on port 3001.'));
