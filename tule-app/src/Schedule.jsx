@@ -41,6 +41,31 @@ const exampleTasks = [{
     day: 'Tues'
 }]
 
+async function getAllTasks(){
+    try{
+        const response = await fetch("http://localhost:3001/GetAllTasks",{
+            method:'POST',
+            mode:'cors',
+            headers:{
+            "Access-Control-Allow-Origin":'http://localhost:3000',
+            "Content-Type":'application/json' 
+            },
+            body:JSON.stringify({
+                "Username":sessionStorage["Username"],
+                "Password":sessionStorage["Password"]
+            })
+        })
+        return await response.json();
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+useEffect(() => {
+    console.log(getAllTasks());
+})
+
 const castDuration=(task) =>{
     return(Array.from({ length: Math.round(changeToMinutes(task.duration,0)/15) }, (_,i) => task.startTime+i*0.25))
 }
