@@ -159,6 +159,30 @@ class DbHandler {
             }
         })
     }
+
+    //Takes a new schedule and makes sure that the user entry is up to date
+    /*  {
+            <scheduleId>(mmddyyy) :{
+                "Tasks":[{"Id":<int64>, "StartTime":<String>(XX:XX)},...],
+                "SchedStart":<string>(XX:XX),
+                "SchedStop":<String>(XX:XX)
+            }
+        }
+    */
+    //Recurring tasks need different behavior
+    altTask(req){
+        return new Promise((resolve, reject) => {
+            try{
+                this.#usersCollection.find({Username : req.body.Username}).toArray().then(info => {
+                    let user = this.#taskHandler.newSchedUserClean(info[0], req.body.Schedule);                    
+                    this.#usersCollection.replaceOne({"_id":info[0]['_id']},user)
+                    resolve(user);
+                })
+            }catch(err){
+                reject(err);
+            }
+        })
+    }
 }
 
 module.exports = DbHandler;
