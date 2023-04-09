@@ -159,6 +159,76 @@ class DbHandler {
             }
         })
     }
+
+    //Takes a new schedule and makes sure that the user entry is up to date
+    /*  {
+            <scheduleId>(mmddyyy) :{
+                "Tasks":[{"Id":<int64>, "StartTime":<String>(XX:XX)},...],
+                "SchedStart":<string>(XX:XX),
+                "SchedStop":<String>(XX:XX)
+            }
+        }
+    */
+    //Recurring tasks need different behavior
+    altTask(req){
+        return new Promise((resolve, reject) => {
+            try{
+                var newSched = req.body.Schedule;
+                schedId = Object.keys(newSched);
+                schedId = schedId[0];
+                var taskList = req.body.Schedule[schedId]['Tasks'];
+                var newIdList = []
+                for(var i = 0; i < taskList.length; i++){
+                    newIdList.push(taskList[i]['Id'])
+                }
+                console.log(taskList);
+                console.log(newIdList);
+                this.#usersCollection.find({Username : req.body.Username}).toArray().then(info => {
+                    console.log('INFO: ', info);
+                    var oldSched = info[0]['Schedules'][schedId]['Tasks'];
+                    var oldIdList = [];
+                    for(var i = 0; i < oldSched.length; i++){
+                        oldIdList.push(oldSched[i]['Id'].toString());
+                    }
+                    console.log(oldIdList);
+                    //Swap inactive to active
+                    for(var i = 0; i < newIdList.length; i++){
+                        if(!oldIdList.includes(newIdList[i])){
+                            console.log('Found id in newlist not in oldlist');
+                            let object = new ObjectId(newIdList[i]);
+                            info[0]['ActiveTasks'].push(object);
+                            let inactive = info[0]['InactiveTasks'];
+                            var index = 0;
+                            while(inactive[index].toString() != newIdList[i]){
+                                index++
+                            }
+                            info[0]['InactiveTasks'].splice(index,1);
+                        }
+                    }
+                    //Swap active to inactive
+                    for(var i = 0; i < oldIdList.length; i++){
+                        if(!newIdList.includes(oldIdList[i])){
+                            console.log('Found id in oldList not in newlist');
+                            let object = new ObjectId(oldIdList[i]);
+                            info[0]["InactiveTasks"].push(object);
+                            let active = info[0]['ActiveTasks'];
+                            var index = 0;
+                            while(active[index].toString() != oldIdList[i]){
+                                index++
+                            }
+                            info[0]['ActiveTasks'].splice(index,1);
+                        }
+                    }
+                    //Update schedule to new schedule
+                    info[0]['Schedules'][schedId] = newSched[schedId];
+                    usersCollection.replaceOne({"_id":info[0]['_id']},info[0])
+                    resolve(info[0]);
+                })
+            }catch(err){
+                reject(err);
+            }
+        })
+    }
 }
 
 module.exports = DbHandler;
