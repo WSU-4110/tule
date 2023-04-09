@@ -43,6 +43,52 @@ class TaskHandler{
         user['InactiveTasks'].push(task["_id"]);
         return user;
     }
+
+    newSchedUserClean(user, newSched){
+        var schedId = Object.keys(newSched);
+        schedId = schedId[0];
+        var taskList = req.body.Schedule[schedId]['Tasks'];
+        var newIdList = []
+        for(var i = 0; i < taskList.length; i++){
+            newIdList.push(taskList[i]['Id'])
+        }
+        var oldSched = user['Schedules'][schedId]['Tasks'];
+        var oldIdList = [];
+        for(var i = 0; i < oldSched.length; i++){
+            oldIdList.push(oldSched[i]['Id'].toString());
+        }
+        //Swap inactive to active
+        for(var i = 0; i < newIdList.length; i++){
+            if(!oldIdList.includes(newIdList[i])){
+                console.log('Found id in newlist not in oldlist');
+                let object = new ObjectId(newIdList[i]);
+                user['ActiveTasks'].push(object);
+                let inactive = user['InactiveTasks'];
+                var index = 0;
+                while(inactive[index].toString() != newIdList[i]){
+                    index++
+                }
+                user['InactiveTasks'].splice(index,1);
+            }
+        }
+        //Swap active to inactive
+        for(var i = 0; i < oldIdList.length; i++){
+            if(!newIdList.includes(oldIdList[i])){
+                console.log('Found id in oldList not in newlist');
+                let object = new ObjectId(oldIdList[i]);
+                user["InactiveTasks"].push(object);
+                let active = user['ActiveTasks'];
+                var index = 0;
+                while(active[index].toString() != oldIdList[i]){
+                    index++
+                }
+                user['ActiveTasks'].splice(index,1);
+            }
+        }
+        //Update schedule to new schedule
+        user['Schedules'][schedId] = newSched[schedId];
+        return user;
+    }
 }
 
 module.exports = TaskHandler
