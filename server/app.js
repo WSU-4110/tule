@@ -89,16 +89,17 @@ app.post('/GetAllTasks', (req, res) => {
         var tasksList = {};
        
         tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {
+
             // console.log('tasksCollection return active', info);
             tasksList["ActiveTasks"] = info;
             tasksCollection.find({"_id": {$in: tempInfo[0].InactiveTasks} }).toArray().then(info=> {
-                //console.log('tasksCollection return inactive', info);
+                console.log('tasksCollection return inactive', info);
                 tasksList["InactiveTasks"] = info;
                 tasksCollection.find({"_id": {$in: tempInfo[0].RecurringTasks} }).toArray().then(info=> {
-                    //console.log('tasksCollection return recurring', info);
+                    console.log('tasksCollection return recurring', info);
                     tasksList["RecurringTasks"] = info; 
                     tasksList["Schedules"] = tempInfo[0].Schedules;
-                    //console.log('Final List:', tasksList)
+                    console.log('Final List:', tasksList)
                     res.send(tasksList);  
                 })           
             })
@@ -218,12 +219,12 @@ app.post('/SaveTask', (req,res) => {
         delete task["Id"];
         tasksCollection.insertOne(task).then(info => {
             task["Id"] = String(info.insertedId);
-            console.log('debug info', info)
-            console.log('debug', task["_id"]);
+            //console.log('debug info', info)
+            //console.log('debug', task["_id"]);
             usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
-                console.log('debug user', user);
+                //console.log('debug user', user);
                 user[0]['InactiveTasks'].push(task["_id"]);
-                console.log('user debug 2', user);
+                //console.log('user debug 2', user);
                 usersCollection.replaceOne({"_id":user[0]["_id"]},user[0]);
             })
             res.json(task);

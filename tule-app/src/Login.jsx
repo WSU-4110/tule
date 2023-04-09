@@ -82,7 +82,7 @@ const Login = (props) => {
             style={{
                 width: '30%',
                 margin: 'auto',
-            }}>
+            }} className='center-hor-ver'>
                 <Form noValidate>
                     <h1>Login</h1>
                     <br></br>
