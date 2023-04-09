@@ -37,6 +37,7 @@ export function ScheduleModal(props) {
     }
     
     const handleSubmit = (event) => {
+        props.resetModal();
         event.preventDefault();
         if (verifyTimes()) {
             console.log(activeDays[0]);
