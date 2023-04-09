@@ -1,15 +1,13 @@
 //import Banner from "./components/Banner";
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
-import ActiveHoursModal from './ActiveHoursModal';
 import { ScheduleModal } from "./ScheduleModal";
 
 function Schedule(props){
-const [showAHModal, setShowAHModal] = useState(false);
-const {showSCModal, setShowSCModal} = useState(false);
+const [showSCModal, setShowSCModal] = useState(true);
 const [activeHours, setActiveHours] = useState(Array.from({length: (24-9)}, (_,i) => 9+i));
-const DAYS = ['Sat', 'Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri'];
+const DAYS = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const [today] = useState(new Date());
 const [displayedDay, setDisplayedDay] = useState(today);
 const exampleTasks = [{
@@ -113,12 +111,11 @@ const prevDay = () =>{
     setDisplayedDay(tempDate);
 }
 const resetModal = () =>{
-    setShowAHModal(false) 
+    setShowSCModal(false) 
 }
     return(
         <>
-            <ScheduleModal />
-            {showAHModal && <ActiveHoursModal resetModal={resetModal} setActiveHours={setActiveHours} activeHours ={activeHours}/>}
+            {showSCModal && <ScheduleModal resetModal={resetModal} setActiveHours={setActiveHours} activeHours ={activeHours}/>}
             <div>
             <Navbar text='Tule'/>
             
@@ -128,7 +125,7 @@ const resetModal = () =>{
             <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
                logout
             </button>
-            <button className="btn btn-primary mt-5" onClick={() => setShowAHModal(true)}>
+            <button className="btn btn-primary mt-5" onClick={() => setShowSCModal(true)}>
                change active hours
             </button>
             </div>
