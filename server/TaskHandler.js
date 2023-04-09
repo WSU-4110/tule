@@ -1,7 +1,7 @@
 class TaskHandler{
     // This is the algorithm that will be used to schedule tasks for the day.
-    // 'inputTasks' is an array of tasks that will be scheduled.
-    generateSchedule(inputTasks, req) {
+    // 'inputTasks' is an array of tasks that will be scheduled
+    generateSchedule(inputTasks) {
         console.log(inputTasks)
         // Creates an array to store and organize tasks in.
         const dailySchedule = new Array();
@@ -189,29 +189,29 @@ class TaskHandler{
     }
 
      // Compare two times. This is needed to determine if a task
-        // can be scheduled.
-        // Returns 1 if timeStr1 is greater than timeStr2,
-        // -1 if timeStr1 is less than timeStr2, and
-        // 0 if timeStr1 is equal to timeStr2.
-        compareDuration(timeStr1, timeStr2) {
-            const scheduleHours = parseInt(timeStr1[0] + timeStr1[1]);
-            const durationHours = parseInt(timeStr2[0] + timeStr2[1]);
-            const scheduleMinutes = parseInt(timeStr1[3] + timeStr1[4]);
-            const durationMinutes = parseInt(timeStr2[3] + timeStr2[4]);
-            if (scheduleHours > durationHours) {
+    // can be scheduled.
+    // Returns 1 if timeStr1 is greater than timeStr2,
+    // -1 if timeStr1 is less than timeStr2, and
+    // 0 if timeStr1 is equal to timeStr2.
+    compareDuration(timeStr1, timeStr2) {
+        const scheduleHours = parseInt(timeStr1[0] + timeStr1[1]);
+        const durationHours = parseInt(timeStr2[0] + timeStr2[1]);
+        const scheduleMinutes = parseInt(timeStr1[3] + timeStr1[4]);
+        const durationMinutes = parseInt(timeStr2[3] + timeStr2[4]);
+        if (scheduleHours > durationHours) {
+            return 1;
+        } else if (scheduleHours < durationHours) {
+            return -1;
+        } else {
+            if (scheduleMinutes > durationMinutes) {
                 return 1;
-            } else if (scheduleHours < durationHours) {
+            } else if (scheduleMinutes < durationMinutes) {
                 return -1;
             } else {
-                if (scheduleMinutes > durationMinutes) {
-                    return 1;
-                } else if (scheduleMinutes < durationMinutes) {
-                    return -1;
-                } else {
-                    return 0;
-                }
+                return 0;
             }
         }
+    }
 
      // Adds time to a time string. This is needed to add breaks to tasks.
      addTime(timeStr1, timeStr2) {

@@ -26,7 +26,7 @@ app.post('/AccountCreate', async (req,res) => {
 });
 
 app.post('/GetAllTasks', async (req, res) => {
-    res.send(await dbHandler.getAllTasksForUser(req));
+    console.log(await dbHandler.getUserTasksVerbose(req));
 });
 
 //This route needs to be sent the new schedule in body.Schedule according to the format:
@@ -98,66 +98,13 @@ app.post('/AltTask', (req,res) => {
 //If new task then pass "" as "Id" field
 //body.Username, and body.Password fields need to be provided as well. 
 //Probably need to generate a new schedule after this.
-app.post('/SaveTask', (req,res) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    var task = req.body.Task;
-    console.log('savetask ', task);
-    if (task.Id != ""){
-        var tempId = new ObjectId(task.Id)
-        tasksCollection.replaceOne({"_id":tempId},task).then(info => {
-            usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
-                let recKeyList = Object.keys(task['Recurrence']);
-                let recFlag = false;
-                for (var i = 0; i < user['RecurringTasks'].length; i++){
-                    if (String(user['RecurringTasks'][i]) == String(tempId)){
-                        user['RecurringTasks'].splice(i,1);
-                        break;
-                    }
-                }
-                for(var i = 0; i  < user['InactiveTasks'].length; i++){
-                    if (String(user['InactiveTasks'][i]) == String(tempId)){
-                        user['InactiveTasks'].splice(i,1);
-                        break;
-                    }
-                }
-                for (var i = 0; i < recKeyList.length; i++){
-                    if (task['Recurrence'][recKeyList[i]]){
-                        user['RecurringTasks'].push(tempId);
-                        recFlag = true;
-                        break;
-                    }
-                }
-                if (recFlag == false){
-                    user['InactiveTasks'].push(tempId);
-
-                }
-                usersCollection.replaceOne({"_id":user["_id"]},user);
-                //check for completion of replace???
-            })
-        })
-        res.json(task);
-    }
-    else {
-        delete task["Id"];
-        tasksCollection.insertOne(task).then(info => {
-            task["Id"] = String(info.insertedId);
-            //console.log('debug info', info)
-            //console.log('debug', task["_id"]);
-            usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
-                //console.log('debug user', user);
-                user[0]['InactiveTasks'].push(task["_id"]);
-                //console.log('user debug 2', user);
-                usersCollection.replaceOne({"_id":user[0]["_id"]},user[0]);
-            })
-            res.json(task);
-        })
-        
-    }
+app.post('/SaveTask', async (req,res) => {
+    res.send(await dbHandler.saveTask(req));
 })
 
 app.post('/CreateSchedule', async (req,res) =>{
     const tasks = dbHandler.getUserTasksVerbose(req);
-    const newSchedule = taskHandler.generateSchedule(await tasks, req)
+    const newSchedule = taskHandler.generateSchedule(await tasks)
 })
 
 
