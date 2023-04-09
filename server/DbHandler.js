@@ -85,7 +85,7 @@ class DbHandler {
     getUserTasksVerbose(req){
         return new Promise((resolve, reject) => {
             try{
-                this.#usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
+                this.#usersCollection.find({ Username: req.body.Username}).toArray().then(info => {
                     const tempInfo = info;
                     //console.log('passed find operation', info);
                     //console.log('active tasks', info[0].ActiveTasks);
@@ -94,7 +94,6 @@ class DbHandler {
                     //console.log('schedules: ', info[0].Schedules);
                     // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
                     var tasksList = {};
-                    try{
                     this.#tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {
                         //console.log('tasksCollection return active', info);
                         tasksList["ActiveTasks"] = info;
@@ -110,7 +109,8 @@ class DbHandler {
                             })           
                         })
                     })
-            } catch(err){
+                }) 
+            }catch(err){
                 reject(err);
             }
         })    
