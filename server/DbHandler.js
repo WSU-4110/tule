@@ -140,13 +140,13 @@ class DbHandler {
                             let recKeyList = Object.keys(task['Recurrence']);
                             let recFlag = false;
                             for (var i = 0; i < user[0]['RecurringTasks'].length; i++){
-                                if (String(user['RecurringTasks'][i]) == String(tempId)){
+                                if (String(user[0]['RecurringTasks'][i]) == String(tempId)){
                                     user[0]['RecurringTasks'].splice(i,1);
                                     break;
                                 }
                             }
                             for(var i = 0; i  < user[0]['InactiveTasks'].length; i++){
-                                if (String(user['InactiveTasks'][i]) == String(tempId)){
+                                if (String(user[0]['InactiveTasks'][i]) == String(tempId)){
                                     user[0]['InactiveTasks'].splice(i,1);
                                     break;
                                 }
