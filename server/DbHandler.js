@@ -122,7 +122,7 @@ class DbHandler {
         })
     }
 
-    async saveTask(req){
+    saveTask(req){
         return new Promise((resolve, reject) => {
             var task = req.body.Task;
             console.log('savetask ', task);
