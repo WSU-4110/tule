@@ -139,30 +139,30 @@ class DbHandler {
                         usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
                             let recKeyList = Object.keys(task['Recurrence']);
                             let recFlag = false;
-                            for (var i = 0; i < user['RecurringTasks'].length; i++){
+                            for (var i = 0; i < user[0]['RecurringTasks'].length; i++){
                                 if (String(user['RecurringTasks'][i]) == String(tempId)){
-                                    user['RecurringTasks'].splice(i,1);
+                                    user[0]['RecurringTasks'].splice(i,1);
                                     break;
                                 }
                             }
-                            for(var i = 0; i  < user['InactiveTasks'].length; i++){
+                            for(var i = 0; i  < user[0]['InactiveTasks'].length; i++){
                                 if (String(user['InactiveTasks'][i]) == String(tempId)){
-                                    user['InactiveTasks'].splice(i,1);
+                                    user[0]['InactiveTasks'].splice(i,1);
                                     break;
                                 }
                             }
                             for (var i = 0; i < recKeyList.length; i++){
                                 if (task['Recurrence'][recKeyList[i]]){
-                                    user['RecurringTasks'].push(tempId);
+                                    user[0]['RecurringTasks'].push(tempId);
                                     recFlag = true;
                                     break;
                                 }
                             }
                             if (recFlag == false){
-                                user['InactiveTasks'].push(tempId);
+                                user[0]['InactiveTasks'].push(tempId);
 
                             }
-                            usersCollection.replaceOne({"_id":user["_id"]},user);
+                            usersCollection.replaceOne({"_id":user[0]["_id"]},user);
                             //check for completion of replace???
                         })
                     })
