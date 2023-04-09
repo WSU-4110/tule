@@ -1,4 +1,5 @@
 require("dotenv").config()
+const TaskHandler = require('./TaskHandler');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //Mongodb doc https://www.mongodb.com/docs/drivers/node/current/
 //Fundamentals section will be your friend
@@ -13,6 +14,7 @@ class DbHandler {
     #db;
     #usersCollection;
     #tasksCollection;
+    #taskHandler;
 
     constructor(){     
         this.#uri = process.env.MONGO_CONNECTION;
@@ -29,6 +31,7 @@ class DbHandler {
         //create connection to each collection for use in routes
         this.#usersCollection = this.#db.collection('Users')
         this.#tasksCollection = this.#db.collection('Tasks') 
+        this.#taskHandler = new TaskHandler();
     }
 
     loginVerify(req){
@@ -84,43 +87,38 @@ class DbHandler {
 
     getUserTasksVerbose(req){
         return new Promise((resolve, reject) => {
-            this.#usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
-                const tempInfo = info;
-                //console.log('passed find operation', info);
-                //console.log('active tasks', info[0].ActiveTasks);
-                //console.log('inactive tasks', info[0].InactiveTasks);
-                //console.log('recurring', info[0].RecurringTasks);
-                //console.log('schedules: ', info[0].Schedules);
-                // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
-                var tasksList = {};
-                try{
+            try{
+                this.#usersCollection.find({ Username: req.body.Username}).toArray().then(info => {
+                    const tempInfo = info;
+                    // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
+                    var tasksList = {};
                     this.#tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {
-                        //console.log('tasksCollection return active', info);
                         tasksList["ActiveTasks"] = info;
                         this.#tasksCollection.find({"_id": {$in: tempInfo[0].InactiveTasks} }).toArray().then(info=> {
-                            //console.log('tasksCollection return inactive', info);
                             tasksList["InactiveTasks"] = info;
                             this.#tasksCollection.find({"_id": {$in: tempInfo[0].RecurringTasks} }).toArray().then(info=> {
-                                //console.log('tasksCollection return recurring', info);
                                 tasksList["RecurringTasks"] = info; 
                                 tasksList["Schedules"] = tempInfo[0].Schedules;
-                                //console.log('Final List:', tasksList)
                                 resolve(tasksList);  
                             })           
                         })
                     })
-                } catch(err){
-                    reject(err);
-                }
-            })
-        })
+                }) 
+            }catch(err){
+                reject(err);
+            }
+        })    
     }
 
     getUserTasks(req){
         return new Promise((resolve, reject) => {
-            this.#usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
-                resolve(info);
-            });
+            try{
+                this.#usersCollection.find({ Username: req.body.Username }).toArray().then(info => {
+                    resolve(info);
+                });
+            }catch(err){
+                reject(err);
+            }
         })
     }
 
@@ -130,53 +128,33 @@ class DbHandler {
             console.log('savetask ', task);
             if (task.Id != ""){
                 var tempId = new ObjectId(task.Id)
-                tasksCollection.replaceOne({"_id":tempId},task).then(info => {
-                    usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
-                        let recKeyList = Object.keys(task['Recurrence']);
-                        let recFlag = false;
-                        for (var i = 0; i < user['RecurringTasks'].length; i++){
-                            if (String(user['RecurringTasks'][i]) == String(tempId)){
-                                user['RecurringTasks'].splice(i,1);
-                                break;
-                            }
-                        }
-                        for(var i = 0; i  < user['InactiveTasks'].length; i++){
-                            if (String(user['InactiveTasks'][i]) == String(tempId)){
-                                user['InactiveTasks'].splice(i,1);
-                                break;
-                            }
-                        }
-                        for (var i = 0; i < recKeyList.length; i++){
-                            if (task['Recurrence'][recKeyList[i]]){
-                                user['RecurringTasks'].push(tempId);
-                                recFlag = true;
-                                break;
-                            }
-                        }
-                        if (recFlag == false){
-                            user['InactiveTasks'].push(tempId);
-
-                        }
-                        usersCollection.replaceOne({"_id":user["_id"]},user);
-                        //check for completion of replace???
-                    })
-                })
-                resolve(task);
-            }
-            else {
-                delete task["Id"];
-                this.#tasksCollection.insertOne(task).then(info => {
-                    task["Id"] = String(info.insertedId);
-                    //console.log('debug info', info)
-                    //console.log('debug', task["_id"]);
-                    this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
-                        //console.log('debug user', user);
-                        user[0]['InactiveTasks'].push(task["_id"]);
-                        //console.log('user debug 2', user);
-                        this.#usersCollection.replaceOne({"_id":user[0]["_id"]},user[0]);
+                try{
+                    tasksCollection.replaceOne({"_id":tempId},task).then(info => {
+                        usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
+                            newUser = this.#taskHandler.updateTaskOnUser(user[0],task);
+                            usersCollection.replaceOne({"_id":user[0]["_id"]},newUser);
+                            //check for completion of replace???
+                        })
                     })
                     resolve(task);
-                })
+                }catch(err){
+                    reject(err);
+                }
+            }
+            else {
+                try{
+                delete task["Id"];
+                    this.#tasksCollection.insertOne(task).then(info => {
+                        task["Id"] = String(info.insertedId);
+                        this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
+                            user = this.#taskHandler.addNewTaskToInactive(user[0],task);
+                            this.#usersCollection.replaceOne({"_id":user[0]["_id"]},user);
+                        })
+                        resolve(task);
+                    })
+                }catch(err){
+                    reject(err);
+                }
                 
             }
         })
