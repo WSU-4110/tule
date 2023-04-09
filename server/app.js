@@ -1,11 +1,11 @@
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
-const TaskHandler = require('./TaskHandler');
+const ScheduleGenerator = require('./ScheduleGenerator');
 const DbHandler = require('./DbHandler')
 
 const app = express();
-const taskHandler = new TaskHandler();
+const scheduleGenerator = new ScheduleGenerator();
 const dbHandler = new DbHandler();
 //!!!All requests made to this server must have body in json format!!!
 app.use(express.json());
@@ -26,7 +26,7 @@ app.post('/AccountCreate', async (req,res) => {
 });
 
 app.post('/GetAllTasks', async (req, res) => {
-    console.log(await dbHandler.getUserTasksVerbose(req));
+    res.send(await dbHandler.getUserTasksVerbose(req));
 });
 
 //This route needs to be sent the new schedule in body.Schedule according to the format:
