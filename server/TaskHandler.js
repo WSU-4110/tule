@@ -1,8 +1,11 @@
+const {ObjectId } = require('mongodb');
+
 class TaskHandler{
     //Given a user object from the database, and a task object, will return 
     //a new user object with the appropriate tasks
     updateTaskOnUser(user,task){
         try{
+            let tempId = task['_id'];
             let recKeyList = Object.keys(task['Recurrence']);
             let recFlag = false;
             for (var i = 0; i < user['RecurringTasks'].length; i++){
@@ -33,7 +36,7 @@ class TaskHandler{
             if (recFlag == false){
                 user['InactiveTasks'].push(tempId);
             }
-            return err;
+            return user;
         }catch(err){
             return(err);
         }
@@ -47,7 +50,7 @@ class TaskHandler{
     newSchedUserClean(user, newSched){
         var schedId = Object.keys(newSched);
         schedId = schedId[0];
-        var taskList = req.body.Schedule[schedId]['Tasks'];
+        var taskList = newSched[schedId]['Tasks'];
         var newIdList = []
         for(var i = 0; i < taskList.length; i++){
             newIdList.push(taskList[i]['Id'])

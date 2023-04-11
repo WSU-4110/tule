@@ -129,10 +129,10 @@ class DbHandler {
             if (task.Id != ""){
                 var tempId = new ObjectId(task.Id)
                 try{
-                    tasksCollection.replaceOne({"_id":tempId},task).then(info => {
-                        usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
+                    this.#tasksCollection.replaceOne({"_id":tempId},task).then(info => {
+                        this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
                             newUser = this.#taskHandler.updateTaskOnUser(user[0],task);
-                            usersCollection.replaceOne({"_id":user[0]["_id"]},newUser);
+                            this.#usersCollection.replaceOne({"_id":user[0]["_id"]},newUser);
                             //check for completion of replace???
                         })
                     })
