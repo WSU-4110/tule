@@ -75,7 +75,6 @@ export function AddTaskModal(props) {
     // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
-        setTaskDuration(taskDurationHours + ':' + taskDurationMinutes);
         setTaskBreakDuration(taskBreakDurationHours + ':' + taskBreakDurationMinutes);
         if (taskName !== '') {
             if (taskDuration !== '') {
@@ -120,6 +119,12 @@ export function AddTaskModal(props) {
             Days: reccuringDays,
             Priority: taskPriority,
             Recurrence: ""
+        }
+        if(taskDurationMinutes.length == 1){
+            newTask['Duration'] = taskDurationHours + ':0' + taskDurationMinutes;
+        }
+        if(taskBreakDurationMinutes.length == 1){
+            newTask['Break'] = taskBreakDurationHours + ':0' + taskBreakDurationMinutes;
         }
         console.log(newTask);
         saveTask(newTask);

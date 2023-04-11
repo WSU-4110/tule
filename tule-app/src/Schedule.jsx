@@ -3,9 +3,11 @@ import React, {useState} from "react"
 import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
 import ActiveHoursModal from './ActiveHoursModal';
+import { ScheduleModal } from "./ScheduleModal";
 
 function Schedule(props){
 const [showAHModal, setShowAHModal] = useState(false);
+const {showSCModal, setShowSCModal} = useState(false);
 const [activeHours, setActiveHours] = useState(Array.from({length: (24-9)}, (_,i) => 9+i));
 const DAYS = ['Sat', 'Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri'];
 const [today] = useState(new Date());
@@ -38,6 +40,31 @@ const exampleTasks = [{
     startTime: 12,
     day: 'Tues'
 }]
+
+async function getAllTasks(){
+    try{
+        const response = await fetch("http://localhost:3001/GetAllTasks",{
+            method:'POST',
+            mode:'cors',
+            headers:{
+            "Access-Control-Allow-Origin":'http://localhost:3000',
+            "Content-Type":'application/json' 
+            },
+            body:JSON.stringify({
+                "Username":sessionStorage["Username"],
+                "Password":sessionStorage["Password"]
+            })
+        })
+        return await response.json();
+    }
+    catch(err){
+        console.log(err);
+    }
+}
+
+useEffect(() => {
+    console.log(getAllTasks());
+})
 
 const castDuration=(task) =>{
     return(Array.from({ length: Math.round(changeToMinutes(task.duration,0)/15) }, (_,i) => task.startTime+i*0.25))
@@ -90,6 +117,7 @@ const resetModal = () =>{
 }
     return(
         <>
+            <ScheduleModal />
             {showAHModal && <ActiveHoursModal resetModal={resetModal} setActiveHours={setActiveHours} activeHours ={activeHours}/>}
             <div>
             <Navbar text='Tule'/>
