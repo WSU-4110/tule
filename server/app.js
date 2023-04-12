@@ -49,6 +49,7 @@ app.post('/AltTask', async (req,res) => {
 //body.Username, and body.Password fields need to be provided as well. 
 //Probably need to generate a new schedule after this.
 app.post('/SaveTask', async (req,res) => {
+    console.log(req.body)
     res.send(await dbHandler.saveTask(req));
 })
 
