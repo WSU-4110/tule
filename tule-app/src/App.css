@@ -199,6 +199,11 @@
   background-color:yellow;
   align-items: auto;
 }
+.task0{
+  height: 100%;
+  background-color:beige;
+  align-items: auto;
+}
 .taskButton{
   height:fit-content;
 }
