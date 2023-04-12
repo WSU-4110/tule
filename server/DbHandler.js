@@ -90,6 +90,7 @@ class DbHandler {
             try{
                 this.#usersCollection.find({ Username: req.body.Username}).toArray().then(info => {
                     const tempInfo = info;
+                    console.log('tempInfo',tempInfo);
                     // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
                     var tasksList = {};
                     this.#tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {
@@ -145,9 +146,10 @@ class DbHandler {
                 try{
                 delete task["_id"];
                     this.#tasksCollection.insertOne(task).then(info => {
-                        task["_id"] =info.insertedId;
+                        task["_id"] = info.insertedId;
                         this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
                             console.log(user);
+                            console.log('task in savetask ', task)
                             user = this.#taskHandler.addNewTaskToInactive(user[0],task);
                             console.log(user);
                             this.#usersCollection.replaceOne({"_id":user["_id"]},user);
