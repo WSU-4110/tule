@@ -45,7 +45,7 @@ export function AddTaskModal(props) {
     const [taskDate, setTaskDate] = useState('');
     const [taskStartTimeBool, setTaskStartTimeBool] = useState(false);
     const [taskStartTime, setTaskStartTime] = useState('');
-    const [taskPriority, setTaskPriority] = useState('');
+    const [taskPriority, setTaskPriority] = useState(0);
     const [reccuringDays, setReccuringDays] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -110,21 +110,25 @@ export function AddTaskModal(props) {
         console.log(taskDurationHours + ":" + taskDurationMinutes);
         console.log(props.id);
         const newTask = {
-            Id: "",
-            TaskName: taskName,
-            StartTime: taskStartTime,
-            Duration: taskDurationHours + ":" + taskDurationMinutes,
-            Break: taskBreakDurationHours + ":" + taskBreakDurationMinutes,
-            Date: taskDate,
-            Days: reccuringDays,
-            Priority: taskPriority,
-            Recurrence: ""
-        }
-        if(taskDurationMinutes.length == 1){
-            newTask['Duration'] = taskDurationHours + ':0' + taskDurationMinutes;
-        }
-        if(taskBreakDurationMinutes.length == 1){
-            newTask['Break'] = taskBreakDurationHours + ':0' + taskBreakDurationMinutes;
+            _id: "",
+            Name: taskName,
+            StartTime: {
+                Active: taskStartTime != "",
+                Time: taskStartTime}
+                ,
+            Duration: parseFloat(taskDurationHours) + parseFloat(taskDurationMinutes)/60,
+            Break: {
+                Active: taskBreakDuration!= 0 && taskBreakDuration!=0,
+                Time: parseFloat(taskBreakDurationHours) + parseFloat(taskBreakDurationMinutes)/60
+            },
+            Date: {
+                Active: taskDate != "", 
+                Time: new Date(taskDate)}
+                ,
+            Reccurence: reccuringDays,
+            Priority: parseInt(taskPriority),
+            Location: "",
+            Complete: false
         }
         console.log(newTask);
         saveTask(newTask);

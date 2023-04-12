@@ -147,15 +147,15 @@
   grid-template-rows: repeat(2, 1fr);
 }
 .grid2{
+  height: 200px;
   display: grid;
   grid-template-columns:repeat(1, 100%);
   grid-template-rows: repeat(96, 70%);
 }
 .grid3{
   display: grid;
+  height: 1028px;
   grid-template-columns:[first] 10% repeat(1, 30%);
-  grid-template-rows: repeat(1, 20%);
-  align-tracks: center;
   justify-content: center;
 }
 
@@ -197,6 +197,11 @@
 .task1{
   height: 100%;
   background-color:yellow;
+  align-items: auto;
+}
+.task0{
+  height: 100%;
+  background-color:beige;
   align-items: auto;
 }
 .taskButton{

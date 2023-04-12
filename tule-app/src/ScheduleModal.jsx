@@ -7,16 +7,11 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import ActiveHoursModal from './ActiveHoursModal';
 import { EditTaskModal } from "./EditTaskModal";
 import { AddTaskModal } from "./AddTaskModal";
 
 export function ScheduleModal(props) {
     const [show, setShow] = useState(true);
-    // const [activeStart, setActiveStart] = useState(props.activeHours[0]);
-    // const [activeEnd, setActiveEnd] = useState(props.activeHours[props.activeHours.length - 1]);
-    // const [activeDays, setActiveDays] = useState(props.activeDays);
-    // const [taskList, setTaskList] = useState(props.taskList);
     const daysOfWeek = [
         { name: 'Sunday', id: 0 },
         { name: 'Monday', id: 1 },
@@ -42,15 +37,14 @@ export function ScheduleModal(props) {
     }
     
     const handleSubmit = (event) => {
+        props.resetModal();
         event.preventDefault();
         if (verifyTimes()) {
-            // props.setActiveDays(activeDays);
-            // props.setActiveHours([activeStart, activeEnd]);
-            // props.setTaskList(taskList);
-            // props.resetModal();
             console.log(activeDays[0]);
             console.log(activeStart);
             console.log(activeEnd);
+            console.log(Array.from({length:(parseInt(activeEnd.split(":")[0])-parseInt(activeStart.split(":")[0])+ 1)}, (_,i) => parseInt(activeStart.split(":")[0])+i));
+            props.setActiveHours(Array.from({length:(parseInt(activeEnd.split(":")[0])-parseInt(activeStart.split(":")[0])+ 1)}, (_,i) => parseInt(activeStart.split(":")[0])+i))
             setShow(false);
         }
     }
@@ -135,7 +129,7 @@ export function ScheduleModal(props) {
                             <Form.Group as={Col} controlId="ActiveEnd">
                                 <Form.Label>Schedule End Time</Form.Label>
                                 <Form.Control
-                                    type="time"
+                                type="time"
                                     value={activeEnd}
                                     isInvalid={timeInverified}
                                     onChange={(e) => setActiveEnd(e.target.value)}
@@ -176,55 +170,6 @@ export function ScheduleModal(props) {
                                 </Button>
                             </Form.Group>
                         </Row>
-                        {/* <Row>
-                            <Form.Group as={Col} controlId="TaskList">
-                                <Form.Label>Task List</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows={3}
-                                    value={props.taskList}
-                                    onChange={e => props.setTaskList(e.target.value)}
-                                    style={{
-                                        border: "none",
-                                        borderBottom: "1px solid #007bff",
-                                        borderRadius: "0px",
-                                        outline: "none",
-                                        boxShadow: "none",
-                                        fontSize: "14px",
-                                        fontWeight: "bold",
-                                        color: "#007bff",
-                                    }}
-                                />
-                            </Form.Group>
-                        </Row> */}
-                        {/* <Row>
-                            <Form.Group as={Col} controlId="SelectTask">
-                                <Form.Label>Select Task to Modify</Form.Label>
-                                <DropdownButton id="dropdown-basic-button" title="Select Task">
-                                    <Dropdown.Item onClick={() => setTaskSelected(true)}>Action</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskSelected(true)}>Another action</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskSelected(true)}>Something else</Dropdown.Item>
-                                </DropdownButton>
-                            </Form.Group>
-                        </Row>
-                        <br></br>
-                        <Row>
-                            {taskSelected && (
-                                <>
-                                    <Form.Group as={Col} controlId="TaskName">
-                                        <Button variant="secondary" onClick={handleSubmit}>
-                                            Delete Task
-                                        </Button>
-                                        <Button variant="primary" onClick={() => <EditTaskModal/>}>
-                                            Edit Task
-                                        </Button>
-                                        <Button variant="primary" onClick={() => <AddTaskModal/>}>
-                                            Add Task
-                                        </Button>
-                                    </Form.Group>
-                                </>
-                            )}
-                        </Row> */}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
@@ -238,211 +183,4 @@ export function ScheduleModal(props) {
             </Modal>
         </>
     )
-    
-{/* 
-    //                 <div className='dayDisplay'>
-    //                     <h2>Active Days</h2>
-    //                     <Multiselect
-    //                         options={daysOfWeek} // Options to display in the dropdown
-    //                         selectedValues={activeDays} // Preselected value to persist in dropdown
-    //                         onSelect={onSelect} // Function will trigger on select event
-    //                         onRemove={onRemove} // Function will trigger on remove event
-    //                         displayValue="name" // Property name to display in the dropdown options
-    //                         placeholder="Select Days"
-    //                         style={{
-    //                             chips: {
-    //                                 background: "#007bff",
-    //                                 color: "white",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                                 borderRadius: "5px",
-    //                                 padding: "5px",
-    //                                 margin: "5px",
-    //                                 display: "inline-block",
-    //                             },
-    //                             searchBox: {
-    //                                 border: "none",
-    //                                 borderBottom: "1px solid #007bff",
-    //                                 borderRadius: "0px",
-    //                                 outline: "none",
-    //                                 boxShadow: "none",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                                 color: "#007bff",
-    //                             },
-    //                             multiselectContainer: {
-    //                                 border: "none",
-    //                                 borderBottom: "1px solid #007bff",
-    //                                 borderRadius: "0px",
-    //                                 outline: "none",
-    //                                 boxShadow: "none",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                                 color: "#007bff",
-    //                             },
-    //                             optionContainer: {
-    //                                 border: "none",
-    //                                 borderBottom: "1px solid #007bff",
-    //                                 borderRadius: "0px",
-    //                                 outline: "none",
-    //                                 boxShadow: "none",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                                 color: "#007bff",
-    //                             },
-    //                             option: {
-    //                                 color: "#007bff",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                             },
-    //                             optionContainer: {
-    //                                 color: "#007bff",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                             },
-    //                         }}
-    //                     />
-    //                 </div>
-    //                 <div className='timeDisplay'>
-    //                     <h2>Active Start Time</h2>
-    //                     <Form.Control
-    //                         type="time"
-    //                         value={activeStart}
-    //                         onChange={e => setActiveStart(e.target.value)}
-    //                         style={{
-    //                             border: "none",
-    //                             borderBottom: "1px solid #007bff",
-    //                             borderRadius: "0px",
-    //                             outline: "none",
-    //                             boxShadow: "none",
-    //                             fontSize: "14px",
-    //                             fontWeight: "bold",
-    //                             color: "#007bff",
-    //                         }}
-    //                     />
-    //                     <h2>Active End Time</h2>
-    //                     <Form.Control
-    //                         type="time"
-    //                         value={activeEnd}
-    //                         onChange={e => setActiveEnd(e.target.value)}
-    //                         style={{
-    //                             border: "none",
-    //                             borderBottom: "1px solid #007bff",
-    //                             borderRadius: "0px",
-    //                             outline: "none",
-    //                             boxShadow: "none",
-    //                             fontSize: "14px",
-    //                             fontWeight: "bold",
-    //                             color: "#007bff",
-    //                         }}
-    //                     />
-    //                 </div>
-    //                 <div className='taskDisplay'>
-    //                     <h2>Tasks</h2>
-    //                     <Multiselect
-    //                         options={taskList} // Options to display in the dropdown
-    //                         onSelect={onSelect} // Function will trigger on select event
-    //                         onRemove={onRemove} // Function will trigger on remove event
-    //                         displayValue="name" // Property name to display in the dropdown options
-    //                         placeholder="Select Tasks"
-    //                         style={{
-    //                             chips: {
-    //                                 background: "#007bff",
-    //                                 color: "white",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                                 borderRadius: "5px",
-    //                                 padding: "5px",
-    //                                 margin: "5px",
-    //                                 display: "inline-block",
-    //                             },
-    //                             searchBox: {
-    //                                 border: "none",
-    //                                 borderBottom: "1px solid #007bff",
-    //                                 borderRadius: "0px",
-    //                                 outline: "none",
-    //                                 boxShadow: "none",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                                 color: "#007bff",
-    //                             },
-    //                             multiselectContainer: {
-    //                                 border: "none",
-    //                                 borderBottom: "1px solid #007bff",
-    //                                 borderRadius: "0px",
-    //                                 outline: "none",
-    //                                 boxShadow: "none",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                                 color: "#007bff",
-    //                             },
-    //                             optionContainer: {
-    //                                 border: "none",
-    //                                 borderBottom: "1px solid #007bff",
-    //                                 borderRadius: "0px",
-    //                                 outline: "none",
-    //                                 boxShadow: "none",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                                 color: "#007bff",
-    //                             },
-    //                             option: {
-    //                                 color: "#007bff",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                             },
-    //                             optionContainer: {
-    //                                 color: "#007bff",
-    //                                 fontSize: "14px",
-    //                                 fontWeight: "bold",
-    //                             },
-    //                         }}
-    //                     />
-    //                 </div>
-    //             </Modal.Body>
-    //             <Modal.Footer
-    //                 style={{
-    //                     backgroundColor: '#F8F9FA',
-    //                     borderTop: '1px solid #E9ECEF',
-    //                     display: 'flex',
-    //                     justifyContent: 'center',
-    //                     alignItems: 'center',
-    //                 }}>
-    //                 <Button
-    //                     variant="secondary"
-    //                     onClick={props.resetModal}
-    //                     style={{
-    //                         backgroundColor: '#007bff',
-    //                         border: 'none',
-    //                         color: 'white',
-    //                         fontSize: '14px',
-    //                         fontWeight: 'bold',
-    //                         borderRadius: '5px',
-    //                         padding: '5px',
-    //                         margin: '5px',
-    //                         display: 'inline-block',
-    //                     }}>
-    //                     Close
-    //                 </Button>
-    //                 <Button
-    //                     variant="primary"
-    //                     onClick={handleSubmit}
-    //                     style={{
-    //                         backgroundColor: '#007bff',
-    //                         border: 'none',
-    //                         color: 'white',
-    //                         fontSize: '14px',
-    //                         fontWeight: 'bold',
-    //                         borderRadius: '5px',
-    //                         padding: '5px',
-    //                         margin: '5px',
-    //                         display: 'inline-block',
-    //                     }}>
-    //                     Save Changes
-    //                 </Button>
-    //             </Modal.Footer>
-    //         </Modal>
-    //     </>
-                            
-    // ) */}
 }

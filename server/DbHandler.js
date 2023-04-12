@@ -126,8 +126,8 @@ class DbHandler {
         return new Promise((resolve, reject) => {
             var task = req.body.Task;
             console.log('savetask ', task);
-            if (task.Id != ""){
-                var tempId = new ObjectId(task.Id)
+            if (task._id != ""){
+                var tempId = new ObjectId(task._id)
                 try{
                     tasksCollection.replaceOne({"_id":tempId},task).then(info => {
                         usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
@@ -143,9 +143,9 @@ class DbHandler {
             }
             else {
                 try{
-                delete task["Id"];
+                delete task["_id"];
                     this.#tasksCollection.insertOne(task).then(info => {
-                        task["Id"] = String(info.insertedId);
+                        task["_id"] = String(info.insertedId);
                         this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
                             console.log(user);
                             user = this.#taskHandler.addNewTaskToInactive(user,task);
