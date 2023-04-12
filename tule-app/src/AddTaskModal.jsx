@@ -109,6 +109,9 @@ export function AddTaskModal(props) {
         console.log(taskDuration);        
         console.log(taskDurationHours + ":" + taskDurationMinutes);
         console.log(props.id);
+        console.log(taskDate);
+        let tempDate = new Date(taskDate);
+        let inputDate = new Date(tempDate.getTime() + tempDate.getTimezoneOffset()*60000);
         const newTask = {
             _id: "",
             Name: taskName,
@@ -123,7 +126,7 @@ export function AddTaskModal(props) {
             },
             Date: {
                 Active: taskDate != "", 
-                Time: new Date(taskDate)}
+                Time: inputDate}
                 ,
             Reccurence: reccuringDays,
             Priority: parseInt(taskPriority),
