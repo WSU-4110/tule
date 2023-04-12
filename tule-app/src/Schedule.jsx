@@ -66,7 +66,7 @@ useEffect(() => {
 )
 
 const castDuration=(task) =>{
-    return(Array.from({ length: Math.round(changeToMinutes(task.Duration.Time,0)/15) }, (_,i) => task.StartTime.Time+i*0.25))
+    return(Array.from({ length: Math.round(changeToMinutes(task.Duration,0)/15) }, (_,i) => parseInt(task.StartTime.Time.split(":")[0])+i*0.25))
 }
 const checkDate =(compareDate, date) => {
     //console.log("compare date" + compareDate);
@@ -74,9 +74,6 @@ const checkDate =(compareDate, date) => {
     var d2 = new Date(compareDate)
     //console.log(d1);
     //console.log("date 3 " + d3);
-    console.log(d1.getDate() === d2.getDate()
-    && d1.getMonth() === d2.getMonth()
-    && d1.getFullYear() === d2.getFullYear());
     return (d1.getDate() === d2.getDate()
     && d1.getMonth() === d2.getMonth()
     && d1.getFullYear() === d2.getFullYear());
@@ -110,8 +107,6 @@ const changeTime12hr =(time24, minute) =>{
     return output;
 }
 const nextDay = () =>{
-    console.log("today is " +today);
-    console.log("display date is " +displayedDay);
     const tempDate = new Date(displayedDay.getFullYear(), displayedDay.getMonth(), displayedDay.getDate()+1);
     setDisplayedDay(tempDate);
 }
@@ -156,7 +151,7 @@ const resetModal = () =>{
             <div className="grid2">
                 {activeHours.map((time) => <div className="gridData" key={"d"+time}>
                     {[0, 15, 30, 45].map((minute) => <div  className="gridDataHeader" key={"d"+time+minute}>
-                        {taskList.map((task) => (checkDate(task.Date.Time, displayedDay) && checkTime(changeToMinutes(parseInt(task.StartTime.Time), 0), changeToMinutes(time, minute)) && <div className={"task" + task.Priority} key={task.Name + task.Priority}>
+                        {taskList.map((task) => (checkDate(task.Date.Time, displayedDay) && checkTime(changeToMinutes(parseInt(task.StartTime.Time.split(":")[0]), parseInt(task.StartTime.Time.split(":")[1])), changeToMinutes(time, minute)) && <div className={"task" + task.Priority} key={task.Name + task.Priority}>
                         {castDuration(task).map((index) => (
                         (index===castDuration(task)[0] &&
                             <div className={"task" +task.Priority} key={time+minute+index+"button"}>

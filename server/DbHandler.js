@@ -145,10 +145,12 @@ class DbHandler {
                 try{
                 delete task["_id"];
                     this.#tasksCollection.insertOne(task).then(info => {
-                        task["_id"] = String(info.insertedId);
+                        task["_id"] =info.insertedId;
                         this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
+                            console.log(user);
                             user = this.#taskHandler.addNewTaskToInactive(user[0],task);
-                            this.#usersCollection.replaceOne({"_id":user[0]["_id"]},user);
+                            console.log(user);
+                            this.#usersCollection.replaceOne({"_id":user["_id"]},user);
                         })
                         resolve(task);
                     })
