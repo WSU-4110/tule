@@ -147,8 +147,10 @@ class DbHandler {
                     this.#tasksCollection.insertOne(task).then(info => {
                         task["Id"] = String(info.insertedId);
                         this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
-                            user = this.#taskHandler.addNewTaskToInactive(user[0],task);
-                            this.#usersCollection.replaceOne({"_id":user[0]["_id"]},user);
+                            console.log(user);
+                            user = this.#taskHandler.addNewTaskToInactive(user,task);
+                            console.log(user);
+                            this.#usersCollection.replaceOne({"_id":user["_id"]},user);
                         })
                         resolve(task);
                     })
