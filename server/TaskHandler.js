@@ -40,7 +40,7 @@ class TaskHandler{
     }
 
     addNewTaskToInactive(user, task){
-        user['InactiveTasks'].push(task["_id"]);
+        user["InactiveTasks"].push(task["_id"]);
         return user;
     }
 

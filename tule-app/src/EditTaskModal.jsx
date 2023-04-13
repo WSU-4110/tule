@@ -88,13 +88,25 @@ export function EditTaskModal(props) {
         console.log(taskDurationHours + ":" + taskDurationMinutes);
         console.log(props.id);
         const newTask = {
-            taskName: taskName,
-            startTime: taskStartTime,
-            duration: taskDurationHours + ":" + taskDurationMinutes,
-            break: taskBreakDurationHours + ":" + taskBreakDurationMinutes,
-            date: taskDate,
-            days: reccuringDays,
-            priority: taskPriority
+            _id: "",
+            Name: taskName,
+            StartTime: {
+                Active: taskStartTime != "",
+                Time: taskStartTime}
+                ,
+            Duration: parseFloat(taskDurationHours) + parseFloat(taskDurationMinutes)/60,
+            Break: {
+                Active: taskBreakDuration!= 0 && taskBreakDuration!=0,
+                Time: parseFloat(taskBreakDurationHours) + parseFloat(taskBreakDurationMinutes)/60
+            },
+            Date: {
+                Active: taskDate != "", 
+                Time: new Date(taskDate)}
+                ,
+            Reccurence: reccuringDays,
+            Priority: parseInt(taskPriority),
+            Location: "",
+            Complete: false
         }
         props.editTask(props.id,taskName,taskStartTime,taskDurationHours + ":" + taskDurationMinutes,taskPriority);
         props.resetModal(false);
