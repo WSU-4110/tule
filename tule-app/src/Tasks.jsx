@@ -55,7 +55,7 @@ const Tasks = (props) => {
     useEffect(() => {
         console.log(getAllTasks());
     })
-
+    
     return(
         <>
         {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} editTask={editTask} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}

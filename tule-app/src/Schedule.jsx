@@ -4,7 +4,9 @@ import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
 import ActiveHoursModal from './ActiveHoursModal';
 import { ScheduleModal } from "./ScheduleModal";
-
+import { useEffect
+ } from "react";
+ 
 function Schedule(props){
 const [showAHModal, setShowAHModal] = useState(false);
 const {showSCModal, setShowSCModal} = useState(false);
