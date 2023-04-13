@@ -3,8 +3,6 @@ import React, {useState, useEffect} from "react"
 import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
 import { ScheduleModal } from "./ScheduleModal";
-import { useEffect
- } from "react";
  
 function Schedule(props){
 const [showSCModal, setShowSCModal] = useState(true);

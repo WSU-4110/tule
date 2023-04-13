@@ -69,10 +69,6 @@ const Login = (props) => {
             setPasswordError('Invalid username or password');
             return;
         }
-        //fetch request
-        //fetch()
-
-        
     }
     
     return(
