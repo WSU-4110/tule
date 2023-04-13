@@ -69,10 +69,6 @@ const Login = (props) => {
             setPasswordError('Invalid username or password');
             return;
         }
-        //fetch request
-        //fetch()
-
-        
     }
     
     return(
@@ -82,7 +78,7 @@ const Login = (props) => {
             style={{
                 width: '30%',
                 margin: 'auto',
-            }}>
+            }} className='center-hor-ver'>
                 <Form noValidate>
                     <h1>Login</h1>
                     <br></br>

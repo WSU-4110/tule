@@ -1,6 +1,6 @@
 import TaskList from './components/TaskList'
 import { AddTaskModal } from './AddTaskModal';
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, setUsers, fetchUserData } from "react"
 import Button from 'react-bootstrap/Button';
 import Navbar from './components/Navbar';
 import banner from "./pics/sky.png"
@@ -37,8 +37,10 @@ const Tasks = (props) => {
                     "Password":sessionStorage["Password"]
                 })
             })
-            return await response.json();
+            
+            return response.json(); 
         }
+
         catch(err){
             console.log(err);
         }
@@ -53,9 +55,13 @@ const Tasks = (props) => {
     }
 
     useEffect(() => {
-        console.log(getAllTasks());
-    })
-
+        var result = getAllTasks();
+        result.then((value) => {
+            setCurrentTasks(value.InactiveTasks);
+        })
+    }
+        ,[]
+    )
     return(
         <>
         {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} editTask={editTask} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}
@@ -77,8 +83,7 @@ const Tasks = (props) => {
                     
                     <br />
                     <button className='btn btn-secondary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
-                </div>
-                
+                </div> 
             </form>
         </div>
         </>
