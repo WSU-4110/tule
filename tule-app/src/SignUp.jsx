@@ -45,6 +45,7 @@ export const SignUp = (props) => {
                         "Password":password1,
                         "RecurringTasks":[],
                         "ActiveTasks":[],
+                        "InactiveTasks":[],
                         "Schedules":{},
                         "TaskArchive":[]   
                     })
@@ -193,7 +194,7 @@ export const SignUp = (props) => {
             style={{
                 width: '30%',
                 margin: 'auto',
-            }}>
+            }} className='center-hor-ver'>
                 <Form noValidate>
                     {/* {showAlert && (
                         <Alert

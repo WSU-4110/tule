@@ -4,6 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Col from "react-bootstrap/Col";
 import Navbar from "./components/Navbar";
 
+async function setSessionVariables(username, password){
+    sessionStorage['Username'] = username;
+    sessionStorage['Password'] = password;
+}
+
 const Login = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
@@ -37,6 +42,9 @@ const Login = (props) => {
             console.log(err);
         }
         if (data['LoginSuccess'] === "True") {
+            setSessionVariables(username, password);
+            console.log('Session Username: ', username);
+            console.log('Session Password: ', password);
             props.onChangeScreen('tasks');
         } else if(data['BadPass'] === "True"){
             setPasswordError('Invalid Credentials Retry')
@@ -61,10 +69,6 @@ const Login = (props) => {
             setPasswordError('Invalid username or password');
             return;
         }
-        //fetch request
-        //fetch()
-
-        
     }
     
     return(
@@ -74,7 +78,7 @@ const Login = (props) => {
             style={{
                 width: '30%',
                 margin: 'auto',
-            }}>
+            }} className='center-hor-ver'>
                 <Form noValidate>
                     <h1>Login</h1>
                     <br></br>
