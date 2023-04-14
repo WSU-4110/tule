@@ -2,7 +2,7 @@
 class ScheduleGenerator{
     // This is the algorithm that will be used to schedule tasks for the day.
     // 'inputTasks' is an array of tasks that will be scheduled
-    generateSchedule(user) {
+    generateSchedule(userVerbose) {
         console.log(user)
         console.log(inactiveTasks)
         // Creates an array to store and organize tasks in.
