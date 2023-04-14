@@ -306,7 +306,7 @@ class DbHandler {
                         break;
                     }
             
-                    this.#tasksCollection.deleteOne(tasktobeDeleted);
+                    this.#tasksCollection.deleteOne({"_id":tasktobeDeleted._id});
                     resolve('return info here');
                 })
             }catch(err){
