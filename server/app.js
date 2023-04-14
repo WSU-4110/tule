@@ -29,6 +29,9 @@ app.post('/GetAllTasks', async (req, res) => {
     res.send(await dbHandler.getUserTasksVerbose(req));
 });
 
+app.post('/GetAllTasksAndSched', async (req,res) => {
+    
+})
 //This route needs to be sent the new schedule in body.Schedule according to the format:
 /*  {
         <scheduleId> :{
@@ -52,10 +55,10 @@ app.post('/SaveTask', async (req,res) => {
     res.send(await dbHandler.saveTask(req));
 })
 
-app.post('/CreateSchedule', async (req,res) =>{
+/*app.post('/CreateSchedule', async (req,res) =>{
     const tasks = dbHandler.getUserTasksVerbose(req);
     const newSchedule = taskHandler.generateSchedule(await tasks)
-})
+})*/
 
 
 app.post('/DeleteTask', async (req, res) => { // search userCollection.find, iterate all tasks and look for ID, remove ID. do the same to taskCollection
@@ -63,7 +66,7 @@ app.post('/DeleteTask', async (req, res) => { // search userCollection.find, ite
 })
 
 app.post('/CreateSchedule', async (req,res) =>{
-
+    res.send(await dbHandler.createSchedule(req));
 })
 
 app.post('/PauseTask', async (req, res) => {
