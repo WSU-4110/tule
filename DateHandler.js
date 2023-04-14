@@ -10,6 +10,18 @@ class DateHandler{
       
         return schedKey;
       }
+
+      schedKeyToDate(schedKey) {
+        // Extracting month, day, and year from the input string
+        var month = parseInt(schedKey.substr(0, 2));
+        var day = parseInt(schedKey.substr(2, 2));
+        var year = parseInt(schedKey.substr(4, 4));
+      
+        // Creating a new Date object with the extracted month, day, and year
+        var date = new Date(year, month - 1, day);
+      
+        return date;
+      }
 }
 
 module.exports = DateHandler
