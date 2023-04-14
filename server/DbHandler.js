@@ -164,6 +164,81 @@ class DbHandler {
         })
     }
 
+    pauseTask(req){
+        return new Promise((resolve,reject) => {
+            try{
+                this.#usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
+
+
+                    var pausedTask = req.body.Task;
+                
+                
+                    var today = new Date();
+                    var currentTime = today.getHours() + ":" + today.getMinutes(); // retrieve the current time
+                
+                
+                    let taskStartTimeKeys = Object.keys(pausedTask['StartTime']); // set keys of task's StartTime (its boolean 'Active' status & its starting time) to a variable
+                
+                
+                    var pausedtaskStartTimeHour = (pausedTask['StartTime'][taskStartTimeKeys[1]]).slice(0,2); // set  hour value of start time of pausedTask as a var
+                    // ^ I sliced above so i could keep only the first 2 characters of the Start Time string (the hour value)
+                
+                
+                    var pausedtaskStartTimeMinute = (pausedTask['StartTime'][taskStartTimeKeys[1]]).slice(-2); // set minute value of start time of pausedTask as a var
+                    // ^ I sliced above so i could keep only the last 2 characters of the Start Time string (the minute value)
+                
+                
+                    var newDurationHour = pausedTask['Duration'] - (today.getHours() - parseInt(pausedtaskStartTimeHour)); // previous duration hours Minus how much hours was spent on task
+                    // take current minute(). subtract starttime minutes from this. divide by 60. add to newduration hour
+                
+                
+                    var newDurationMinutestoHours = (today.getMinutes() - parseInt(pausedtaskStartTimeMinute)) / 60;
+
+
+                    newDurationHour = newDurationHour + newDurationMinutestoHours;
+                    // ^ example for above lines of code: StartTime 4:30. Current time 6:15. (Line 282): Duration 4 hours. 4 - (6 - 4) = 2. (Line 286): 15 - 30 = -15. divide 60 = -15/60. 2 + -15/60 = 1.75 => 4 - 1.75 hours = 2.25 hours new remaining duration.
+            
+                    for (var i = 0; i < user[ActiveTasks].length; i++) { // delete task from active
+                        if (user['ActiveTasks'][i] == pausedTask._id) {
+                            user['ActiveTasks'].splice(i, 1);
+                        }
+                        break;
+                    }
+                
+                    for (var i = 0; i < user[Schedules].length; i++) { // delete task from schedule
+                        if (user['Schedules'][i] == pausedTask._id) {
+                            user['Schedules'].splice(i, 1);
+                        }
+                        break;
+                    }
+
+
+                
+                    user['InactiveTasks'].push(pausedTask._id); // move task to inactive
+
+
+                
+                    // pausedTask['StartTime']['Active'] = false; <-- i didn't think this was right so i went with the below implementation
+
+
+                    this.#tasksCollection.updateOne({ "_id": pausedTask._id } , // change Active value of task under "StartTime" to false
+                    {
+                        "$set": {
+                            "StartTime.Active" : false
+                        }
+                    }
+                    )
+
+
+                    // Change "Location"??
+                    resolve('return info here');
+                })
+            }catch(err){
+                reject(err)
+            }
+        })
+    }
+
     //Takes a new schedule and makes sure that the user entry is up to date
     /*  {
             <scheduleId>(mmddyyy) :{
@@ -184,6 +259,58 @@ class DbHandler {
                 })
             }catch(err){
                 reject(err);
+            }
+        })
+    }
+
+    deleteTask(req){
+        return new Promise((resolve, reject) => {
+            try{
+                this.#usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
+
+
+                    var tasktobeDeleted = req.body.Task;
+            
+                    // use POSTman
+            
+            
+            
+                    for (var i = 0; i < user[InactiveTasks].length; i++) {
+                        if (user['InactiveTasks'][i] == tasktobeDeleted) { // how to compare only the "_id" info from the Task passed in the req?
+                            user['InactiveTasks'].splice(i, 1);
+                        }
+                        break;
+                    }
+            
+            
+                    for (var i = 0; i < user[ActiveTasks].length; i++) {
+                        if (user['ActiveTasks'][i] == tasktobeDeleted) {
+                            user['ActiveTasks'].splice(i, 1);
+                        }
+                        break;
+                    }
+            
+            
+                    for (var i = 0; i < user[RecurringTasks].length; i++) {
+                        if (user['RecurringTasks'][i] == tasktobeDeleted) {
+                            user['RecurringTasks'].splice(i, 1);
+                        }
+                        break;
+                    }
+            
+            
+                    for (var i = 0; i < user[Schedules].length; i++) {
+                        if (user['Schedules'][i] == tasktobeDeleted) {
+                            user['Schedules'].splice(i, 1);
+                        }
+                        break;
+                    }
+            
+                    this.#tasksCollection.deleteOne(tasktobeDeleted);
+                    resolve('return info here');
+                })
+            }catch(err){
+                reject(err)
             }
         })
     }
