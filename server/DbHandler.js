@@ -1,5 +1,6 @@
 require("dotenv").config()
 const TaskHandler = require('./TaskHandler');
+const DateHandler = require('../DateHandler')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //Mongodb doc https://www.mongodb.com/docs/drivers/node/current/
 //Fundamentals section will be your friend
@@ -15,6 +16,7 @@ class DbHandler {
     #usersCollection;
     #tasksCollection;
     #taskHandler;
+    #dateHandler;
 
     constructor(){     
         this.#uri = process.env.MONGO_CONNECTION;
@@ -32,6 +34,7 @@ class DbHandler {
         this.#usersCollection = this.#db.collection('Users')
         this.#tasksCollection = this.#db.collection('Tasks') 
         this.#taskHandler = new TaskHandler();
+        this.#dateHandler = new DateHandler();
     }
 
     loginVerify(req){
@@ -314,6 +317,37 @@ class DbHandler {
                 reject(err)
             }
         })
+    }
+
+    createSchedule(req){
+        return new Promise((resolve, reject) => {
+            try{
+                console.log(req.body);
+                let tempDate = new Date(req.body.Date);
+                let key = this.#dateHandler.dateToSchedKey(tempDate);
+                this.getUserTasksVerbose(req).then(user => {
+                    console.log(user);
+                    if(Object.keys(user['Schedules']).includes(key)){
+                        console.log('found key')
+                        //convert all from active to inactive, or delete if recurring. then delete sched
+                        this.#taskHandler.deleteSchedAndClean(user,key);
+                        
+
+                    }
+                })
+            }catch(err){
+                reject(err)
+            }            
+        })
+        
+        //get the user
+        //if there is a schedule currently for the pas
+    }
+
+    getTaskById(idObject){
+        this.#tasksCollection.find({'_id': idObject}).then(data => {
+            console.log('getTaskById', data);
+        })  
     }
 }
 

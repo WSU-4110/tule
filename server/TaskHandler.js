@@ -1,4 +1,7 @@
+const DbHandler = require('./DbHandler');
+
 class TaskHandler{
+
     //Given a user object from the database, and a task object, will return 
     //a new user object with the appropriate tasks
     updateTaskOnUser(user,task){
@@ -94,10 +97,10 @@ class TaskHandler{
         let schedKeys = Object.keys(verboseUser['Schedules']);
         let schedules = verboseUser['Schedules'];
         let activeTasks = verboseUser['ActiveTasks'];
-        for(i = 0; i < schedKeys.length; i++){
+        for(let i = 0; i < schedKeys.length; i++){
             let currentSched = schedules[schedKeys[i]];
-            for(j = 0; j < currentSched.length; j++){
-                for(k = 0; k < activeTasks.length; k++){
+            for(let j = 0; j < currentSched.length; j++){
+                for(let k = 0; k < activeTasks.length; k++){
                     if(String(activeTasks[k]['_id']) == String(currentSched[j]['_id'])){
                         let tempTask = activeTasks[k];
                         tempTask['StartTime'] = currentSched[j]['SchedStartTime']
@@ -106,7 +109,38 @@ class TaskHandler{
                     }
                 }
             }
+            verboseUser['Schedules'][schedKeys[i]] = currentSched;
         }
+        return verboseUser;
+        
+    }
+
+    deleteSchedAndClean(user,key){
+         //convert all from active to inactive, or delete if recurring
+        console.log('first user', user);
+        //load schedule to be deleted
+        let delSched = user['Schedules'][key];
+        let delArr = [];
+        console.log('schedule to delete',delSched);
+        //iterate over the tasks in the schedule to find matches in active tasks
+        for(let i = 0; i < delSched.length; i++){
+            for(let j = 0; j < user['ActiveTasks'].length; j++){
+                if(String(delSched[i]['_id']) == String(user['ActiveTasks'][j]['_id'])){
+                    console.log('found task in active tasks.');
+                    //add task to InactiveTasks and push index to array
+                    user['InactiveTasks'].push(user['ActiveTasks'][j]);
+                    delArr.push(j);
+                    break;
+                }
+            }
+        }
+        //iterate over array backwards and remove tasks from ActiveTasks
+        for(let i = delArr.length; i >= 0; i--){
+            user['ActiveTasks'].splice(delArr[i],1);
+        }
+        //delete sched from user
+        delete user['Schedules'][key];
+        console.log(user);
     }
 }
 
