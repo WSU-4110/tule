@@ -1,6 +1,6 @@
 require("dotenv").config()
 const TaskHandler = require('./TaskHandler');
-const DateHandler = require('../DateHandler')
+const DateHandler = require('../DateHandler');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //Mongodb doc https://www.mongodb.com/docs/drivers/node/current/
 //Fundamentals section will be your friend
@@ -328,20 +328,16 @@ class DbHandler {
                 this.getUserTasksVerbose(req).then(user => {
                     console.log(user);
                     if(Object.keys(user['Schedules']).includes(key)){
-                        console.log('found key')
-                        //convert all from active to inactive, or delete if recurring. then delete sched
-                        this.#taskHandler.deleteSchedAndClean(user,key);
-                        
-
+                        user = this.#taskHandler.deleteSchedAndClean(user,key);
                     }
+                    user = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
+
+                    resolve(user);
                 })
             }catch(err){
                 reject(err)
             }            
         })
-        
-        //get the user
-        //if there is a schedule currently for the pas
     }
 
     getTaskById(idObject){
