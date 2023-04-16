@@ -93,7 +93,7 @@ const changeToMinutes = (input)=>{
         min = parseInt(input.split(':')[1]);
         
     }
-    return(hr * 60 + min)
+    return(hr * 60 + roundDown15(min))
     
     
 }
@@ -134,6 +134,9 @@ const todaySchedule = () =>{
         }
     }
     return([]);
+}
+const roundDown15 = (start) =>{
+    return start - (start %15);
 }
 
 const resetModal = () =>{
