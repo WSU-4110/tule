@@ -191,11 +191,11 @@ const handleTaskButton =(task) =>{
                             <div className={"task" + task.Priority} key={task.Name + task.Priority}>
                                 {castDuration(task).map((index) => (
                                 (index===castDuration(task)[0] &&
-                                    <div className={"task" +task.Priority} key={time+minute+index+"button"}>
+                                    <div className={(!task.Complete && "task" +task.Priority) || (task.Complete && "taskComplete")} key={time+minute+index+"button"}>
                                         <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={task.Name} onClick={()=> handleTaskButton(task)}>{task.Name}</Button>
                                     </div>)
                                 ||
-                                    <div className={"task" +task.Priority} key={time+minute+index}>
+                                    <div className={(!task.Complete && "task" +task.Priority) || (task.Complete && "taskComplete")} key={time+minute+index}>
                                     </div>))}
                             </div>
                             ))}
