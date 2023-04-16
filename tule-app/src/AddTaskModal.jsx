@@ -45,6 +45,7 @@ export function AddTaskModal(props) {
     const [taskDate, setTaskDate] = useState('');
     const [taskStartTimeBool, setTaskStartTimeBool] = useState(false);
     const [taskStartTime, setTaskStartTime] = useState('');
+    const [taskLocation, setTaskLocation] = useState('');
     const [taskPriority, setTaskPriority] = useState(0);
     const [reccuringDays, setReccuringDays] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
@@ -349,18 +350,31 @@ export function AddTaskModal(props) {
                             </Form.Group>
                         </Row>
 
-                        <Form.Group className="mb-3" controlId="formBasicPassword">
-                            <DropdownButton id="dropdown-basic-button" title="Priority">
-                                <Dropdown.Item onClick={() => setTaskPriority("3")}>3 (Highest priority)</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setTaskPriority("2")}>2</Dropdown.Item>
-                                <Dropdown.Item onClick={() => setTaskPriority("1")}>1 (Lowest priority)</Dropdown.Item>
-                            </DropdownButton>
-                            <Form.Text className="text-muted">
-                                Optional
-                            </Form.Text>
-
-                        </Form.Group>
-
+                        <Row>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <DropdownButton id="dropdown-basic-button" title="Priority">
+                                    <Dropdown.Item onClick={() => setTaskPriority("3")}>3 (Highest priority)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setTaskPriority("2")}>2</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setTaskPriority("1")}>1 (Lowest priority)</Dropdown.Item>
+                                </DropdownButton>
+                                <Form.Text className="text-muted">
+                                    Optional
+                                </Form.Text>
+                            </Form.Group>
+                            
+                            <Form.Group className="mb-3" controlId="formTaskLocation">
+                                <Form.Label>Location</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter location"
+                                    onChange={(u) => setTaskLocation(u.target.value)}
+                                    />
+                                <Form.Text className="text-muted">
+                                    Optional
+                                </Form.Text>
+                            </Form.Group>
+                        </Row>
+                        
                     </Form>
 
                     {/* <label style={{marginRight: '20px'}} htmlFor="taskName">Task Name</label>
