@@ -4,9 +4,11 @@ import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
 import { ScheduleModal } from "./ScheduleModal";
 import DateHandler from "./DateHandler";
+import TaskCompleteModal from "./TaskCompleteModal";
  
 function Schedule(props){
 const [showSCModal, setShowSCModal] = useState(true);
+const [showTCModal, setShowTCModal] = useState(false);
 const [activeHours, setActiveHours] = useState(Array.from({length: (24-9)}, (_,i) => 9+i));
 const DAYS = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const [today] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
@@ -14,6 +16,7 @@ const [displayedDay, setDisplayedDay] = useState(new Date(today.getFullYear(), t
 const [taskList, setTaskList] = useState([]);
 const [createdSchedules, setCreatedSchedules] = useState([[{StartTime: "15:00"}]]);
 const dateHandler = new DateHandler();
+const [selectedTask, setSelectedTask] = useState({});
 const exampleTasks = [{
     taskName: "example task",
     duration: 2,
@@ -141,10 +144,17 @@ const roundDown15 = (start) =>{
 
 const resetModal = () =>{
     setShowSCModal(false) 
+    setShowTCModal(false)
+}
+
+const handleTaskButton =(task) =>{
+    setSelectedTask(task);
+    setShowTCModal(true);
 }
     return(
         <>
             {showSCModal && <ScheduleModal resetModal={resetModal} setActiveHours={setActiveHours} activeHours ={activeHours}/>}
+            {showTCModal && <TaskCompleteModal resetModal={resetModal}  task={selectedTask}/>}
             <div>
             <Navbar text='Tule'/>
             
@@ -182,7 +192,7 @@ const resetModal = () =>{
                                 {castDuration(task).map((index) => (
                                 (index===castDuration(task)[0] &&
                                     <div className={"task" +task.Priority} key={time+minute+index+"button"}>
-                                        <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={task.Name}>{task.Name}</Button>
+                                        <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={task.Name} onClick={()=> handleTaskButton(task)}>{task.Name}</Button>
                                     </div>)
                                 ||
                                     <div className={"task" +task.Priority} key={time+minute+index}>
