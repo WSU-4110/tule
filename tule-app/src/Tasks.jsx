@@ -7,21 +7,21 @@ import banner from "./pics/sky.png"
 import DropDownMenu from './components/DropDownMenu';
 
 const Tasks = (props) => {
-    const [currentTasks, setCurrentTasks] = useState([]);
+    // const [currentTasks, setCurrentTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
-    const editTask = (index, newName, newStartTime, newDuration, newBreak, newDate, newDays, newPriority) =>{
+    // const editTask = (index, newName, newStartTime, newDuration, newBreak, newDate, newDays, newPriority) =>{
     
-        console.log("test");
-        currentTasks[index].taskName = newName;
-        currentTasks[index].startTime = newStartTime;
-        currentTasks[index].duration = newDuration;
-        currentTasks[index].break = newBreak;
-        currentTasks[index].date = newDate;
-        currentTasks[index].days = newDays;
-        currentTasks[index].priority = newPriority;
-        console.log(currentTasks);
-    }
+    //     console.log("test");
+    //     currentTasks[index].taskName = newName;
+    //     currentTasks[index].startTime = newStartTime;
+    //     currentTasks[index].duration = newDuration;
+    //     currentTasks[index].break = newBreak;
+    //     currentTasks[index].date = newDate;
+    //     currentTasks[index].days = newDays;
+    //     currentTasks[index].priority = newPriority;
+    //     console.log(currentTasks);
+    // }
     //Should return all of the tasks from database associated with the user.
     async function getAllTasks(){
         try{
