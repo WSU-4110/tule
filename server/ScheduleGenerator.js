@@ -2,8 +2,9 @@
 class ScheduleGenerator{
     // This is the algorithm that will be used to schedule tasks for the day.
     // 'inputTasks' is an array of tasks that will be scheduled
-    generateSchedule(inputTasks) {
-        console.log(inputTasks)
+    generateSchedule(userVerbose) {
+        console.log(user)
+        console.log(inactiveTasks)
         // Creates an array to store and organize tasks in.
         const dailySchedule = new Array();
 
@@ -19,22 +20,22 @@ class ScheduleGenerator{
         // Orgainizes tasks based on whether they have a start time.
         // If the task has no start time, this organizes the task
         // based on its priority.
-        for (let t = 0; t > inputTasks.length; t++) {
-            if (inputTasks[t].StartTime.Active) {
-                concrete.push(inputTasks[t]);
+        for (let t = 0; t > inactiveTasks.length; t++) {
+            if (inactiveTasks[t].StartTime.Active) {
+                concrete.push(inactiveTasks[t]);
             } else {
-                switch (inputTasks[t].Priority) {
+                switch (inactiveTasks[t].Priority) {
                     case 3:
-                        priority3.push(inputTasks[t]);
+                        priority3.push(inactiveTasks[t]);
                         break;
                     case 2:
-                        priority2.push(inputTasks[t]);
+                        priority2.push(inactiveTasks[t]);
                         break;
                     case 1:
-                        priority1.push(inputTasks[t]);
+                        priority1.push(inactiveTasks[t]);
                         break;
                     case 0:
-                        priority0.push(inputTasks[t]);
+                        priority0.push(inactiveTasks[t]);
                         break;
                 }
             }
