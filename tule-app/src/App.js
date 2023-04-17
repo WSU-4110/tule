@@ -6,7 +6,7 @@ import {SignUp} from "./SignUp";
 import Tasks from "./Tasks";
 import { EditTaskModal } from './EditTaskModal';
 import Schedule from './Schedule';
-
+import * as Unicons from '@iconscout/react-unicons';
 
 function App() {
   const [currentScreen, setCurrentScreen] = useState('init');
