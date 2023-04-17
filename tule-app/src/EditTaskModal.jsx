@@ -28,21 +28,17 @@ export function EditTaskModal(props) {
     // const [taskPriority, setTaskPriority] = useState(props.currentTasks[props.id].priority);
 
     // Still does not retreive reccruing days
-    const [taskName, setTaskName] = useState(props.currentTask.taskName);
-    const [taskDuration, setTaskDuration] = useState(props.currentTask.duration);
-    const [taskDurationHours, setTaskDurationHours] = useState(props.task.duration.split(':')[0]);
-    const [taskDurationMinutes, setTaskDurationMinutes] = useState(props.currentTask.duration.split(':')[1]);
-    const [taskBreakDurationBool, setTaskBreakDurationBool] = useState(false);
-    const [taskBreakDuration, setTaskBreakDuration] = useState(props.currentTask.break);
-    const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(props.currentTask.break.split(':')[0]);
-    const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(props.currentTask.break.split(':')[1]);
-    const [taskDateBool, setTaskDateBool] = useState(false);
-    const [taskDate, setTaskDate] = useState(props.currentTask.date);
-    const [taskStartTimeBool, setTaskStartTimeBool] = useState(false);
-    const [taskStartTime, setTaskStartTime] = useState(props.currentTask.startTime);
-    // need to add location from backend
-    // const [taskLocation, setTaskLocation] = useState(props.currentTask.location);
-    const [taskPriority, setTaskPriority] = useState(props.currentTask.priority);
+    const [taskName, setTaskName] = useState(props.Task.Name);
+    const [taskDuration, setTaskDuration] = useState(props.Task.Duration);
+    const [taskDurationHours,setTaskDurationHours] = useState(((props.Task.Duration*60).toString()).slice(2));
+    const [taskDurationMinutes, setTaskDurationMinutes] = useState(((props.Task.Duration*60).toString()).slice(0, 1));
+    const [taskBreakDuration, setTaskBreakDuration] = useState(props.Task.Break.Time);
+    const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(((props.Task.Break.Time*60).toString()).slice(2));
+    const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(((props.Task.Break.Time*60).toString()).slice(0, 1));
+    const [taskDate, setTaskDate] = useState(props.Task.Date.Time);
+    const [taskStartTime, setTaskStartTime] = useState(props.Task.StartTime.Time);
+    const [taskLocation, setTaskLocation] = useState(props.Task.Location);
+    const [taskPriority, setTaskPriority] = useState(props.Task.Priority);
     const [reccuringDays, setReccuringDays] = useState([]);
     const [showModal, setShowModal] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
@@ -102,15 +98,6 @@ export function EditTaskModal(props) {
                     if (taskPriority === '') {
                         setTaskPriority(0)
                     }
-                    if (taskStartTime !== '') {
-                        setTaskStartTimeBool(true);
-                    }
-                    if (taskBreakDuration !== '') {
-                        setTaskBreakDurationBool(true);
-                    }
-                    if (taskDate !== '') {
-                        setTaskDateBool(true);
-                    }
                     setShowModal(false);
                 } else {
                     setErrorMessage('Please enter date');
@@ -146,7 +133,7 @@ export function EditTaskModal(props) {
                 ,
             Reccurence: reccuringDays,
             Priority: parseInt(taskPriority),
-            Location: "",
+            Location: taskLocation,
             Complete: false
         }
         props.editTask(props.id,taskName,taskStartTime,taskDurationHours + ":" + taskDurationMinutes,taskPriority);
@@ -173,7 +160,7 @@ export function EditTaskModal(props) {
     return(
         <>
             <Modal
-                showModal={showModal}
+                show={showModal}
                 onHide={handleClose}
                 backdrop="static"
                 >
@@ -211,7 +198,6 @@ export function EditTaskModal(props) {
                             <Form.Group
                                 as={Col}
                                 controlId="formBasicPassword"
-                                disabled={!taskStartTimeBool}
                                 >
                                 <Form.Label>Start Time</Form.Label>
                                 <Form.Control
@@ -313,11 +299,11 @@ export function EditTaskModal(props) {
                             <Form.Group as={Col} controlId="formBasicPassword">
                                 <Form.Label>Reccuring Days</Form.Label>
                                 <Multiselect
-                                    options={daysOfWeek} // Options to display in the dropdown
-                                    selectedValues={reccuringDays} // Preselected value to persist in dropdown
-                                    onSelect={onSelect} // Function will trigger on select event
-                                    onRemove={onRemove} // Function will trigger on remove event
-                                    displayValue="name" // Property name to display in the dropdown options
+                                    options={daysOfWeek} 
+                                    selectedValues={reccuringDays} 
+                                    onSelect={onSelect} 
+                                    onRemove={onRemove} 
+                                    displayValue="name" 
                                 />
                                 <Form.Text className="text-muted">
                                     Optional
@@ -326,28 +312,44 @@ export function EditTaskModal(props) {
                         </Row>
 
                         <Row>
-                            <Form.Group className="mb-3" controlId="formTaskPriority">
-                                <DropdownButton id="dropdown-basic-button" title="Priority">
-                                    <Dropdown.Item onClick={() => setTaskPriority("3")}>3 (Highest priority)</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("2")}>2</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("1")}>1 (Lowest priority)</Dropdown.Item>
-                                </DropdownButton>
-                                <Form.Text className="text-muted">
-                                    Optional
-                                </Form.Text>
-                            </Form.Group>
+                            <Col>
+                                <Form.Group className="mb-3" controlId="formTaskLocation">
+                                    <Form.Label>Location</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="Enter location"
+                                        onChange={(u) => setTaskLocation(u.target.value)}
+                                        />
+                                    <Form.Text className="text-muted">
+                                        Optional
+                                    </Form.Text>
+                                </Form.Group>
+                            </Col>
 
-                            <Form.Group className="mb-3" controlId="formTaskLocation">
-                                <Form.Label>Location</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter location"
-                                    onChange={(u) => setTaskLocation(u.target.value)}
-                                    />
-                                <Form.Text className="text-muted">
-                                    Optional
-                                </Form.Text>
-                            </Form.Group>
+                            <Col>
+                                <Form.Group className="mb-3" controlId="formTaskPriority">
+                                    <Form.Label>Priority</Form.Label>
+                                    <DropdownButton
+                                        id="dropdown-basic-button"
+                                        title={taskPriority}>
+                                        <Dropdown.Item onClick={() => setTaskPriority("3")}>
+                                            3 (Highest Priority)
+                                        </Dropdown.Item>
+                                        <Dropdown.Item onClick={() => setTaskPriority("2")}>
+                                            2
+                                        </Dropdown.Item>
+                                        <Dropdown.Item onClick={() => setTaskPriority("1")}>
+                                            1 (Lowest Priority)
+                                        </Dropdown.Item>
+                                        <Dropdown.Item onClick={() => setTaskPriority("None")}>
+                                            0 (No Priority)
+                                        </Dropdown.Item>
+                                    </DropdownButton>
+                                    <Form.Text className="text-muted">
+                                        Optional
+                                    </Form.Text>
+                                </Form.Group>
+                            </Col>
                         </Row>
 
                     </Form>
