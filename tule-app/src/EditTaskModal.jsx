@@ -38,6 +38,8 @@ export function EditTaskModal(props) {
     const [taskDate, setTaskDate] = useState(props.Task.Date.Time);
     const [taskStartTime, setTaskStartTime] = useState(props.Task.StartTime.Time);
     const [taskLocation, setTaskLocation] = useState(props.Task.Location);
+    const [addLocation, setAddLocation] = useState(false);
+    const [locations, setLocations] = useState([]);
     const [taskPriority, setTaskPriority] = useState(props.Task.Priority);
     const [reccuringDays, setReccuringDays] = useState([]);
     const [showModal, setShowModal] = useState(true);
@@ -51,7 +53,36 @@ export function EditTaskModal(props) {
           { name: 'Thursday', id: 4 },
           { name: 'Friday', id: 5 },
           { name: 'Saturday', id: 6 },
-        ];
+    ];
+
+    // Makes a list of all unique locations in the current tasks list
+    // to be used in the location dropdown menu.
+    const locationsList = () => {
+        for (var i = 0; i < props.currentTasks.length; i++) {
+            if (props.currentTasks[i].Location !== ''
+                && props.currentTasks[i].Location !== undefined) {
+                    try{
+                        if(!locations.includes(props.currentTasks[i].Location)){
+                            locations.push(props.currentTasks[i].Location);
+                        }
+                    } catch(err){
+                        console.log(err);
+                        locations = [props.currentTasks[i].Location];
+                    }
+            }
+        }
+        return locations;
+    }
+
+    const addNewLocation = () => {
+        setAddLocation(true);
+        setTaskLocation("Add new location");
+    }
+
+    const changeLocation = (location) => {
+        setTaskLocation(location);
+        setAddLocation(false);
+    }
 
     const handleClose = () => {
         setShowModal(false);
@@ -288,7 +319,7 @@ export function EditTaskModal(props) {
                         </Row>
 
                         <Row className="mb-3">
-                            <Form.Group as={Col} controlId="formBasicPassword">
+                            <Form.Group as={Col} controlId="formTaskDate">
                                 <Form.Label>Date</Form.Label>
                                 <Form.Control
                                     type="date"
@@ -296,7 +327,7 @@ export function EditTaskModal(props) {
                                     />
                             </Form.Group>
 
-                            <Form.Group as={Col} controlId="formBasicPassword">
+                            <Form.Group as={Col} controlId="formRecurringDays">
                                 <Form.Label>Reccuring Days</Form.Label>
                                 <Multiselect
                                     options={daysOfWeek} 
@@ -315,11 +346,18 @@ export function EditTaskModal(props) {
                             <Col>
                                 <Form.Group className="mb-3" controlId="formTaskLocation">
                                     <Form.Label>Location</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Enter location"
-                                        onChange={(u) => setTaskLocation(u.target.value)}
-                                        />
+                                    <DropdownButton
+                                        id="dropdown-basic-button"
+                                        title={taskLocation}>
+                                            <ul>
+                                                {(locationsList() !== undefined) && locations && locations.map && locations.map((location) => (
+                                                    <Dropdown.Item onClick={() => changeLocation(location)}>{location}</Dropdown.Item>
+                                                ))}
+                                            </ul>
+                                            <Dropdown.Item onClick={() => addNewLocation()}>
+                                                Add new location
+                                            </Dropdown.Item>
+                                    </DropdownButton>
                                     <Form.Text className="text-muted">
                                         Optional
                                     </Form.Text>
@@ -327,29 +365,55 @@ export function EditTaskModal(props) {
                             </Col>
 
                             <Col>
-                                <Form.Group className="mb-3" controlId="formTaskPriority">
-                                    <Form.Label>Priority</Form.Label>
-                                    <DropdownButton
-                                        id="dropdown-basic-button"
-                                        title={taskPriority}>
-                                        <Dropdown.Item onClick={() => setTaskPriority("3")}>
-                                            3 (Highest Priority)
-                                        </Dropdown.Item>
-                                        <Dropdown.Item onClick={() => setTaskPriority("2")}>
-                                            2
-                                        </Dropdown.Item>
-                                        <Dropdown.Item onClick={() => setTaskPriority("1")}>
-                                            1 (Lowest Priority)
-                                        </Dropdown.Item>
-                                        <Dropdown.Item onClick={() => setTaskPriority("None")}>
-                                            0 (No Priority)
-                                        </Dropdown.Item>
-                                    </DropdownButton>
-                                    <Form.Text className="text-muted">
-                                        Optional
-                                    </Form.Text>
-                                </Form.Group>
+                                {(addLocation) && (
+                                    <Form.Group className="mb-3" controlId="formTaskLocation">
+                                        <Form.Label>Add Location</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            placeholder="Enter location"
+                                            onChange={(u) => setTaskLocation(u.target.value)}
+                                            />
+                                    </Form.Group>
+                                )}
+                                {!((taskLocation === "-----") || (taskLocation === "Add new location"))
+                                    && (!addLocation) && (
+                                    <Form.Group className="mb-3" controlId="formTaskLocationDisplay">
+                                        <Form.Label>Selected Location</Form.Label>
+                                        {(taskLocation === "-----") && (
+                                            <Form.Control type="text" value="" readOnly/>
+                                        )}
+
+                                        {(taskLocation !== "-----") && (
+                                            <Form.Control type="text" value={taskLocation} readOnly/>
+                                        )}
+                                    </Form.Group>
+                                )}
                             </Col>
+                        </Row>
+
+                        <Row>
+                            <Form.Group className="mb-3" controlId="formTaskPriority">
+                                <Form.Label>Priority</Form.Label>
+                                <DropdownButton
+                                    id="dropdown-basic-button"
+                                    title={taskPriority}>
+                                    <Dropdown.Item onClick={() => setTaskPriority("3")}>
+                                        3 (Highest Priority)
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setTaskPriority("2")}>
+                                        2
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setTaskPriority("1")}>
+                                        1 (Lowest Priority)
+                                    </Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setTaskPriority("None")}>
+                                        0 (No Priority)
+                                    </Dropdown.Item>
+                                </DropdownButton>
+                                <Form.Text className="text-muted">
+                                    Optional
+                                </Form.Text>
+                            </Form.Group>
                         </Row>
 
                     </Form>

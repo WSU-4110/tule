@@ -420,6 +420,9 @@ export function AddTaskModal(props) {
                                                 Add new location
                                             </Dropdown.Item>
                                     </DropdownButton>
+                                    <Form.Text className="text-muted">
+                                        Optional
+                                    </Form.Text>
                                 </Form.Group>
                             </Col>
 
