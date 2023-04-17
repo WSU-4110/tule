@@ -24,7 +24,7 @@ function App() {
         return <Tasks onChangeScreen={changeCurrentScreen}/>
       case 'editTask':
         return <EditTaskModal onChangeScreen={changeCurrentScreen}/>
-      case 'schedule':
+        case 'schedule':
         return <Schedule onChangeScreen={changeCurrentScreen}/>
       default:
         return <Init onChangeScreen={changeCurrentScreen}/>

@@ -46,7 +46,7 @@ export function AddTaskModal(props) {
     const [taskStartTimeBool, setTaskStartTimeBool] = useState(false);
     const [taskStartTime, setTaskStartTime] = useState('');
     const [taskLocation, setTaskLocation] = useState('');
-    const [taskPriority, setTaskPriority] = useState("None");
+    const [taskPriority, setTaskPriority] = useState(0);
     const [reccuringDays, setReccuringDays] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -76,34 +76,7 @@ export function AddTaskModal(props) {
     // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        if (taskBreakDurationHours < 10) {
-            setTaskBreakDurationHours('0' + taskBreakDurationHours.toString());
-        } else {
-            setTaskBreakDurationHours(taskBreakDurationHours.toString());
-        }
-        if (taskBreakDurationMinutes < 10) {
-            setTaskBreakDurationMinutes('0' + taskBreakDurationMinutes.toString());
-        } else {
-            setTaskBreakDurationMinutes(taskBreakDurationMinutes.toString());
-        }
-        if (taskDurationHours < 10) {
-            setTaskDurationHours('0' + taskDurationHours.toString());
-        } else {
-            setTaskDurationHours(taskDurationHours.toString());
-        }
-        if (taskDurationMinutes < 10) {
-            setTaskDurationMinutes('0' + taskDurationMinutes.toString());
-        } else {
-            setTaskDurationMinutes(taskDurationMinutes.toString());
-        }
         setTaskBreakDuration(taskBreakDurationHours + ':' + taskBreakDurationMinutes);
-        setTaskDuration(taskDurationHours + ':' + taskDurationMinutes);
-
-        if (taskPriority === 'None') {
-            setTaskPriority(0);
-        }
-
         if (taskName !== '') {
             if (taskDuration !== '') {
                 if (taskDate !== '') {
@@ -378,36 +351,28 @@ export function AddTaskModal(props) {
                         </Row>
 
                         <Row>
-                            <Col>
-                                <Form.Group className="mb-3" controlId="formTaskPriority">
-                                    <Form.Label>Priority</Form.Label>
-                                    <DropdownButton
-                                        id="dropdown-basic-button"
-                                        title={taskPriority}>
-                                        <Dropdown.Item onClick={() => setTaskPriority("3")}>3 (Highest Priority)</Dropdown.Item>
-                                        <Dropdown.Item onClick={() => setTaskPriority("2")}>2</Dropdown.Item>
-                                        <Dropdown.Item onClick={() => setTaskPriority("1")}>1 (Lowest Priority)</Dropdown.Item>
-                                        <Dropdown.Item onClick={() => setTaskPriority("None")}>0 (No Priority)</Dropdown.Item>
-                                    </DropdownButton>
-                                    <Form.Text className="text-muted">
-                                        Optional
-                                    </Form.Text>
-                                </Form.Group>
-                            </Col>
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <DropdownButton id="dropdown-basic-button" title="Priority">
+                                    <Dropdown.Item onClick={() => setTaskPriority("3")}>3 (Highest priority)</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setTaskPriority("2")}>2</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => setTaskPriority("1")}>1 (Lowest priority)</Dropdown.Item>
+                                </DropdownButton>
+                                <Form.Text className="text-muted">
+                                    Optional
+                                </Form.Text>
+                            </Form.Group>
                             
-                            <Col>
-                                <Form.Group className="mb-3" controlId="formTaskLocation">
-                                    <Form.Label>Location</Form.Label>
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Enter location"
-                                        onChange={(u) => setTaskLocation(u.target.value)}
-                                        />
-                                    <Form.Text className="text-muted">
-                                        Optional
-                                    </Form.Text>
-                                </Form.Group>
-                            </Col>
+                            <Form.Group className="mb-3" controlId="formTaskLocation">
+                                <Form.Label>Location</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Enter location"
+                                    onChange={(u) => setTaskLocation(u.target.value)}
+                                    />
+                                <Form.Text className="text-muted">
+                                    Optional
+                                </Form.Text>
+                            </Form.Group>
                         </Row>
                         
                     </Form>

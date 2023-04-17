@@ -11,7 +11,6 @@ const DAYS = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const [today] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
 const [displayedDay, setDisplayedDay] = useState(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 const [taskList, setTaskList] = useState([]);
-const [modalTitle, setModalTitle] = useState("Create Schedule");
 const exampleTasks = [{
     taskName: "example task",
     duration: 2,
@@ -69,7 +68,6 @@ useEffect(() => {
 const castDuration=(task) =>{
     return(Array.from({ length: Math.round(changeToMinutes(task.Duration.Time,0)/15) }, (_,i) => task.StartTime.Time+i*0.25))
 }
-
 const checkDate =(compareDate, date) => {
     //console.log("compare date" + compareDate);
     var d1 = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -83,17 +81,14 @@ const checkDate =(compareDate, date) => {
     && d1.getMonth() === d2.getMonth()
     && d1.getFullYear() === d2.getFullYear());
 }
-
 const checkTime =(compareTime, time) => {
     return(
         compareTime === time
     )
 }
-
 const changeToMinutes = (hr, min)=>{
     return(hr * 60 + min)
 }
-
 const changeTime12hr =(time24, minute) =>{
     var output = "";
     if(time24 === 0 || time24 === 12){
@@ -114,37 +109,22 @@ const changeTime12hr =(time24, minute) =>{
     }
     return output;
 }
-
 const nextDay = () =>{
     console.log("today is " +today);
     console.log("display date is " +displayedDay);
     const tempDate = new Date(displayedDay.getFullYear(), displayedDay.getMonth(), displayedDay.getDate()+1);
     setDisplayedDay(tempDate);
 }
-
 const prevDay = () =>{
     const tempDate = new Date(displayedDay.getFullYear(), displayedDay.getMonth(), displayedDay.getDate()-1);
     setDisplayedDay(tempDate);
 }
-
 const resetModal = () =>{
     setShowSCModal(false) 
 }
-
-const editSchedule = () =>{
-    setModalTitle("Edit Schedule");
-    setShowSCModal(true);
-}
-
     return(
         <>
-            {showSCModal && 
-                <ScheduleModal
-                    resetModal={resetModal}
-                    setActiveHours={setActiveHours} 
-                    activeHours={activeHours}
-                    title={modalTitle}
-                    />}
+            {showSCModal && <ScheduleModal resetModal={resetModal} setActiveHours={setActiveHours} activeHours ={activeHours}/>}
             <div>
             <Navbar text='Tule'/>
             
@@ -152,10 +132,10 @@ const editSchedule = () =>{
                 Back
             </button>
             <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
-               Logout
+               logout
             </button>
-            <button className="btn btn-primary mt-5" onClick={editSchedule}>
-               Edit Schedule
+            <button className="btn btn-primary mt-5" onClick={() => setShowSCModal(true)}>
+               change active hours
             </button>
             </div>
             <div className="dayDisplay">

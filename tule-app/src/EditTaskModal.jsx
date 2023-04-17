@@ -11,40 +11,22 @@ import Alert from 'react-bootstrap/Alert';
 import './EditTaskModal.css'
 
 export function EditTaskModal(props) {
-    // const [taskName, setTaskName] = useState(props.currentTasks[props.id].taskName);
-    // const [taskDuration, setTaskDuration] = useState(props.currentTasks[props.id].duration);
-    // const [taskDurationHours, setTaskDurationHours] = useState(props.currentTasks[props.id].duration.split(':')[0]);
-    // const [taskDurationMinutes, setTaskDurationMinutes] = useState(props.currentTasks[props.id].duration.split(':')[1]);
-    // const [taskBreakDurationBool, setTaskBreakDurationBool] = useState(false);
-    // const [taskBreakDuration, setTaskBreakDuration] = useState('');
-    // const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(0);
-    // const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(0);
-    // const [taskDateBool, setTaskDateBool] = useState(false);
-    // const [taskDate, setTaskDate] = useState(props.currentTasks[props.id].date);
-    // const [taskStartTimeBool, setTaskStartTimeBool] = useState(false);
-    // const [taskStartTime, setTaskStartTime] = useState(props.currentTasks[props.id].startTime);
-    // // need to add location from backend
-    // const [taskLocation, setTaskLocation] = useState(props.currentTasks[props.id].location);
-    // const [taskPriority, setTaskPriority] = useState(props.currentTasks[props.id].priority);
-
-    // Still does not retreive reccruing days
-    const [taskName, setTaskName] = useState(props.currentTask.taskName);
-    const [taskDuration, setTaskDuration] = useState(props.currentTask.duration);
-    const [taskDurationHours, setTaskDurationHours] = useState(props.task.duration.split(':')[0]);
-    const [taskDurationMinutes, setTaskDurationMinutes] = useState(props.currentTask.duration.split(':')[1]);
+    const [taskName, setTaskName] = useState(props.currentTasks[props.id].taskName);
+    const [taskDuration, setTaskDuration] = useState(props.currentTasks[props.id].duration);
+    const [taskDurationHours, setTaskDurationHours] = useState(props.currentTasks[props.id].duration.split(':')[0]);
+    const [taskDurationMinutes, setTaskDurationMinutes] = useState(props.currentTasks[props.id].duration.split(':')[1]);
     const [taskBreakDurationBool, setTaskBreakDurationBool] = useState(false);
-    const [taskBreakDuration, setTaskBreakDuration] = useState(props.currentTask.break);
-    const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(props.currentTask.break.split(':')[0]);
-    const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(props.currentTask.break.split(':')[1]);
+    const [taskBreakDuration, setTaskBreakDuration] = useState('');
+    const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(0);
+    const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(0);
     const [taskDateBool, setTaskDateBool] = useState(false);
-    const [taskDate, setTaskDate] = useState(props.currentTask.date);
+    const [taskDate, setTaskDate] = useState(props.currentTasks[props.id].date);
     const [taskStartTimeBool, setTaskStartTimeBool] = useState(false);
-    const [taskStartTime, setTaskStartTime] = useState(props.currentTask.startTime);
+    const [taskStartTime, setTaskStartTime] = useState(props.currentTasks[props.id].startTime);
     // need to add location from backend
-    // const [taskLocation, setTaskLocation] = useState(props.currentTask.location);
-    const [taskPriority, setTaskPriority] = useState(props.currentTask.priority);
+    const [taskLocation, setTaskLocation] = useState(props.currentTasks[props.id].location);
+    const [taskPriority, setTaskPriority] = useState(props.currentTasks[props.id].priority);
     const [reccuringDays, setReccuringDays] = useState([]);
-    const [showModal, setShowModal] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const daysOfWeek = [
@@ -56,22 +38,15 @@ export function EditTaskModal(props) {
           { name: 'Friday', id: 5 },
           { name: 'Saturday', id: 6 },
         ];
-
+    const [show, setShow] = useState(true);
     const handleClose = () => {
-        setShowModal(false);
+        setShow(false);
         console.log(taskStartTime);
         props.resetModal(false);
     }
-
-    const handleShow = () => {
-        setShowModal(true);
-        props.resetModal(true);
-    }
-
     const onSelect = (selectedItem) => {
         reccuringDays.push(selectedItem);
     }
-
     const onRemove = (selectedItem) => {
         reccuringDays.pop(selectedItem);
     }
@@ -80,22 +55,8 @@ export function EditTaskModal(props) {
     // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        if (taskDurationHours < 10) {
-            setTaskDurationHours('0' + taskDurationHours.toString());
-        }
-        if (taskDurationMinutes < 10) {
-            setTaskDurationMinutes('0' + taskDurationMinutes.toString());
-        }
-        if (taskBreakDurationHours < 10) {
-            setTaskBreakDurationHours('0' + taskBreakDurationHours.toString());
-        }
-        if (taskBreakDurationMinutes < 10) {
-            setTaskBreakDurationMinutes('0' + taskBreakDurationMinutes.toString());
-        }
         setTaskDuration(taskDurationHours + ':' + taskDurationMinutes);
         setTaskBreakDuration(taskBreakDurationHours + ':' + taskBreakDurationMinutes);
-
         if (taskName !== '') {
             if (taskDuration !== '') {
                 if (taskDate !== '') {
@@ -111,7 +72,7 @@ export function EditTaskModal(props) {
                     if (taskDate !== '') {
                         setTaskDateBool(true);
                     }
-                    setShowModal(false);
+                    setShow(false);
                 } else {
                     setErrorMessage('Please enter date');
                     setShowAlert(true);
@@ -173,7 +134,7 @@ export function EditTaskModal(props) {
     return(
         <>
             <Modal
-                showModal={showModal}
+                show={show}
                 onHide={handleClose}
                 backdrop="static"
                 >
