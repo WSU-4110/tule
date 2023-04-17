@@ -2,13 +2,9 @@ import React, {useState} from "react";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Multiselect from 'multiselect-react-dropdown';
-import Dropdown from 'react-bootstrap/Dropdown';
-import DropdownButton from 'react-bootstrap/DropdownButton';
 import Form from 'react-bootstrap/Form';
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { EditTaskModal } from "./EditTaskModal";
-import { AddTaskModal } from "./AddTaskModal";
 
 export function ScheduleModal(props) {
     const [show, setShow] = useState(true);
@@ -99,7 +95,7 @@ export function ScheduleModal(props) {
                         justifyContent: 'center',
                         alignItems: 'center',
                     }}>
-                    <Modal.Title>Edit Schedule</Modal.Title>
+                    <Modal.Title>{props.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -164,11 +160,13 @@ export function ScheduleModal(props) {
                         </Row>
                         <br></br>
                         <Row>
-                            <Form.Group as={Col} controlId="Regenerate">
-                                <Button variant="primary" type="submit" onClick={handleRegen}>
-                                    Regenerate Schedule
-                                </Button>
-                            </Form.Group>
+                            {(props.title === "Edit Schedule") &&
+                                <Form.Group as={Col} controlId="Regenerate">
+                                    <Button variant="primary" type="submit" onClick={handleRegen}>
+                                        Regenerate Schedule
+                                    </Button>
+                                </Form.Group>
+                            }
                         </Row>
                     </Form>
                 </Modal.Body>
