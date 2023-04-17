@@ -8,7 +8,6 @@ function TaskComponent(props) {
 
    for (let i = 0; i < props.currentTasks.length; i++) {
         if (props.currentTasks[i].taskName === props.task.Name) {
-            setTask(props.currentTasks[i]);
             console.log(props.currentTasks[i]);
             console.log(props.task);
             console.log(task);
@@ -32,7 +31,13 @@ function TaskComponent(props) {
                     <p key={1}>{"Priority: "+props.task.Priority}</p>*/}
                 </div>
                 <div className="mt-3 position-relative right-1">
-                    <Button className='' type = 'reset' onClick={() => setShowModal(true)} >Edit Task</Button>
+                    <Button
+                        className=''
+                        type='reset'
+                        onClick={() => setShowModal(true)}
+                        >
+                        Edit Task
+                    </Button>
                 </div>
         </>
     )

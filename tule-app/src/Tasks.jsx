@@ -10,8 +10,7 @@ const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
 
-    const editTask = (index, newName, newStartTime, newDuration, newBreak, newDate, newDays, newPriority) =>{
-    
+    const editTask = (index, newName, newStartTime, newDuration, newBreak, newDate, newDays, newPriority) => {
         console.log("test");
         currentTasks[index].taskName = newName;
         currentTasks[index].startTime = newStartTime;

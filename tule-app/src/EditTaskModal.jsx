@@ -27,22 +27,33 @@ export function EditTaskModal(props) {
     // const [taskLocation, setTaskLocation] = useState(props.currentTasks[props.id].location);
     // const [taskPriority, setTaskPriority] = useState(props.currentTasks[props.id].priority);
 
-    // Still does not retreive reccruing days
-    const [taskName, setTaskName] = useState(props.Task.Name);
-    const [taskDuration, setTaskDuration] = useState(props.Task.Duration);
-    const [taskDurationHours,setTaskDurationHours] = useState(((props.Task.Duration*60).toString()).slice(2));
-    const [taskDurationMinutes, setTaskDurationMinutes] = useState(((props.Task.Duration*60).toString()).slice(0, 1));
-    const [taskBreakDuration, setTaskBreakDuration] = useState(props.Task.Break.Time);
-    const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(((props.Task.Break.Time*60).toString()).slice(2));
-    const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(((props.Task.Break.Time*60).toString()).slice(0, 1));
-    const [taskDate, setTaskDate] = useState(props.Task.Date.Time);
-    const [taskStartTime, setTaskStartTime] = useState(props.Task.StartTime.Time);
-    const [taskLocation, setTaskLocation] = useState(props.Task.Location);
-    const [addLocation, setAddLocation] = useState(false);
-    const [locations, setLocations] = useState([]);
-    const [taskPriority, setTaskPriority] = useState(props.Task.Priority);
+    // // Still does not retreive reccruing days
+    // const [taskName, setTaskName] = useState(props.task.Name);
+    // const [taskDuration, setTaskDuration] = useState(props.task.Duration);
+    // const [taskDurationHours,setTaskDurationHours] = useState(((props.task.Duration*60).toString()).slice(2));
+    // const [taskDurationMinutes, setTaskDurationMinutes] = useState(((props.task.Duration*60).toString()).slice(0, 1));
+    // const [taskBreakDuration, setTaskBreakDuration] = useState(props.task.Break.Time);
+    // const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(((props.task.Break.Time*60).toString()).slice(2));
+    // const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(((props.task.Break.Time*60).toString()).slice(0, 1));
+    // const [taskDate, setTaskDate] = useState(props.task.Date.Time);
+    // const [taskStartTime, setTaskStartTime] = useState(props.task.StartTime.Time);
+    // const [taskLocation, setTaskLocation] = useState(props.task.Location);
+    // const [taskPriority, setTaskPriority] = useState(props.task.Priority);
+    const [taskName, setTaskName] = useState('');
+    const [taskDuration, setTaskDuration] = useState('');
+    const [taskDurationHours, setTaskDurationHours] = useState(0);
+    const [taskDurationMinutes, setTaskDurationMinutes] = useState(0);
+    const [taskBreakDuration, setTaskBreakDuration] = useState('');
+    const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(0);
+    const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(0);
+    const [taskDate, setTaskDate] = useState('');
+    const [taskStartTime, setTaskStartTime] = useState('');
+    const [taskPriority, setTaskPriority] = useState("None");
     const [reccuringDays, setReccuringDays] = useState([]);
     const [showModal, setShowModal] = useState(true);
+    const [taskLocation, setTaskLocation] = useState("-----");
+    const [addLocation, setAddLocation] = useState(false);
+    const [locations, setLocations] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const daysOfWeek = [
@@ -54,6 +65,15 @@ export function EditTaskModal(props) {
           { name: 'Friday', id: 5 },
           { name: 'Saturday', id: 6 },
     ];
+
+    try {
+        console.log(props.task);
+        console.log(props.task.Name);
+        console.log(props.task.Duration);
+        setTaskName(props.task.Name);
+    } catch (err) {
+        console.log(err);
+    }
 
     // Makes a list of all unique locations in the current tasks list
     // to be used in the location dropdown menu.
@@ -428,6 +448,9 @@ export function EditTaskModal(props) {
                         justifyContent: 'center',
                     }}
                     >
+                    <Button variant="danger" onClick={handleClose}>
+                        Delete Task
+                    </Button>
                     <Button variant="secondary" onClick={handleClose}>
                         Close
                     </Button>
