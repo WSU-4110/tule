@@ -161,7 +161,6 @@ class TaskHandler{
         let priority1 = [];
         let priority0 = [];
         let inactiveTasks = userV['InactiveTasks'];
-        console.log(inactiveTasks);
 
         // Orgainizes tasks based on whether they have a start time.
         // If the task has no start time, this organizes the task
@@ -232,6 +231,7 @@ class TaskHandler{
     // the longest duration get scheduled first.        
     dailyAlgorithm(dailySchedule, taskList, schedStart = "08:00",
         schedEnd = "24:00",first = false) {
+        console.log('taskList', taskList);
         // Checks if this is the first time the algorithm is adding to
         // the dailySchedule array. If it is, it will add the first task
         // to the array, then run the rest of the algorithm.
@@ -242,18 +242,18 @@ class TaskHandler{
                 // The end time is the duration plus the break time
                 // if it has one.
                 const taskStart = taskList[i].StartTime.Time;
-                if (taskList[i].BreakDuration.Active) {
-                    var totalDuration = addTime(
-                        taskList[i].Duration.Time,
-                        taskList[i].BreakDuration.Time);
+                if (taskList[i].Break.Active) {
+                    var totalDuration = this.addTime(
+                        taskList[i].Duration,
+                        taskList[i].Break.Time);
                 } else {
-                    var totalDuration = taskList[i].Duration.Time;
+                    var totalDuration = taskList[i].Duration;
                 }
                 // Then we add the task to the dailySchedule array.
                 // The end time is the task start time plus the duration.
                 dailySchedule.push(
                     [taskStart, taskList[i].Name,
-                    addTime(totalDuration, taskStart)]);
+                    this.addTime(totalDuration, taskStart)]);
             }
         // If the algorithm is not adding the tasts with a start time,
         // it will come here and finds a place to schedule each task.
@@ -261,12 +261,12 @@ class TaskHandler{
             for (let i = 0; i < taskList.length; i++) {
                 // First we set the duration time of the task.
                 // The end time is the duration plus the break time.
-                if (taskList[i].BreakDuration.Active) {
-                    var taskDuration = addTime(
-                        taskList[i].Duration.Time,
-                        taskList[i].BreakDuration.Time)
+                if (taskList[i].Break.Active) {
+                    var taskDuration = this.addTime(
+                        taskList[i].Duration,
+                        taskList[i].Break.Time);
                 } else {
-                    var taskDuration = taskList[i].Duration.Time
+                    var taskDuration = taskList[i].Duration;
                 }
                 // Searches through the dailySchedule array to find a place
                 // to schedule the current task.
@@ -276,27 +276,27 @@ class TaskHandler{
                     // This checks to see if there is a next task
                     // in the schedule.
                     if (dailySchedule[x + 1] == undefined) {
-                        if (compareDuration(
-                                subtractTime(schedEnd, dailySchedule[x][2]),
+                        if (this.compareDuration(
+                                this.subtractTime(schedEnd, dailySchedule[x][2]),
                                 taskDuration) === 1) {
                             const taskStart = dailySchedule[x][2];
                             dailySchedule.push(
                                 [taskStart, taskList[i].Name,
-                                addTime(taskStart, taskDuration)]);
+                                this.addTime(taskStart, taskDuration)]);
                             success = true;
                         }
                     } else {
                         // First tries to fill the gap between the first task
                         // and the start of the day.
-                        if (compareDuration(
-                                subtractTime(
+                        if (this.compareDuration(
+                                this.subtractTime(
                                     dailySchedule[x + 1][0],
                                     schedStart),
                                 taskDuration) === 1) {
                             const taskStart = dailySchedule[x][2];
                             dailySchedule.splice(x, 0,
                                 [taskStart, taskList[i].Name,
-                                addTime(taskStart, taskDuration)]);
+                                this.addTime(taskStart, taskDuration)]);
                             success = true;
                         // If the gap between the first task and
                         // the start of the day isnt big enough, we look
