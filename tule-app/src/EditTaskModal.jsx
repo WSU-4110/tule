@@ -10,6 +10,29 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import './EditTaskModal.css'
 
+async function saveTask(task){
+    try{
+        const response = await fetch('http://localhost:3001/SaveTask',{
+            method:'POST',
+            mode:'cors',
+            headers:{
+                'Access-Control-Allow-Origin':'http://localhost:3000',
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                "Username":sessionStorage['Username'],
+                "Password":sessionStorage['Password'],
+                "Task":task
+            })
+        })
+        return await response;
+    }
+    catch(err){
+        console.log(err);
+        return false;
+    }
+}
+
 export function EditTaskModal(props) {
     // const [taskName, setTaskName] = useState(props.currentTasks[props.id].taskName);
     // const [taskDuration, setTaskDuration] = useState(props.currentTasks[props.id].duration);
@@ -39,24 +62,25 @@ export function EditTaskModal(props) {
     // const [taskStartTime, setTaskStartTime] = useState(props.task.StartTime.Time);
     // const [taskLocation, setTaskLocation] = useState(props.task.Location);
     // const [taskPriority, setTaskPriority] = useState(props.task.Priority);
-    const [taskName, setTaskName] = useState('');
-    const [taskDuration, setTaskDuration] = useState('');
-    const [taskDurationHours, setTaskDurationHours] = useState(0);
-    const [taskDurationMinutes, setTaskDurationMinutes] = useState(0);
-    const [taskBreakDuration, setTaskBreakDuration] = useState('');
-    const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(0);
-    const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(0);
-    const [taskDate, setTaskDate] = useState('');
-    const [taskStartTime, setTaskStartTime] = useState('');
-    const [taskPriority, setTaskPriority] = useState("None");
-    const [reccuringDays, setReccuringDays] = useState([]);
     const [showModal, setShowModal] = useState(true);
-    const [taskLocation, setTaskLocation] = useState("-----");
-    const [addLocation, setAddLocation] = useState(false);
-    const [locations, setLocations] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+
     var taskNameConst = "Task Name";
+    var taskDurationConst = "Task Duration";
+    var taskBreakDurationConst = "Task Break Duration";
+    var taskDateConst = "Task Date";
+    var taskStartTimeConst = "Task Start Time";
+    var taskLocationConst = "Task Location";
+    var taskPriorityConst = "Task Priority";
+    var taskBreakDurationHoursConst = 0;
+    var taskBreakDurationMinutesConst = 0;
+    var taskDurationHoursConst = 0;
+    var taskDurationMinutesConst = 0;
+    var reccuringDaysConst = [];
+    var addLocation = false;
+    const locations = new Array();
+
     const daysOfWeek = [
           { name: 'Sunday', id: 0 },
           { name: 'Monday', id: 1 },
@@ -69,10 +93,35 @@ export function EditTaskModal(props) {
 
     try {
         const task = props.task;
+        console.log(props.task._id)
         console.log(task);
         console.log(task.Name);
         console.log(task.Duration);
+        console.log(task.Date.Time);
+
         taskNameConst = task.Name;
+        taskDurationConst = task.Duration;
+        taskBreakDurationConst = task.Break.Time;
+        taskDateConst = task.Date.Time.slice(0, 10);
+        taskStartTimeConst = task.StartTime.Time;
+        taskLocationConst = task.Location;
+        taskPriorityConst = task.Priority;
+        reccuringDaysConst = task.Reccurence[0];
+        taskBreakDurationHoursConst = parseInt((((task.Break.Time).toString()).split(".")).slice(0));
+        taskBreakDurationMinutesConst = parseFloat("0." + (((task.Break.Time).toString()).split(".")).slice(1)) * 60;
+        taskDurationHoursConst = parseInt((((task.Duration).toString()).split(".")).slice(0));
+        taskDurationMinutesConst = parseFloat("0." + (((task.Duration).toString()).split(".")).slice(1)) * 60;
+
+        console.log(reccuringDaysConst);
+        console.log(taskDateConst);
+
+        if (taskPriorityConst == 0) {
+            taskPriorityConst = "None";
+        } else if ((taskPriorityConst === null) || (taskPriorityConst === undefined)) {
+            taskPriorityConst = "None";
+        }
+
+        
     } catch (err) {
         console.log(err);
     }
@@ -84,7 +133,7 @@ export function EditTaskModal(props) {
             if (props.currentTasks[i].Location !== ''
                 && props.currentTasks[i].Location !== undefined) {
                     try{
-                        if(!locations.includes(props.currentTasks[i].Location)){
+                        if (!locations.includes(props.currentTasks[i].Location)) {
                             locations.push(props.currentTasks[i].Location);
                         }
                     } catch(err){
@@ -97,18 +146,23 @@ export function EditTaskModal(props) {
     }
 
     const addNewLocation = () => {
-        setAddLocation(true);
-        setTaskLocation("Add new location");
+        addLocation = (true);
+        taskLocationConst = ("Add new location");
     }
 
     const changeLocation = (location) => {
-        setTaskLocation(location);
-        setAddLocation(false);
+        taskLocationConst = (location);
+        addLocation = (false);
+    }
+
+    const noLocation = () => {
+        taskLocationConst = ("-----");
+        addLocation = (false);
     }
 
     const handleClose = () => {
         setShowModal(false);
-        console.log(taskStartTime);
+        console.log(taskStartTimeConst);
         props.resetModal(false);
     }
 
@@ -118,11 +172,11 @@ export function EditTaskModal(props) {
     }
 
     const onSelect = (selectedItem) => {
-        reccuringDays.push(selectedItem);
+        reccuringDaysConst.push(selectedItem);
     }
 
     const onRemove = (selectedItem) => {
-        reccuringDays.pop(selectedItem);
+        reccuringDaysConst.pop(selectedItem);
     }
 
     // Handles form submission.
@@ -130,26 +184,26 @@ export function EditTaskModal(props) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (taskDurationHours < 10) {
-            setTaskDurationHours('0' + taskDurationHours.toString());
+        if (taskDurationHoursConst < 10) {
+            taskDurationHoursConst = ('0' + taskDurationHoursConst.toString());
         }
-        if (taskDurationMinutes < 10) {
-            setTaskDurationMinutes('0' + taskDurationMinutes.toString());
+        if (taskDurationMinutesConst < 10) {
+            taskDurationMinutesConst = ('0' + taskDurationMinutesConst.toString());
         }
-        if (taskBreakDurationHours < 10) {
-            setTaskBreakDurationHours('0' + taskBreakDurationHours.toString());
+        if (taskBreakDurationHoursConst < 10) {
+            taskBreakDurationHoursConst = ('0' + taskBreakDurationHoursConst.toString());
         }
-        if (taskBreakDurationMinutes < 10) {
-            setTaskBreakDurationMinutes('0' + taskBreakDurationMinutes.toString());
+        if (taskBreakDurationMinutesConst < 10) {
+            taskBreakDurationMinutesConst = ('0' + taskBreakDurationMinutesConst.toString());
         }
-        setTaskDuration(taskDurationHours + ':' + taskDurationMinutes);
-        setTaskBreakDuration(taskBreakDurationHours + ':' + taskBreakDurationMinutes);
+        taskDurationConst = (taskDurationHoursConst + ':' + taskDurationMinutesConst);
+        taskBreakDurationConst = (taskBreakDurationHoursConst + ':' + taskBreakDurationMinutesConst);
 
-        if (taskName !== '') {
-            if (taskDuration !== '') {
-                if (taskDate !== '') {
-                    if (taskPriority === '') {
-                        setTaskPriority(0)
+        if (taskNameConst !== '') {
+            if (taskDurationConst !== '') {
+                if (taskDateConst !== '') {
+                    if (taskPriorityConst === 'None') {
+                        taskPriorityConst = 0;
                     }
                     setShowModal(false);
                 } else {
@@ -164,32 +218,32 @@ export function EditTaskModal(props) {
             setErrorMessage('Please enter task name');
             setShowAlert(true);
         }
-        console.log(taskName);
-        console.log(taskDuration);
-        console.log(taskDurationHours + ":" + taskDurationMinutes);
-        console.log(props.id);
+        console.log(taskNameConst);
+        console.log(taskDurationConst);
+        console.log(taskDurationHoursConst + ":" + taskDurationMinutesConst);
         const newTask = {
-            _id: "",
-            Name: taskName,
+            _id: props.task._id,
+            Name: taskNameConst,
             StartTime: {
-                Active: taskStartTime != "",
-                Time: taskStartTime}
+                Active: taskStartTimeConst != "",
+                Time: taskStartTimeConst}
                 ,
-            Duration: parseFloat(taskDurationHours) + parseFloat(taskDurationMinutes)/60,
+            Duration: parseFloat(taskDurationHoursConst) + parseFloat(taskDurationMinutesConst)/60,
             Break: {
-                Active: taskBreakDuration!= 0 && taskBreakDuration!=0,
-                Time: parseFloat(taskBreakDurationHours) + parseFloat(taskBreakDurationMinutes)/60
+                Active: taskBreakDurationConst!= 0 && taskBreakDurationConst!=0,
+                Time: parseFloat(taskBreakDurationHoursConst) + parseFloat(taskBreakDurationMinutesConst)/60
             },
             Date: {
-                Active: taskDate != "", 
-                Time: new Date(taskDate)}
+                Active: taskDateConst != "", 
+                Time: new Date(taskDateConst)}
                 ,
-            Reccurence: reccuringDays,
-            Priority: parseInt(taskPriority),
-            Location: taskLocation,
+            Reccurence: reccuringDaysConst,
+            Priority: parseInt(taskPriorityConst),
+            Location: taskLocationConst,
             Complete: false
         }
-        props.editTask(props.id,taskName,taskStartTime,taskDurationHours + ":" + taskDurationMinutes,taskPriority);
+        console.log(newTask);
+        saveTask(newTask);
         props.resetModal(false);
         props.update([...props.currentTasks])
     }
@@ -243,7 +297,7 @@ export function EditTaskModal(props) {
                                     defaultValue = {taskNameConst}
                                     type="text"
                                     placeholder="Enter task name"
-                                    onChange={(u) => setTaskName(u.target.value)}
+                                    onChange={(u) => (taskNameConst = u.target.value)}
                                     autoFocus
                                     />
                             </Form.Group>
@@ -254,10 +308,10 @@ export function EditTaskModal(props) {
                                 >
                                 <Form.Label>Start Time</Form.Label>
                                 <Form.Control
-                                    defaultValue = {taskStartTime}
+                                    defaultValue = {taskStartTimeConst}
                                     type="time"
                                     
-                                    onChange={(u) => setTaskStartTime(u.target.value)}
+                                    onChange={(u) => (taskStartTimeConst = u.target.value)}
                                     required
                                     />
                                 <Form.Text muted>
@@ -272,11 +326,11 @@ export function EditTaskModal(props) {
                                 <Row className="taskDurationRow">
                                     <Col className='durationInput' >
                                         <Form.Control
-                                        defaultValue = {taskDurationHours}
+                                        defaultValue = {taskDurationHoursConst}
                                         type='number'
                                         min='0'
                                         max='24'
-                                        onChange={(u) => setTaskDurationHours(u.target.value)}
+                                        onChange={(u) => (taskDurationHoursConst = u.target.value)}
                                         />
                                         
                                         <Form.Text muted>
@@ -290,11 +344,11 @@ export function EditTaskModal(props) {
 
                                     <Col className='durationInput' >
                                         <Form.Control
-                                            defaultValue = {taskDurationMinutes}
+                                            defaultValue = {taskDurationMinutesConst}
                                             type='number'
                                             min='0'
                                             max='60'
-                                            onChange={(u) => setTaskDurationMinutes(u.target.value)}
+                                            onChange={(u) => (taskDurationMinutesConst = u.target.value)}
                                             />
                                         <Form.Text muted>
                                             Minutes
@@ -308,11 +362,11 @@ export function EditTaskModal(props) {
                                 <Row className="break duration">
                                     <Col sm={5} >
                                     <Form.Control
-                                    defaultValue = {taskBreakDurationHours}
+                                    defaultValue = {taskBreakDurationHoursConst}
                                     type='number'
                                     min='0'
                                     max='24'
-                                    onChange={(u) => setTaskBreakDurationHours(u.target.value)}
+                                    onChange={(u) => (taskBreakDurationHoursConst = u.target.value)}
                                     />
                                     <Form.Text muted>
                                         Hours
@@ -325,11 +379,11 @@ export function EditTaskModal(props) {
 
                                     <Col sm={5} >
                                     <Form.Control
-                                        defaultValue = {taskBreakDurationMinutes}
+                                        defaultValue = {taskBreakDurationMinutesConst}
                                         type='number'
                                         min='0'
                                         max='60'
-                                        onChange={(u) => setTaskBreakDurationMinutes(u.target.value)}
+                                        onChange={(u) => (taskBreakDurationMinutesConst = u.target.value)}
                                         />
                                     <Form.Text muted>
                                         Minutes
@@ -346,9 +400,9 @@ export function EditTaskModal(props) {
                             <Form.Group as={Col} controlId="formTaskDate">
                                 <Form.Label>Date</Form.Label>
                                 <Form.Control
-                                    defaultValue = {taskDate}
+                                    defaultValue = {taskDateConst}
                                     type="date"
-                                    onChange={(u) => setTaskDate(u.target.value)}
+                                    onChange={(u) => (taskDateConst = u.target.value)}
                                     />
                             </Form.Group>
 
@@ -356,7 +410,7 @@ export function EditTaskModal(props) {
                                 <Form.Label>Reccuring Days</Form.Label>
                                 <Multiselect
                                     options={daysOfWeek} 
-                                    selectedValues={reccuringDays} 
+                                    selectedValues={reccuringDaysConst} 
                                     onSelect={onSelect} 
                                     onRemove={onRemove} 
                                     displayValue="name"
@@ -374,7 +428,7 @@ export function EditTaskModal(props) {
                                     <Form.Label>Location</Form.Label>
                                     <DropdownButton
                                         id="dropdown-basic-button"
-                                        title={taskLocation}>
+                                        title={taskLocationConst}>
                                             <ul>
                                                 {(locationsList() !== undefined) && locations && locations.map && locations.map((location) => (
                                                     <Dropdown.Item onClick={() => changeLocation(location)}>{location}</Dropdown.Item>
@@ -382,6 +436,9 @@ export function EditTaskModal(props) {
                                             </ul>
                                             <Dropdown.Item onClick={() => addNewLocation()}>
                                                 Add new location
+                                            </Dropdown.Item>
+                                            <Dropdown.Item onClick={() => noLocation()}>
+                                                None
                                             </Dropdown.Item>
                                     </DropdownButton>
                                     <Form.Text className="text-muted">
@@ -397,20 +454,20 @@ export function EditTaskModal(props) {
                                         <Form.Control
                                             type="text"
                                             placeholder="Enter location"
-                                            onChange={(u) => setTaskLocation(u.target.value)}
+                                            onChange={(u) => (taskLocationConst = u.target.value)}
                                             />
                                     </Form.Group>
                                 )}
-                                {!((taskLocation === "-----") || (taskLocation === "Add new location"))
+                                {!((taskLocationConst === "-----") || (taskLocationConst === "Add new location"))
                                     && (!addLocation) && (
                                     <Form.Group className="mb-3" controlId="formTaskLocationDisplay">
                                         <Form.Label>Selected Location</Form.Label>
-                                        {(taskLocation === "-----") && (
+                                        {(taskLocationConst === "-----") && (
                                             <Form.Control type="text" value="" readOnly/>
                                         )}
 
-                                        {(taskLocation !== "-----") && (
-                                            <Form.Control type="text" value={taskLocation} readOnly/>
+                                        {(taskLocationConst !== "-----") && (
+                                            <Form.Control type="text" value={taskLocationConst} readOnly/>
                                         )}
                                     </Form.Group>
                                 )}
@@ -422,17 +479,17 @@ export function EditTaskModal(props) {
                                 <Form.Label>Priority</Form.Label>
                                 <DropdownButton
                                     id="dropdown-basic-button"
-                                    title={taskPriority}>
-                                    <Dropdown.Item onClick={() => setTaskPriority("3")}>
+                                    title={taskPriorityConst}>
+                                    <Dropdown.Item onClick={() => (taskPriorityConst = 3)}>
                                         3 (Highest Priority)
                                     </Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("2")}>
+                                    <Dropdown.Item onClick={() => (taskPriorityConst = 2)}>
                                         2
                                     </Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("1")}>
+                                    <Dropdown.Item onClick={() => (taskPriorityConst = 1)}>
                                         1 (Lowest Priority)
                                     </Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("None")}>
+                                    <Dropdown.Item onClick={() => (taskPriorityConst = "None")}>
                                         0 (No Priority)
                                     </Dropdown.Item>
                                 </DropdownButton>

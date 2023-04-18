@@ -11,7 +11,6 @@ function TaskComponent(props) {
             {showModal && (
                 <EditTaskModal
                     key={props._id}
-                    editTask={props.editTask}
                     resetModal={setShowModal}
                     currentTasks={props.currentTasks}
                     task={task}

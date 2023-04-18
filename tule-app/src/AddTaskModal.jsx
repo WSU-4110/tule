@@ -101,11 +101,21 @@ export function AddTaskModal(props) {
     }
 
     const onSelect = (selectedItem) => {
-        reccuringDays.push(selectedItem);
+        try {
+            reccuringDays.push(selectedItem);
+        } catch (err) {
+            console.log(err);
+            reccuringDays = [selectedItem];
+        }
     }
 
     const onRemove = (selectedItem) => {
-        reccuringDays.pop(selectedItem);
+        try {
+            reccuringDays.pop(selectedItem);
+        } catch (err) {
+            console.log(err);
+            reccuringDays = [];
+        }
     }
 
     // Handles form submission.

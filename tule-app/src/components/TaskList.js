@@ -8,7 +8,6 @@ function TaskList(props){
             <TaskComponent
                 key={task._id}
                 task={task}
-                editTask={props.editTask}
                 currentTasks={props.currentTasks}
                 update={props.update}/>
         )}
