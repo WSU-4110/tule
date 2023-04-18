@@ -9,19 +9,7 @@ import DropDownMenu from './components/DropDownMenu';
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
-
-    const editTask = (index, newName, newStartTime, newDuration, newBreak, newDate, newDays, newPriority) =>{
     
-        console.log("test");
-        currentTasks[index].taskName = newName;
-        currentTasks[index].startTime = newStartTime;
-        currentTasks[index].duration = newDuration;
-        currentTasks[index].break = newBreak;
-        currentTasks[index].date = newDate;
-        currentTasks[index].days = newDays;
-        currentTasks[index].priority = newPriority;
-        console.log(currentTasks);
-    }
     //Should return all of the tasks from database associated with the user.
     async function getAllTasks(){
         try{
@@ -64,7 +52,7 @@ const Tasks = (props) => {
     )
     return(
         <>
-        {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} editTask={editTask} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}
+        {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}
         <div>
             <Navbar text='Tule'/>
             <DropDownMenu/>
@@ -74,7 +62,7 @@ const Tasks = (props) => {
             <form className='mt-5' onSubmit={handleSubmit}>
                 <h1>Tasks</h1>
                 <section >
-                    <TaskList ListOfTasks={currentTasks} editTask={editTask} currentTasks={currentTasks} update={setCurrentTasks}/>
+                    <TaskList ListOfTasks={currentTasks} currentTasks={currentTasks} update={setCurrentTasks}/>
                 </section>
 
                 <div className=''>
