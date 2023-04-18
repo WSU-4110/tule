@@ -14,6 +14,7 @@ const DAYS = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const [today] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
 const [displayedDay, setDisplayedDay] = useState(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 const [taskList, setTaskList] = useState([]);
+const [modalTitle, setModalTitle] = useState("Create Schedule");
 const [createdSchedules, setCreatedSchedules] = useState([[{StartTime: "15:00"}]]);
 const dateHandler = new DateHandler();
 const [selectedTask, setSelectedTask] = useState({});
@@ -75,6 +76,7 @@ useEffect(() => {
 const castDuration=(task) =>{
     return(Array.from({ length: Math.round(task.Duration*4) }, (_,i) => parseInt(task.StartTime.split(":")[0])+i*0.25))
 }
+
 const checkDate =(compareDate, date) => {
     var d1 = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     var d2 = new Date(compareDate)
@@ -82,12 +84,14 @@ const checkDate =(compareDate, date) => {
     && d1.getMonth() === d2.getMonth()
     && d1.getFullYear() === d2.getFullYear());
 }
+
 const checkTime =(compareTime, time) => {
     if(compareTime === time){
         return true;
     }
     return false;
 }
+
 const changeToMinutes = (input)=>{
     var hr = 0;
     var min = 0;
@@ -100,6 +104,7 @@ const changeToMinutes = (input)=>{
     
     
 }
+
 const changeTime12hr =(time24, minute) =>{
     var output = "";
     if(time24 === 0 || time24 === 12){
@@ -120,10 +125,12 @@ const changeTime12hr =(time24, minute) =>{
     }
     return output;
 }
+
 const nextDay = () =>{
     const tempDate = new Date(displayedDay.getFullYear(), displayedDay.getMonth(), displayedDay.getDate()+1);
     setDisplayedDay(tempDate);
 }
+
 const prevDay = () =>{
     const tempDate = new Date(displayedDay.getFullYear(), displayedDay.getMonth(), displayedDay.getDate()-1);
     setDisplayedDay(tempDate);
@@ -151,9 +158,21 @@ const handleTaskButton =(task) =>{
     setSelectedTask(task);
     setShowTCModal(true);
 }
+
+const editSchedule = () =>{
+    setModalTitle("Edit Schedule");
+    setShowSCModal(true);
+}
+
     return(
         <>
-            {showSCModal && <ScheduleModal resetModal={resetModal} setActiveHours={setActiveHours} activeHours ={activeHours}/>}
+            {showSCModal && 
+                <ScheduleModal
+                    resetModal={resetModal}
+                    setActiveHours={setActiveHours} 
+                    activeHours={activeHours}
+                    title={modalTitle}
+                    />}
             {showTCModal && <TaskCompleteModal resetModal={resetModal}  task={selectedTask}/>}
             <div>
             <Navbar text='Tule'/>
@@ -162,10 +181,10 @@ const handleTaskButton =(task) =>{
                 Back
             </button>
             <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
-               logout
+               Logout
             </button>
-            <button className="btn btn-primary mt-5" onClick={() => setShowSCModal(true)}>
-               change active hours
+            <button className="btn btn-primary mt-5" onClick={editSchedule}>
+               Edit Schedule
             </button>
             </div>
             <div className="dayDisplay">
