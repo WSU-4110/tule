@@ -1,4 +1,5 @@
 const DateHandler = require('../tule-app/src/DateHandler');
+const {ObjectId } = require('mongodb');
 
 class TaskHandler{
 
@@ -55,45 +56,33 @@ class TaskHandler{
         var schedId = Object.keys(newSched);
         schedId = schedId[0];
         var taskList = newSched[schedId]['Tasks'];
-        var newIdList = []
+        var newIdList = [];
+        var delArr = [];
+        var index = 0;
         for(var i = 0; i < taskList.length; i++){
-            newIdList.push(taskList[i]['Id'])
+            newIdList.push(taskList[i]["_id"]);
         }
-        var oldSched = user['Schedules'][schedId]['Tasks'];
-        var oldIdList = [];
-        for(var i = 0; i < oldSched.length; i++){
-            oldIdList.push(oldSched[i]['Id'].toString());
-        }
+        console.log('newSchedUser',user);
+        console.log('newIdList', newIdList);
+        console.log('taskList', taskList)
         //Swap inactive to active
-        for(var i = 0; i < newIdList.length; i++){
-            if(!oldIdList.includes(newIdList[i])){
-                console.log('Found id in newlist not in oldlist');
-                let object = new ObjectId(newIdList[i]);
-                user['ActiveTasks'].push(object);
-                let inactive = user['InactiveTasks'];
-                var index = 0;
-                while(inactive[index].toString() != newIdList[i]){
-                    index++
-                }
-                user['InactiveTasks'].splice(index,1);
+        for(let i = 0; i < newIdList.length; i++){
+            user['ActiveTasks'].push(newIdList[i]);
+            let inactive = user['InactiveTasks'];
+            index = 0;
+            while(String(inactive[index]['_id']) != String(newIdList[i])){
+                delArr.push(index);
+                index++
             }
         }
-        //Swap active to inactive
-        for(var i = 0; i < oldIdList.length; i++){
-            if(!newIdList.includes(oldIdList[i])){
-                console.log('Found id in oldList not in newlist');
-                let object = new ObjectId(oldIdList[i]);
-                user["InactiveTasks"].push(object);
-                let active = user['ActiveTasks'];
-                var index = 0;
-                while(active[index].toString() != oldIdList[i]){
-                    index++
-                }
-                user['ActiveTasks'].splice(index,1);
-            }
-        }
+        //iterate backwards over delArr to remove tasks from inactive
         //Update schedule to new schedule
+        console.log('delArr',delArr);
+        for(let i = delArr.length; i >= 0; i--){
+            user['InactiveTasks'].splice(delArr[i],1);
+        }
         user['Schedules'][schedId] = newSched[schedId];
+        console.log('newSchedUserClean',user);
         return user;
     }
 
@@ -434,6 +423,14 @@ class TaskHandler{
             minutes = minutes.toString();
         }
         return (hours + ":" + minutes);
+    }
+
+    addTasksAndSchedToUser(user,tasks){
+        user['ActiveTasks'] = tasks['ActiveTasks'];
+        user['InactiveTasks'] = tasks['InactiveTasks'];
+        user['Recurringtasks'] = tasks['RecurringTasks'];
+        user['Schedules'] = tasks['Schedules'];
+        return user;
     }
 }
 
