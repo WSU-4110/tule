@@ -330,8 +330,15 @@ class DbHandler {
                         user = this.#taskHandler.deleteSchedAndClean(user,key);
                     }
                     let newSched = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
-                    newUser = this.#taskHandler.newSchedUserClean(user, tempDate, newSched);
-                    resolve(newUser);
+                    let newUser = this.#taskHandler.newSchedUserClean(user, tempDate, newSched);
+                    this.getUserTasks(req).then(data => {
+                        newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],newUser);
+                        console.log('createSched user', data);
+                        console.log(newUser);
+                        this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
+                            resolve(newUser);
+                        })
+                    })                  
                 })
             }catch(err){
                 reject(err)
