@@ -3,15 +3,21 @@ import React, {useState, useEffect} from "react"
 import Navbar from "./components/Navbar";
 import Button from 'react-bootstrap/Button';
 import { ScheduleModal } from "./ScheduleModal";
+import DateHandler from "./DateHandler";
+import TaskCompleteModal from "./TaskCompleteModal";
  
 function Schedule(props){
 const [showSCModal, setShowSCModal] = useState(true);
+const [showTCModal, setShowTCModal] = useState(false);
 const [activeHours, setActiveHours] = useState(Array.from({length: (24-9)}, (_,i) => 9+i));
 const DAYS = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 const [today] = useState(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
 const [displayedDay, setDisplayedDay] = useState(new Date(today.getFullYear(), today.getMonth(), today.getDate()));
 const [taskList, setTaskList] = useState([]);
 const [modalTitle, setModalTitle] = useState("Create Schedule");
+const [createdSchedules, setCreatedSchedules] = useState([[{StartTime: "15:00"}]]);
+const dateHandler = new DateHandler();
+const [selectedTask, setSelectedTask] = useState({});
 const exampleTasks = [{
     taskName: "example task",
     duration: 2,
@@ -37,7 +43,7 @@ const exampleTasks = [{
 
 async function getAllTasks(){
     try{
-        const response = await fetch("http://localhost:3001/GetAllTasks",{
+        const response = await fetch("http://localhost:3001/GetAllTasksAndSched",{
             method:'POST',
             mode:'cors',
             headers:{
@@ -57,41 +63,46 @@ async function getAllTasks(){
 }
 
 useEffect(() => {
-    var result = getAllTasks();
-    result.then((value) => {
-        setTaskList(value.InactiveTasks);
-        console.log(taskList);
-    })
+    const fetchData = async () => {
+        const value = await getAllTasks()
+        setCreatedSchedules(value.Schedules);
+        setTaskList(value.ActiveTasks);
+    }
+    fetchData().catch(console.error);
 }
-    ,[activeHours]
+    ,[displayedDay]
 )
 
 const castDuration=(task) =>{
-    return(Array.from({ length: Math.round(changeToMinutes(task.Duration.Time,0)/15) }, (_,i) => task.StartTime.Time+i*0.25))
+    return(Array.from({ length: Math.round(task.Duration*4) }, (_,i) => parseInt(task.StartTime.split(":")[0])+i*0.25))
 }
 
 const checkDate =(compareDate, date) => {
-    //console.log("compare date" + compareDate);
     var d1 = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     var d2 = new Date(compareDate)
-    //console.log(d1);
-    //console.log("date 3 " + d3);
-    console.log(d1.getDate() === d2.getDate()
-    && d1.getMonth() === d2.getMonth()
-    && d1.getFullYear() === d2.getFullYear());
     return (d1.getDate() === d2.getDate()
     && d1.getMonth() === d2.getMonth()
     && d1.getFullYear() === d2.getFullYear());
 }
 
 const checkTime =(compareTime, time) => {
-    return(
-        compareTime === time
-    )
+    if(compareTime === time){
+        return true;
+    }
+    return false;
 }
 
-const changeToMinutes = (hr, min)=>{
-    return(hr * 60 + min)
+const changeToMinutes = (input)=>{
+    var hr = 0;
+    var min = 0;
+    if(typeof input == 'string'){
+        hr = parseInt(input.split(':')[0]);
+        min = parseInt(input.split(':')[1]);
+        
+    }
+    return(hr * 60 + roundDown15(min))
+    
+    
 }
 
 const changeTime12hr =(time24, minute) =>{
@@ -116,8 +127,6 @@ const changeTime12hr =(time24, minute) =>{
 }
 
 const nextDay = () =>{
-    console.log("today is " +today);
-    console.log("display date is " +displayedDay);
     const tempDate = new Date(displayedDay.getFullYear(), displayedDay.getMonth(), displayedDay.getDate()+1);
     setDisplayedDay(tempDate);
 }
@@ -126,9 +135,28 @@ const prevDay = () =>{
     const tempDate = new Date(displayedDay.getFullYear(), displayedDay.getMonth(), displayedDay.getDate()-1);
     setDisplayedDay(tempDate);
 }
+const todaySchedule = () =>{
+    for(var i = 0; i<Object.keys(createdSchedules).length; i++){
+        if(dateHandler.schedKeyToDate(Object.keys(createdSchedules)[i]).getDate() === displayedDay.getDate()
+        && dateHandler.schedKeyToDate(Object.keys(createdSchedules)[i]).getFullYear() === displayedDay.getFullYear()
+        && dateHandler.schedKeyToDate(Object.keys(createdSchedules)[i]).getMonth() === displayedDay.getMonth()){
+            return(createdSchedules[Object.keys(createdSchedules)[i]]);
+        }
+    }
+    return([]);
+}
+const roundDown15 = (start) =>{
+    return start - (start %15);
+}
 
 const resetModal = () =>{
     setShowSCModal(false) 
+    setShowTCModal(false)
+}
+
+const handleTaskButton =(task) =>{
+    setSelectedTask(task);
+    setShowTCModal(true);
 }
 
 const editSchedule = () =>{
@@ -145,6 +173,7 @@ const editSchedule = () =>{
                     activeHours={activeHours}
                     title={modalTitle}
                     />}
+            {showTCModal && <TaskCompleteModal resetModal={resetModal}  task={selectedTask}/>}
             <div>
             <Navbar text='Tule'/>
             
@@ -175,17 +204,21 @@ const editSchedule = () =>{
             </div>
             <div className="grid2">
                 {activeHours.map((time) => <div className="gridData" key={"d"+time}>
-                    {[0, 15, 30, 45].map((minute) => <div  className="gridDataHeader" key={"d"+time+minute}>
-                        {taskList.map((task) => (checkDate(task.Date.Time, displayedDay) && checkTime(changeToMinutes(parseInt(task.StartTime.Time), 0), changeToMinutes(time, minute)) && <div className={"task" + task.Priority} key={task.Name + task.Priority}>
-                        {castDuration(task).map((index) => (
-                        (index===castDuration(task)[0] &&
-                            <div className={"task" +task.Priority} key={time+minute+index+"button"}>
-                            <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={task.Name}>{task.Name}</Button>
-                            </div>)
-                            ||
-                            <div className={"task" +task.Priority} key={time+minute+index}>
-                            </div>))}
-                        </div>))}
+                    {["00", "15", "30", "45"].map((minute) => <div  className="gridDataHeader" key={"d"+time+minute}>
+                        {todaySchedule().map((task) => (
+                            checkTime(changeToMinutes(task.StartTime), changeToMinutes(time + ":" + minute)) &&
+                            <div className={"task" + task.Priority} key={task.Name + task.Priority}>
+                                {castDuration(task).map((index) => (
+                                (index===castDuration(task)[0] &&
+                                    <div className={(!task.Complete && "task" +task.Priority) || (task.Complete && "taskComplete")} key={time+minute+index+"button"}>
+                                        <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={task.Name} onClick={()=> handleTaskButton(task)}>{task.Name}</Button>
+                                    </div>)
+                                ||
+                                    <div className={(!task.Complete && "task" +task.Priority) || (task.Complete && "taskComplete")} key={time+minute+index}>
+                                    </div>))}
+                            </div>
+                            ))}
+                        
                     </div>)}
                 </div>)}
                 

@@ -1,5 +1,6 @@
 require("dotenv").config()
 const TaskHandler = require('./TaskHandler');
+const DateHandler = require('../tule-app/src/DateHandler');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //Mongodb doc https://www.mongodb.com/docs/drivers/node/current/
 //Fundamentals section will be your friend
@@ -15,6 +16,7 @@ class DbHandler {
     #usersCollection;
     #tasksCollection;
     #taskHandler;
+    #dateHandler;
 
     constructor(){     
         this.#uri = process.env.MONGO_CONNECTION;
@@ -32,6 +34,7 @@ class DbHandler {
         this.#usersCollection = this.#db.collection('Users')
         this.#tasksCollection = this.#db.collection('Tasks') 
         this.#taskHandler = new TaskHandler();
+        this.#dateHandler = new DateHandler();
     }
 
     loginVerify(req){
@@ -90,7 +93,6 @@ class DbHandler {
             try{
                 this.#usersCollection.find({ Username: req.body.Username}).toArray().then(info => {
                     const tempInfo = info;
-                    console.log('tempInfo',tempInfo);
                     // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
                     var tasksList = {};
                     this.#tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {
@@ -308,12 +310,38 @@ class DbHandler {
                     }
             
                     this.#tasksCollection.deleteOne({"_id":tasktobeDeleted._id});
-                    resolve('return info here');
+                    resolve(user);
                 })
             }catch(err){
                 reject(err)
             }
         })
+    }
+
+    createSchedule(req){
+        return new Promise((resolve, reject) => {
+            try{
+                console.log(req.body);
+                let tempDate = new Date(req.body.Date);
+                let key = this.#dateHandler.dateToSchedKey(tempDate);
+                this.getUserTasksVerbose(req).then(user => {
+                    console.log(user);
+                    if(Object.keys(user['Schedules']).includes(key)){
+                        user = this.#taskHandler.deleteSchedAndClean(user,key);
+                    }
+                    user = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
+                    resolve(user);
+                })
+            }catch(err){
+                reject(err)
+            }            
+        })
+    }
+
+    getTaskById(idObject){
+        this.#tasksCollection.find({'_id': idObject}).then(data => {
+            console.log('getTaskById', data);
+        })  
     }
 }
 
