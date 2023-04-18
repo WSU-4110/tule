@@ -36,10 +36,10 @@ export function ScheduleModal(props) {
         props.resetModal();
         event.preventDefault();
         if (verifyTimes()) {
-            console.log(activeDays[0]);
-            console.log(activeStart);
-            console.log(activeEnd);
-            console.log(Array.from({length:(parseInt(activeEnd.split(":")[0])-parseInt(activeStart.split(":")[0])+ 1)}, (_,i) => parseInt(activeStart.split(":")[0])+i));
+            //console.log(activeDays[0]);
+            //console.log(activeStart);
+            //console.log(activeEnd);
+            //console.log(Array.from({length:(parseInt(activeEnd.split(":")[0])-parseInt(activeStart.split(":")[0])+ 1)}, (_,i) => parseInt(activeStart.split(":")[0])+i));
             props.setActiveHours(Array.from({length:(parseInt(activeEnd.split(":")[0])-parseInt(activeStart.split(":")[0])+ 1)}, (_,i) => parseInt(activeStart.split(":")[0])+i))
             setShow(false);
         }
