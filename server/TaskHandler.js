@@ -1,4 +1,4 @@
-const DateHandler = require('../DateHandler');
+const DateHandler = require('../tule-app/src/DateHandler');
 
 class TaskHandler{
 
@@ -121,11 +121,11 @@ class TaskHandler{
 
     deleteSchedAndClean(userV,key){
          //convert all from active to inactive, or delete if recurring
-        console.log('first user', userV);
+        //console.log('first user', userV);
         //load schedule to be deleted
         let delSched = userV['Schedules'][key];
         let delArr = [];
-        console.log('schedule to delete',delSched);
+        //console.log('schedule to delete',delSched);
         //iterate over the tasks in the schedule to find matches in active tasks
         for(let i = 0; i < delSched.length; i++){
             for(let j = 0; j < userV['ActiveTasks'].length; j++){
@@ -161,29 +161,37 @@ class TaskHandler{
         let priority1 = [];
         let priority0 = [];
         let inactiveTasks = userV['InactiveTasks'];
-
+        console.log(userV['InactiveTasks']);
         // Orgainizes tasks based on whether they have a start time.
         // If the task has no start time, this organizes the task
         // based on its priority.
         for (let t = 0; t < inactiveTasks.length; t++) {
             if (inactiveTasks[t].StartTime.Active && 
-                this.#dateHandler.dateToSchedKey(inactiveTasks[t]['Date']['Active']) == true &&
+                inactiveTasks[t]['Date']['Active'] == true &&
                 this.#dateHandler.dateToSchedKey(date) == 
                 this.#dateHandler.dateToSchedKey(inactiveTasks[t]['Date']['Time'])){
                 concrete.push(inactiveTasks[t]);
             } else {
                 switch (inactiveTasks[t].Priority) {
                     case 3:
-                        priority3.push(inactiveTasks[t]);
+                        if(inactiveTasks[t]['Date']['Active'] == false){
+                            priority3.push(inactiveTasks[t]);
+                        }
                         break;
                     case 2:
-                        priority2.push(inactiveTasks[t]);
+                        if(inactiveTasks[t]['Date']['Active'] == false){
+                            priority2.push(inactiveTasks[t]);
+                        }
                         break;
                     case 1:
-                        priority1.push(inactiveTasks[t]);
+                        if(inactiveTasks[t]['Date']['Active'] == false){
+                            priority1.push(inactiveTasks[t]);
+                        }
                         break;
                     case 0:
-                        priority0.push(inactiveTasks[t]);
+                        if(inactiveTasks[t]['Date']['Active'] == false){
+                            priority0.push(inactiveTasks[t]);
+                        }
                         break;
                 }
             }
@@ -231,7 +239,6 @@ class TaskHandler{
     // the longest duration get scheduled first.        
     dailyAlgorithm(dailySchedule, taskList, schedStart = "08:00",
         schedEnd = "24:00",first = false) {
-        console.log('taskList', taskList);
         // Checks if this is the first time the algorithm is adding to
         // the dailySchedule array. If it is, it will add the first task
         // to the array, then run the rest of the algorithm.
@@ -255,7 +262,7 @@ class TaskHandler{
                     [taskStart, taskList[i].Name,
                     this.addTime(totalDuration, taskStart)]);
             }
-        // If the algorithm is not adding the tasts with a start time,
+        // If the algorithm is not adding the tasts with a start time,                 
         // it will come here and finds a place to schedule each task.
         } else {
             for (let i = 0; i < taskList.length; i++) {
@@ -268,12 +275,25 @@ class TaskHandler{
                 } else {
                     var taskDuration = taskList[i].Duration;
                 }
+                
+                tempTask = {
+                    "_id" : taskList[i]["_id"],
+                    "SchedStartTime" : ""
+                }
+                if(taskList[i]["StartTime"] != ""){
+                    tempTask["SchedStartTime"] = taskList[i]["StartTime"];
+                }
+                if(dailySchedule.length == 0){
+
+                    dailySchedule.push(taskList[i])
+                }
                 // Searches through the dailySchedule array to find a place
                 // to schedule the current task.
                 var success = false;
                 var x = 0;
-                while (!success && (x < dailySchedule.length)) {
-                    // This checks to see if there is a next task
+                while (success && (x < dailySchedule.length)) {
+                    console.log('in while');
+                    // This checks to see if there is a next task            when the tasks go into the schedule they need to be sorted by start time
                     // in the schedule.
                     if (dailySchedule[x + 1] == undefined) {
                         if (this.compareDuration(

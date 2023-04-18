@@ -1,6 +1,6 @@
 require("dotenv").config()
 const TaskHandler = require('./TaskHandler');
-const DateHandler = require('../DateHandler');
+const DateHandler = require('../tule-app/src/DateHandler');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //Mongodb doc https://www.mongodb.com/docs/drivers/node/current/
 //Fundamentals section will be your friend
@@ -310,7 +310,7 @@ class DbHandler {
                     }
             
                     this.#tasksCollection.deleteOne({"_id":tasktobeDeleted._id});
-                    resolve('return info here');
+                    resolve(user);
                 })
             }catch(err){
                 reject(err)
@@ -330,7 +330,6 @@ class DbHandler {
                         user = this.#taskHandler.deleteSchedAndClean(user,key);
                     }
                     user = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
-
                     resolve(user);
                 })
             }catch(err){
