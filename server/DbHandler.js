@@ -330,6 +330,7 @@ class DbHandler {
                         user = this.#taskHandler.deleteSchedAndClean(user,key);
                     }
                     let newSched = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
+
                     let newUser = this.#taskHandler.newSchedUserClean(user, tempDate, newSched);
                     this.getUserTasks(req).then(data => {
                         newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],newUser);
