@@ -311,44 +311,6 @@ export function AddTaskModal(props) {
                                         </Form.Text>
                                     </Col>
                                 </Row>
-
-                                {/* <Stack direction='horizontal' gap={3}>
-                                    <Form.Group controlId='formBasicCheckbox'>
-                                        <Form.Control type='number' min='0' max='24' value={taskDuration} onChange={(u) => setTaskDurationHours(u.target.value)} required />
-                                        <Form.Text muted>
-                                            Hours
-                                        </Form.Text>
-                                    </Form.Group>
-
-                                    <Form.Control plaintext readOnly defaultValue=":" />
-                                    
-                                    <Form.Group controlId='formBasicCheckbox'>
-                                        <Form.Control type='number' min='0' max='60' value={taskDuration} onChange={(u) => setTaskDurationMinutes(u.target.value)} required />
-                                        <Form.Text muted>
-                                            Minutes
-                                        </Form.Text>
-                                    </Form.Group>
-                                </Stack> */}
-
-                                {/* <Row className="duration">
-                                    <Col sm={5} >
-                                    <Form.Control type='number' min='0' max='24' value={taskDuration} onChange={(u) => setTaskDurationHours(u.target.value)} required />
-                                    <Form.Text muted>
-                                        Hours
-                                    </Form.Text>
-                                    </Col>
-
-                                    <Col xs={1} sm={1} lg={1} >
-                                    <Form.Label>:</Form.Label>
-                                    </Col>
-
-                                    <Col sm={5} >
-                                    <Form.Control type='number' min='0' max='60' value={taskDuration} onChange={(u) => setTaskDurationMinutes(u.target.value)} required />
-                                    <Form.Text muted>
-                                        Minutes
-                                    </Form.Text>
-                                    </Col>
-                                </Row> */}
                             </Form.Group>
 
                             <Form.Group as={Col} controlId="formBreakDuration">

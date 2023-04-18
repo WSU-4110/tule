@@ -34,34 +34,6 @@ async function saveTask(task){
 }
 
 export function EditTaskModal(props) {
-    // const [taskName, setTaskName] = useState(props.currentTasks[props.id].taskName);
-    // const [taskDuration, setTaskDuration] = useState(props.currentTasks[props.id].duration);
-    // const [taskDurationHours, setTaskDurationHours] = useState(props.currentTasks[props.id].duration.split(':')[0]);
-    // const [taskDurationMinutes, setTaskDurationMinutes] = useState(props.currentTasks[props.id].duration.split(':')[1]);
-    // const [taskBreakDurationBool, setTaskBreakDurationBool] = useState(false);
-    // const [taskBreakDuration, setTaskBreakDuration] = useState('');
-    // const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(0);
-    // const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(0);
-    // const [taskDateBool, setTaskDateBool] = useState(false);
-    // const [taskDate, setTaskDate] = useState(props.currentTasks[props.id].date);
-    // const [taskStartTimeBool, setTaskStartTimeBool] = useState(false);
-    // const [taskStartTime, setTaskStartTime] = useState(props.currentTasks[props.id].startTime);
-    // // need to add location from backend
-    // const [taskLocation, setTaskLocation] = useState(props.currentTasks[props.id].location);
-    // const [taskPriority, setTaskPriority] = useState(props.currentTasks[props.id].priority);
-
-    // // Still does not retreive reccruing days
-    // const [taskName, setTaskName] = useState(props.task.Name);
-    // const [taskDuration, setTaskDuration] = useState(props.task.Duration);
-    // const [taskDurationHours,setTaskDurationHours] = useState(((props.task.Duration*60).toString()).slice(2));
-    // const [taskDurationMinutes, setTaskDurationMinutes] = useState(((props.task.Duration*60).toString()).slice(0, 1));
-    // const [taskBreakDuration, setTaskBreakDuration] = useState(props.task.Break.Time);
-    // const [taskBreakDurationHours, setTaskBreakDurationHours] = useState(((props.task.Break.Time*60).toString()).slice(2));
-    // const [taskBreakDurationMinutes, setTaskBreakDurationMinutes] = useState(((props.task.Break.Time*60).toString()).slice(0, 1));
-    // const [taskDate, setTaskDate] = useState(props.task.Date.Time);
-    // const [taskStartTime, setTaskStartTime] = useState(props.task.StartTime.Time);
-    // const [taskLocation, setTaskLocation] = useState(props.task.Location);
-    // const [taskPriority, setTaskPriority] = useState(props.task.Priority);
     const [showModal, setShowModal] = useState(true);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
