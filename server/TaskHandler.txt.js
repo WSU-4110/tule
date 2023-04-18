@@ -51,10 +51,10 @@ class TaskHandler{
         return user;
     }
 
-    newSchedUserClean(user, date, newSched){
+    newSchedUserClean(user, newSched){
         var schedId = Object.keys(newSched);
         schedId = schedId[0];
-        var taskList = newSched[schedId]['Tasks'];
+        var taskList = req.body.Schedule[schedId]['Tasks'];
         var newIdList = []
         for(var i = 0; i < taskList.length; i++){
             newIdList.push(taskList[i]['Id'])
@@ -238,22 +238,9 @@ class TaskHandler{
         dailySchedule = this.dailyAlgorithm(dailySchedule, priority2, schedStart, schedEnd);
         dailySchedule = this.dailyAlgorithm(dailySchedule, priority1, schedStart, schedEnd);
         dailySchedule = this.dailyAlgorithm(dailySchedule, priority0, schedStart, schedEnd);
+        console.log('dailySchedule', dailySchedule);
         //dailySchedule to returnSchedule function here.
-        let returnSched = {}
-        let tempDate = this.#dateHandler.dateToSchedKey(date);
-        returnSched[tempDate] = {};
-        returnSched[tempDate]["SchedStart"] = schedStart;
-        returnSched[tempDate]["SchedStop"] = schedEnd;
-        returnSched[tempDate]['Tasks'] = [];
-        for(let i = 0; i < dailySchedule.length; i++){
-            let tempTask = {
-                "_id": dailySchedule[i]["_id"],
-                "SchedStartTime" : dailySchedule[i]['SchedStartTime']
-            };
-            returnSched[tempDate]['Tasks'].push(tempTask);
-        }
-        console.log('returnSched', returnSched);
-        return returnSched;
+        return dailySchedule;
     }
 
     // Makes an a schedule for the day. It does this by first
@@ -284,7 +271,7 @@ class TaskHandler{
                 else{
                     tempTask['SchedStartTime'] = schedStart;
                 }
-                dailySchedule.push(tempTask);
+                dailySchedule.push(taskList[i])
             }
             else{
                 if(taskList[i]["StartTime"]['Active']){
@@ -299,74 +286,62 @@ class TaskHandler{
                     while (!success && (x < dailySchedule.length)) {
                         if(x == 0){
                             //check the SchedStartTime for the first task, and see if there is a difference between schedStart and the task start time
-                            //if the task fits insert at beginning and break
-                            let schedArr = schedStart.split(':');
-                            let schedStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
-                            schedArr = dailySchedule[x]['SchedStartTime'];
-                            schedArr = schedStart.split(':');
-                            let taskStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
-                            if(tempTask["Duration"] < taskStartFloat - schedStartFloat){
-                                tempTask['SchedStartTime'] = schedStart;
-                                dailySchedule.splice(x,0,tempTask);
-                                x++;
-                                break;
-                            }
-                        }                        
-                        if(x > 0){
-                            //check task against previous task end and current task start
-                            //if fits then insert and break
-                            let schedArr = dailySchedule[x-1]['SchedStartTime'].split(':');
-                            let prevTaskFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
-                            prevTaskFloat += dailySchedule[x-1]['Duration'];
-                            schedArr = dailySchedule[x]['SchedStartTime'].split(':');
-                            let currentTaskFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
-                            if(tempTask["Duration"] < currentTaskFloat - prevTaskFloat){
-                                let tempTime = parseInt(prevTaskFloat * 60);
-                                let tempHours = String(Math.floor(prevTaskFloat));
-                                if(tempHours.length == 1){
-                                    tempHours = '0' + tempHours;
-                                }
-                                if(tempMinutes.length == 1){
-                                    tempMinutes = '0' + tempMinutes;
-                                }
-                                let tempMinutes = String(tempTime % 60);
-                                let tempStr = tempHours + ':' + tempMinutes;
-                                tempTask['SchedStartTime'] = tempStr;
-                                dailySchedule.splice(x,0,tempTask);
-                                x++;
-                                break;
-                            }
+                            //if the task fits insert at beginning and break 
                         }
                         if(x == dailySchedule.length - 1){
                             //check between current task and schedule end for enough time to insert
-                            //insert, break
-                            let schedArr = dailySchedule[x]['SchedStartTime'].split(':');
-                            let currentTaskFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
-                            currentTaskFloat += dailySchedule[x]['Duration'];
-                            schedArr = schedEnd.split(':');
-                            let schedEndFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
-                            if(tempTask["Duration"] < schedEndFloat - currentTaskFloat){
-                                let tempTime = parseInt(currentTaskFloat * 60);
-                                let tempHours = String(Math.floor(currentTaskFloat));
-                                if(tempHours.length == 1){
-                                    tempHours = '0' + tempHours;
-                                }
-                                let tempMinutes = String(tempTime % 60);
-                                if(tempMinutes.length == 1){
-                                    tempMinutes = '0' + tempMinutes;
-                                }
-                                let tempStr = tempHours + ':' + tempMinutes;
-                                tempTask['SchedStartTime'] = tempStr;
-                                dailySchedule.push(tempTask);
-                                x++
-                                break;
+                            //insert, break 
+                        }
+                        //check task against previous task end and current task start
+                        //if fits then insert and break
+
+                        console.log(dailySchedule[x]);
+                        console.log('in while');
+                        // This checks to see if there is a next task            when the tasks go into the schedule they need to be sorted by start time
+                        // in the schedule.
+                        if (dailySchedule[x + 1] == undefined) {
+                            if (this.compareDuration(
+                                    this.subtractTime(schedEnd, dailySchedule[x][2]),
+                                    taskDuration) === 1) {
+                                const taskStart = dailySchedule[x][2];
+                                dailySchedule.push(
+                                    [taskStart, taskList[i].Name,
+                                    this.addTime(taskStart, taskDuration)]);
+                                success = true;
+                            }
+                        } else {
+                            // First tries to fill the gap between the first task
+                            // and the start of the day.
+                            if (this.compareDuration(
+                                    this.subtractTime(
+                                        dailySchedule[x + 1][0],
+                                        schedStart),
+                                    taskDuration) === 1) {
+                                const taskStart = dailySchedule[x][2];
+                                dailySchedule.splice(x, 0,
+                                    [taskStart, taskList[i].Name,
+                                    this.addTime(taskStart, taskDuration)]);
+                                success = true;
+                            // If the gap between the first task and
+                            // the start of the day isnt big enough, we look
+                            // for a gap between the tasks.
+                            } else if (compareDuration(
+                                    subtractTime(
+                                        dailySchedule[x + 1][0],
+                                        dailySchedule[x][2]),
+                                    taskDuration) === 1) {
+                                const taskStart = dailySchedule[x][2];
+                                dailySchedule.splice(x, 0,
+                                    [taskStart, taskList[i].Name,
+                                    addTime(taskStart, taskDuration)]);
+                                success = true;
                             }
                         }
-                        x++
+                        x++;
                     }
                 }
             }
-        }        
+        }
         return dailySchedule;
     }
     // Subraction of time. This is needed to determine the duration of tasks.

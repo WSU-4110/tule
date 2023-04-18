@@ -329,8 +329,9 @@ class DbHandler {
                     if(Object.keys(user['Schedules']).includes(key)){
                         user = this.#taskHandler.deleteSchedAndClean(user,key);
                     }
-                    user = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
-                    resolve(user);
+                    let newSched = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
+                    newUser = this.#taskHandler.newSchedUserClean(user, tempDate, newSched);
+                    resolve(newUser);
                 })
             }catch(err){
                 reject(err)
