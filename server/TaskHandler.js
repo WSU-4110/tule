@@ -102,7 +102,10 @@ class TaskHandler{
         let schedules = verboseUser['Schedules'];
         let activeTasks = verboseUser['ActiveTasks'];
         for(let i = 0; i < schedKeys.length; i++){
+        for(let i = 0; i < schedKeys.length; i++){
             let currentSched = schedules[schedKeys[i]];
+            for(let j = 0; j < currentSched.length; j++){
+                for(let k = 0; k < activeTasks.length; k++){
             for(let j = 0; j < currentSched.length; j++){
                 for(let k = 0; k < activeTasks.length; k++){
                     if(String(activeTasks[k]['_id']) == String(currentSched[j]['_id'])){

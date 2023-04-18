@@ -93,7 +93,6 @@ class DbHandler {
             try{
                 this.#usersCollection.find({ Username: req.body.Username}).toArray().then(info => {
                     const tempInfo = info;
-                    console.log('tempInfo',tempInfo);
                     // populate a list with all IDs from info.activeTasks, info.inactiveTasks, info.recurringTasks, info.schedules
                     var tasksList = {};
                     this.#tasksCollection.find({"_id": {$in: tempInfo[0].ActiveTasks} }).toArray().then(info => {

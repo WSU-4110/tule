@@ -32,10 +32,11 @@ app.post('/GetAllTasks', async (req, res) => {
 });
 
 app.post('/GetAllTasksAndSched', async (req,res) => {
-    console.log(req);
+    console.log("test");
     let userVerbose = await dbHandler.getUserTasksVerbose(req);
-    console.log(taskHandler.populateSched(userVerbose));
-});
+    console.log(userVerbose);
+    res.send(taskHandler.populateSched(userVerbose));
+})
 //This route needs to be sent the new schedule in body.Schedule according to the format:
 /*  {
         <scheduleId> :{
