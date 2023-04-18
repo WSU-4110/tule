@@ -133,10 +133,10 @@ class DbHandler {
             if (task._id != ""){
                 var tempId = new ObjectId(task._id)
                 try{
-                    tasksCollection.replaceOne({"_id":tempId},task).then(info => {
-                        usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
+                    this.#tasksCollection.replaceOne({"_id":tempId},task).then(info => {
+                        this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
                             newUser = this.#taskHandler.updateTaskOnUser(user[0],task);
-                            usersCollection.replaceOne({"_id":user[0]["_id"]},newUser);
+                            this.#usersCollection.replaceOne({"_id":user[0]["_id"]},newUser);
                             //check for completion of replace???
                         })
                     })
@@ -329,8 +329,9 @@ class DbHandler {
                     if(Object.keys(user['Schedules']).includes(key)){
                         user = this.#taskHandler.deleteSchedAndClean(user,key);
                     }
-                    user = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
-                    resolve(user);
+                    let newSched = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
+                    newUser = this.#taskHandler.newSchedUserClean(user, tempDate, newSched);
+                    resolve(newUser);
                 })
             }catch(err){
                 reject(err)
