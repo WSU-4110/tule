@@ -6,14 +6,6 @@ function TaskComponent(props) {
    const [showModal, setShowModal] = useState(false);
    const [task, setTask] = useState(props.task);
 
-   for (let i = 0; i < props.currentTasks.length; i++) {
-        if (props.currentTasks[i].taskName === props.task.Name) {
-            console.log(props.currentTasks[i]);
-            console.log(props.task);
-            console.log(task);
-        }
-    }
-
     return(
         <>
             {showModal && (

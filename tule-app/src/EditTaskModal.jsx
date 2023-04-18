@@ -56,6 +56,7 @@ export function EditTaskModal(props) {
     const [locations, setLocations] = useState([]);
     const [showAlert, setShowAlert] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    var taskNameConst = "Task Name";
     const daysOfWeek = [
           { name: 'Sunday', id: 0 },
           { name: 'Monday', id: 1 },
@@ -67,10 +68,11 @@ export function EditTaskModal(props) {
     ];
 
     try {
-        console.log(props.task);
-        console.log(props.task.Name);
-        console.log(props.task.Duration);
-        setTaskName(props.task.Name);
+        const task = props.task;
+        console.log(task);
+        console.log(task.Name);
+        console.log(task.Duration);
+        taskNameConst = task.Name;
     } catch (err) {
         console.log(err);
     }
@@ -238,7 +240,7 @@ export function EditTaskModal(props) {
                             <Form.Group as={Col} controlId="formBasicEmail">
                                 <Form.Label>Task Name</Form.Label>
                                 <Form.Control
-                                    defaultValue = {props.currentTasks[props.id].taskName}
+                                    defaultValue = {taskNameConst}
                                     type="text"
                                     placeholder="Enter task name"
                                     onChange={(u) => setTaskName(u.target.value)}
@@ -252,7 +254,7 @@ export function EditTaskModal(props) {
                                 >
                                 <Form.Label>Start Time</Form.Label>
                                 <Form.Control
-                                    defaultValue = {props.currentTasks[props.id].startTime}
+                                    defaultValue = {taskStartTime}
                                     type="time"
                                     
                                     onChange={(u) => setTaskStartTime(u.target.value)}
@@ -270,7 +272,7 @@ export function EditTaskModal(props) {
                                 <Row className="taskDurationRow">
                                     <Col className='durationInput' >
                                         <Form.Control
-                                        defaultValue = {props.currentTasks[props.id].duration.split(':')[0]}
+                                        defaultValue = {taskDurationHours}
                                         type='number'
                                         min='0'
                                         max='24'
@@ -288,7 +290,7 @@ export function EditTaskModal(props) {
 
                                     <Col className='durationInput' >
                                         <Form.Control
-                                            defaultValue = {props.currentTasks[props.id].duration.split(':')[1]}
+                                            defaultValue = {taskDurationMinutes}
                                             type='number'
                                             min='0'
                                             max='60'
@@ -306,6 +308,7 @@ export function EditTaskModal(props) {
                                 <Row className="break duration">
                                     <Col sm={5} >
                                     <Form.Control
+                                    defaultValue = {taskBreakDurationHours}
                                     type='number'
                                     min='0'
                                     max='24'
@@ -322,6 +325,7 @@ export function EditTaskModal(props) {
 
                                     <Col sm={5} >
                                     <Form.Control
+                                        defaultValue = {taskBreakDurationMinutes}
                                         type='number'
                                         min='0'
                                         max='60'
@@ -342,6 +346,7 @@ export function EditTaskModal(props) {
                             <Form.Group as={Col} controlId="formTaskDate">
                                 <Form.Label>Date</Form.Label>
                                 <Form.Control
+                                    defaultValue = {taskDate}
                                     type="date"
                                     onChange={(u) => setTaskDate(u.target.value)}
                                     />
@@ -354,7 +359,8 @@ export function EditTaskModal(props) {
                                     selectedValues={reccuringDays} 
                                     onSelect={onSelect} 
                                     onRemove={onRemove} 
-                                    displayValue="name" 
+                                    displayValue="name"
+                                    placeholder="Select Days"
                                 />
                                 <Form.Text className="text-muted">
                                     Optional
