@@ -84,6 +84,18 @@ class TaskHandler{
         }
         user['Schedules'][schedId] = newSched[schedId];
         console.log('newSchedUserClean',user);
+        for (let i = 0; i < user['ActiveTasks'].length; i++){
+            console.log('resetting active tasks')
+            if(Object.keys(user['ActiveTasks'][i]).length > 1){
+                console.log('deeper reset');
+                user['ActiveTasks'][i] = user['ActiveTasks'][i]['_id'];
+            }
+        }
+        for (let i = 0; i < user['InactiveTasks'].length; i++){
+            if(Object.keys(user['ActiveTasks'][i]).length > 1){
+                user['InactiveTasks'][i] = user['InactiveTasks'][i]['_id'];
+            }
+        }
         return user;
     }
 
@@ -131,7 +143,6 @@ class TaskHandler{
             }
         }
         delArr = delArr.sort(this.compareNum);
-        //iterate over array backwards and remove tasks from ActiveTasks
         for(let i = 0; i < delArr.length; i++){
             userV['ActiveTasks'].splice(delArr[i],1);
         }
