@@ -223,3 +223,15 @@
   align-items: center;
   justify-content: center;
 }
+
+.task-icon:hover{
+  background-color: rgb(132, 186, 233);
+  border-radius: 50%;
+}
+
+.add-icon{
+  background: url(./pics/addIcon-light.png) no-repeat;
+}
+.add-icon:hover{
+  background: url(./pics/addIcon-dark.png) no-repeat;
+}

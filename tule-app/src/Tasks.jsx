@@ -3,7 +3,9 @@ import { AddTaskModal } from './AddTaskModal';
 import React, { useState, useEffect, setUsers, fetchUserData } from "react"
 import Button from 'react-bootstrap/Button';
 import Navbar from './components/Navbar';
-import banner from "./pics/sky.png"
+import banner from "./pics/sky.png";
+import addIconLight from "./pics/addIcon-light.png";
+import addIconDark from "./pics/addIcon-dark.png";
 import DropDownMenu from './components/DropDownMenu';
 
 const Tasks = (props) => {
@@ -59,20 +61,26 @@ const Tasks = (props) => {
             <div className="container">
                 <img className="width-100" src={banner} />
             </div>
-            <div className='mt-5' onSubmit={handleSubmit}>
-                <h1>Tasks</h1>
+            <form className='mt-5' onSubmit={handleSubmit}>
+                <div className='container'>
+                    <h1 className='mb-5'>Tasks</h1>
+                </div>
+
                 <section >
                     <TaskList ListOfTasks={currentTasks} currentTasks={currentTasks} update={setCurrentTasks}/>
                 </section>
 
                 <div className='container'>
                     {/*<button className='btn btn-primary mb-5 mt-5' type="submit">Add task</button>*/}
-                    <Button variant="danger" className='mb-5 mt-5' type="submit" >Add task</Button>
-                    
-                    
-                    <button className='btn btn-secondary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
+                    {/*<Button variant="danger" className='mb-5 mt-5' type="submit" >Add task</Button>*/}
+                    <img src={require({addIconLight})}
+       onMouseOver={this.src = require({addIconDark})}
+       onMouseOut={this.src = require({addIconLight})}  onClick={handleSubmit}/>
+                    <br />
+                 
                 </div> 
-            </div>
+                <button className='btn btn-secondary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
+            </form>
         </div>
         </>
     )
