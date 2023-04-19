@@ -1,5 +1,6 @@
 require("dotenv").config()
 const TaskHandler = require('./TaskHandler');
+const DateHandler = require('../tule-app/src/DateHandler');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //Mongodb doc https://www.mongodb.com/docs/drivers/node/current/
 //Fundamentals section will be your friend
@@ -15,6 +16,7 @@ class DbHandler {
     #usersCollection;
     #tasksCollection;
     #taskHandler;
+    #dateHandler;
 
     constructor(){     
         this.#uri = process.env.MONGO_CONNECTION;
@@ -32,6 +34,7 @@ class DbHandler {
         this.#usersCollection = this.#db.collection('Users')
         this.#tasksCollection = this.#db.collection('Tasks') 
         this.#taskHandler = new TaskHandler();
+        this.#dateHandler = new DateHandler();
     }
 
     loginVerify(req){
@@ -130,10 +133,10 @@ class DbHandler {
             if (task._id != ""){
                 var tempId = new ObjectId(task._id)
                 try{
-                    tasksCollection.replaceOne({"_id":tempId},task).then(info => {
-                        usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
+                    this.#tasksCollection.replaceOne({"_id":tempId},task).then(info => {
+                        this.#usersCollection.find({"Username":req.body.Username}).toArray().then(user =>{
                             newUser = this.#taskHandler.updateTaskOnUser(user[0],task);
-                            usersCollection.replaceOne({"_id":user[0]["_id"]},newUser);
+                            this.#usersCollection.replaceOne({"_id":user[0]["_id"]},newUser);
                             //check for completion of replace???
                         })
                     })
@@ -307,12 +310,47 @@ class DbHandler {
                     }
             
                     this.#tasksCollection.deleteOne({"_id":tasktobeDeleted._id});
-                    resolve('return info here');
+                    resolve(user);
                 })
             }catch(err){
                 reject(err)
             }
         })
+    }
+
+    createSchedule(req){
+        return new Promise((resolve, reject) => {
+            try{
+                console.log(req.body);
+                let tempDate = new Date(req.body.Date);
+                let key = this.#dateHandler.dateToSchedKey(tempDate);
+                this.getUserTasksVerbose(req).then(user => {
+                    if(Object.keys(user['Schedules']).includes(key)){
+                        user = this.#taskHandler.deleteSchedAndClean(user,key);
+                    }
+                    let newSched = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
+                    let newUser = this.#taskHandler.newSchedUserClean(user, tempDate, newSched);
+                    this.getUserTasks(req).then(data => {
+                        newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],newUser);
+                        console.log('createSched user', data);
+                        console.log(newUser);
+                        console.log(newUser)
+                        /*this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
+                            resolve(newUser);
+                        })*/
+                        resolve(newUser);
+                    })                  
+                })
+            }catch(err){
+                reject(err)
+            }            
+        })
+    }
+
+    getTaskById(idObject){
+        this.#tasksCollection.find({'_id': idObject}).then(data => {
+            console.log('getTaskById', data);
+        })  
     }
 }
 
