@@ -77,12 +77,25 @@ class TaskHandler{
         }
         //iterate backwards over delArr to remove tasks from inactive
         //Update schedule to new schedule
+        delArr = delArr.sort(this.compareNum);
         console.log('delArr',delArr);
-        for(let i = delArr.length; i >= 0; i--){
+        for(let i = 0; i < delArr.length; i++){
             user['InactiveTasks'].splice(delArr[i],1);
         }
         user['Schedules'][schedId] = newSched[schedId];
         console.log('newSchedUserClean',user);
+        for (let i = 0; i < user['ActiveTasks'].length; i++){
+            console.log('resetting active tasks')
+            if(Object.keys(user['ActiveTasks'][i]).length > 1){
+                console.log('deeper reset');
+                user['ActiveTasks'][i] = user['ActiveTasks'][i]['_id'];
+            }
+        }
+        for (let i = 0; i < user['InactiveTasks'].length; i++){
+            if(Object.keys(user['ActiveTasks'][i]).length > 1){
+                user['InactiveTasks'][i] = user['InactiveTasks'][i]['_id'];
+            }
+        }
         return user;
     }
 
@@ -112,13 +125,15 @@ class TaskHandler{
          //convert all from active to inactive, or delete if recurring
         //console.log('first user', userV);
         //load schedule to be deleted
+        console.log('key in delete', key);
         let delSched = userV['Schedules'][key];
+        console.log(delSched['Tasks'].length);
         let delArr = [];
         //console.log('schedule to delete',delSched);
         //iterate over the tasks in the schedule to find matches in active tasks
-        for(let i = 0; i < delSched.length; i++){
+        for(let i = 0; i < delSched['Tasks'].length; i++){
             for(let j = 0; j < userV['ActiveTasks'].length; j++){
-                if(String(delSched[i]['_id']) == String(userV['ActiveTasks'][j]['_id'])){
+                if(String(delSched['Tasks'][i]['_id']) == String(userV['ActiveTasks'][j]['_id'])){
                     console.log('found task in active tasks.');
                     //add task to InactiveTasks and push index to array
                     userV['InactiveTasks'].push(userV['ActiveTasks'][j]['_id']);
@@ -127,8 +142,8 @@ class TaskHandler{
                 }
             }
         }
-        //iterate over array backwards and remove tasks from ActiveTasks
-        for(let i = delArr.length; i >= 0; i--){
+        delArr = delArr.sort(this.compareNum);
+        for(let i = 0; i < delArr.length; i++){
             userV['ActiveTasks'].splice(delArr[i],1);
         }
         //delete sched from user
@@ -467,6 +482,16 @@ class TaskHandler{
         if (parseFloat(a.Duration) < parseFloat(b.Duration)) {
             return 1;
         } else if (parseFloat(a.Duration) > parseFloat(b.Duration)) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    compareNum(a,b){
+        if(parseInt(a) < parseInt(b)){
+            return 1;
+        } else if (parseInt(a) > parseInt(b)){
             return -1;
         } else {
             return 0;
