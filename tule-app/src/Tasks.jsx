@@ -6,7 +6,7 @@ import Navbar from './components/Navbar';
 import banner from "./pics/sky.png";
 import addIconLight from "./pics/addIcon-light.png";
 import addIconDark from "./pics/addIcon-dark.png";
-import progressTracker from './components/progressTracker';
+//import ProgressTracker from './components/ProgressTracker';
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -69,7 +69,7 @@ const Tasks = (props) => {
                     <h1 className='mb-5'>Tasks</h1>
                 </div>
                 
-                <progressTracker/>
+                {/*<ProgressTracker/>*/}
 
                 <section >
                     <TaskList ListOfTasks={currentTasks} currentTasks={currentTasks} update={setCurrentTasks}/>

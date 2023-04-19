@@ -1,13 +1,14 @@
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { easeQuadInOut } from "d3-ease";
 
 
-
-function progressTracker(props){
+function ProgressTracker(props){
     //This component displays the user's task completion progress
-    var numOfActiveTasks = props.ActiveTasks.length;
+    const [user, setUser] = useState(props.task);
+    const totalTasks = props.task._id;
     var numOfCompleteTasks = 0;
-    var counter = numOfActiveTasks;
+    var counter = totalTasks;
 
     while(counter > 0){
         if(props.task.Complete){
@@ -16,14 +17,15 @@ function progressTracker(props){
         counter--;
     }
 
-    var percentage = ((numOfCompleteTasks/numOfActiveTasks) * 100);
+    var percentage = ((numOfCompleteTasks/totalTasks) * 100);
 
     return(
             <div>
-               <CircularProgressbar value={percentage} text={`${percentage}%`} strokeWidth={5}/>
+               <CircularProgressbar value={percentage} text={`${percentage}%`} strokeWidth={5}
+               buildStyles/>
             </div>
     );
 
 }
 
-export default progressTracker;
+export default ProgressTracker;
