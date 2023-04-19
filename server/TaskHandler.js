@@ -154,7 +154,7 @@ class TaskHandler{
         // If the task has no start time, this organizes the task
         // based on its priority.
         console.log(date);
-        console.log(userV['InactiveTasks']);
+        console.log('in schedgen', userV['InactiveTasks']);
         for (let t = 0; t < inactiveTasks.length; t++) {
             if (inactiveTasks[t].StartTime.Active && 
                 inactiveTasks[t]['Date']['Active'] == true &&
@@ -223,8 +223,10 @@ class TaskHandler{
         // Allocates time for tasks with a start time,
         // then allocates time for tasks with decreasing priority.
         dailySchedule = this.dailyAlgorithm(dailySchedule, concrete, schedStart, schedEnd);
+        console.log('daily after concrete', dailySchedule);
         dailySchedule = this.dailyAlgorithm(dailySchedule, priority3, schedStart, schedEnd);
         dailySchedule = this.dailyAlgorithm(dailySchedule, priority2, schedStart, schedEnd);
+        console.log('daily after priority2', dailySchedule);
         dailySchedule = this.dailyAlgorithm(dailySchedule, priority1, schedStart, schedEnd);
         dailySchedule = this.dailyAlgorithm(dailySchedule, priority0, schedStart, schedEnd);
         //dailySchedule to returnSchedule function here.
@@ -279,22 +281,73 @@ class TaskHandler{
                 if(taskList[i]["StartTime"]['Active']){
                     // different behavior (unsure how to handle conflicts)
                     //iterate over to put the task in appropriate spot
+                    for(let j = 0; j < dailySchedule.length; j++){
+                        if(j == 0){
+                            let schedArr = schedStart.split(':');
+                            let schedStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            schedArr = dailySchedule[j]['SchedStartTime'];
+                            schedArr = schedStart.split(':');
+                            let nextTaskStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;                            
+                            schedArr = taskList[i]['StartTime']['Time'];
+                            schedArr = schedArr.split(':');
+                            let taskStartFloat =  parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            let taskEndFloat = taskStartFloat + taskList[i]['Duration'];
+                            if(taskStartFloat > schedStartFloat && taskEndFloat < nextTaskStartFloat){
+                                tempTask['SchedStartTime'] = taskList[i]['StartTime']['Time'];
+                                dailySchedule.splice(x,0,tempTask);
+                                x++;
+                                break;
+                            }
+                        }
+                        if(j > 0){
+                            //check task against previous task end and current task start
+                            //if fits then insert and break
+                            //end of previous and start of next task
+                            let schedArr = dailySchedule[j-1]['SchedStartTime'].split(':');
+                            let prevTaskFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            prevTaskFloat += dailySchedule[j-1]['Duration'];
+                            schedArr = dailySchedule[j]['SchedStartTime'].split(':');
+                            let currentTaskFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            // start and end for task to be inserted
+                            schedArr = taskList[i];
+                            schedArr = schedArr.split(':');
+                            let taskStartFloat =  parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            let taskEndFloat = taskStartFloat + taskList[i]['Duration'];
+                            if(false){
+                                let tempTime = parseInt(prevTaskFloat * 60);
+                                let tempHours = String(Math.floor(prevTaskFloat));
+                                if(tempHours.length == 1){
+                                    tempHours = '0' + tempHours;
+                                }
+                                if(tempMinutes.length == 1){
+                                    tempMinutes = '0' + tempMinutes;
+                                }
+                                let tempMinutes = String(tempTime % 60);
+                                let tempStr = tempHours + ':' + tempMinutes;
+                                tempTask['SchedStartTime'] = tempStr;
+                                dailySchedule.splice(x,0,tempTask);
+                                x++;
+                                break;
+                            }
+                        }
+                    }                    
                 }
                 else{
                     // Searches through the dailySchedule array to find a place
                     // to schedule the current task.
-                    var success = false;
                     var x = 0;
-                    while (!success && (x < dailySchedule.length)) {
+                    while (x < dailySchedule.length) {
                         if(x == 0){
                             //check the SchedStartTime for the first task, and see if there is a difference between schedStart and the task start time
                             //if the task fits insert at beginning and break
                             let schedArr = schedStart.split(':');
                             let schedStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
                             schedArr = dailySchedule[x]['SchedStartTime'];
-                            schedArr = schedStart.split(':');
+                            schedArr = schedArr.split(':');
                             let taskStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            console.log('x==0 compare', schedStartFloat, taskStartFloat);
                             if(tempTask["Duration"] < taskStartFloat - schedStartFloat){
+                                console.log('in x==0 if');
                                 tempTask['SchedStartTime'] = schedStart;
                                 dailySchedule.splice(x,0,tempTask);
                                 x++;
