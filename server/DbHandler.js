@@ -325,20 +325,52 @@ class DbHandler {
                 let tempDate = new Date(req.body.Date);
                 let key = this.#dateHandler.dateToSchedKey(tempDate);
                 this.getUserTasksVerbose(req).then(user => {
+                    console.log('user in route pre deleteSchedAndClean', user);
                     if(Object.keys(user['Schedules']).includes(key)){
                         user = this.#taskHandler.deleteSchedAndClean(user,key);
+                        this.getUserTasks(req).then(data => {
+                            console.log('data in route after newSchedClean', data);
+                            let newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],user);
+                            console.log('createSched user', data);
+                            console.log(newUser);
+                            console.log(newUser['Schedules']['04182023'])
+                            this.#usersCollection.replaceOne({"Username":req.body.Username},newUser);
+                            //working to here
+                            this.getUserTasksVerbose(req).then(info => {
+                                let newSched = this.#taskHandler.generateSchedule(info,tempDate, req.body.SchedStart, req.body.SchedEnd);
+                                console.log('user in route after schedGen', info, newSched);
+                                let newUser = this.#taskHandler.newSchedUserClean(info, tempDate, newSched);
+                                this.getUserTasks(req).then(data => {
+                                    console.log('newUser in route after newSchedClean', newUser);
+                                    newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],newUser);
+                                    console.log('createSched user', data);
+                                    console.log(newUser);
+                                    console.log(newUser['Schedules']['04182023'])
+                                    this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
+                                        resolve(newUser);
+                                    })
+                                })
+                            })
+                        })                        
                     }
-                    let newSched = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
-                    let newUser = this.#taskHandler.newSchedUserClean(user, tempDate, newSched);
-                    this.getUserTasks(req).then(data => {
-                        newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],newUser);
-                        console.log('createSched user', data);
-                        console.log(newUser);
-                        console.log(newUser['Schedules']['04182023'])
-                        this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
-                            resolve(newUser);
+                    else{
+                        console.log('user in route pre schedgen', user);
+                        this.getUserTasksVerbose(req).then(info => {
+                            let newSched = this.#taskHandler.generateSchedule(info,tempDate, req.body.SchedStart, req.body.SchedEnd);
+                            console.log('user in route after schedGen', info, newSched);
+                            let newUser = this.#taskHandler.newSchedUserClean(info, tempDate, newSched);
+                            this.getUserTasks(req).then(data => {
+                                console.log('newUser in route after newSchedClean', newUser);
+                                newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],newUser);
+                                console.log('createSched user', data);
+                                console.log(newUser);
+                                console.log(newUser['Schedules']['04182023'])
+                                this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
+                                    resolve(newUser);
+                                })
+                            })
                         })
-                    })                  
+                    }                 
                 })
             }catch(err){
                 reject(err)
