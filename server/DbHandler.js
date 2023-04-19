@@ -334,11 +334,10 @@ class DbHandler {
                         newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],newUser);
                         console.log('createSched user', data);
                         console.log(newUser);
-                        console.log(newUser)
-                        /*this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
+                        console.log(newUser['Schedules']['04182023'])
+                        this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
                             resolve(newUser);
-                        })*/
-                        resolve(newUser);
+                        })
                     })                  
                 })
             }catch(err){

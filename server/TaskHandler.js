@@ -121,7 +121,7 @@ class TaskHandler{
                 if(String(delSched[i]['_id']) == String(userV['ActiveTasks'][j]['_id'])){
                     console.log('found task in active tasks.');
                     //add task to InactiveTasks and push index to array
-                    userV['InactiveTasks'].push(userV['ActiveTasks'][j]);
+                    userV['InactiveTasks'].push(userV['ActiveTasks'][j]['_id']);
                     delArr.push(j);
                     break;
                 }
@@ -267,7 +267,6 @@ class TaskHandler{
             }
             
             var tempTask = taskList[i];
-            
             if(dailySchedule.length == 0){
                 if(taskList[i]["StartTime"]['Active']){
                     tempTask["SchedStartTime"] = taskList[i]["StartTime"]["Time"];
@@ -279,27 +278,36 @@ class TaskHandler{
             }
             else{
                 if(taskList[i]["StartTime"]['Active']){
+                    taskList[i]['SchedStartTime'] = taskList[i]['StartTime']['Time'];
                     // different behavior (unsure how to handle conflicts)
                     //iterate over to put the task in appropriate spot
+                    console.log(dailySchedule.length);
                     for(let j = 0; j < dailySchedule.length; j++){
+                        console.log('j',j);
                         if(j == 0){
+                            console.log('tempTask in j == 0', tempTask);
+                            //start of the schedule
                             let schedArr = schedStart.split(':');
                             let schedStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            //current task in dailySchedule
                             schedArr = dailySchedule[j]['SchedStartTime'];
-                            schedArr = schedStart.split(':');
-                            let nextTaskStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;                            
+                            schedArr = schedArr.split(':');
+                            let nextTaskStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            //                            
                             schedArr = taskList[i]['StartTime']['Time'];
                             schedArr = schedArr.split(':');
                             let taskStartFloat =  parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
                             let taskEndFloat = taskStartFloat + taskList[i]['Duration'];
-                            if(taskStartFloat > schedStartFloat && taskEndFloat < nextTaskStartFloat){
+                            console.log('9 8 10 16');
+                            console.log(taskStartFloat, schedStartFloat, taskEndFloat, nextTaskStartFloat);
+                            if(taskStartFloat >= schedStartFloat && taskEndFloat <= nextTaskStartFloat){
                                 tempTask['SchedStartTime'] = taskList[i]['StartTime']['Time'];
-                                dailySchedule.splice(x,0,tempTask);
-                                x++;
+                                dailySchedule.splice(j,0,tempTask);
                                 break;
                             }
                         }
                         if(j > 0){
+                            console.log('tempTask in j > 0', tempTask);
                             //check task against previous task end and current task start
                             //if fits then insert and break
                             //end of previous and start of next task
@@ -309,24 +317,37 @@ class TaskHandler{
                             schedArr = dailySchedule[j]['SchedStartTime'].split(':');
                             let currentTaskFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
                             // start and end for task to be inserted
-                            schedArr = taskList[i];
+                            schedArr = taskList[i]['StartTime']['Time'];
                             schedArr = schedArr.split(':');
                             let taskStartFloat =  parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
                             let taskEndFloat = taskStartFloat + taskList[i]['Duration'];
-                            if(false){
-                                let tempTime = parseInt(prevTaskFloat * 60);
-                                let tempHours = String(Math.floor(prevTaskFloat));
-                                if(tempHours.length == 1){
-                                    tempHours = '0' + tempHours;
+                            if(taskStartFloat >= prevTaskFloat && taskEndFloat <= currentTaskFloat){
+                                tempTask['SchedStartTime'] = taskList[i]['StartTime']['Time'];
+                                if(j == dailySchedule.length-1){
+                                    dailySchedule.push(tempTask);
                                 }
-                                if(tempMinutes.length == 1){
-                                    tempMinutes = '0' + tempMinutes;
+                                else{
+                                    dailySchedule.splice(j,0,tempTask);
                                 }
-                                let tempMinutes = String(tempTime % 60);
-                                let tempStr = tempHours + ':' + tempMinutes;
-                                tempTask['SchedStartTime'] = tempStr;
-                                dailySchedule.splice(x,0,tempTask);
-                                x++;
+                                break;
+                            }
+                        }
+                        if(j == dailySchedule.length - 1){
+                            console.log('tempTask in end of array', tempTask)
+                            //check between current task and schedule end for enough time to insert
+                            //insert, break
+                            let schedArr = dailySchedule[j]['SchedStartTime'].split(':');
+                            let currentTaskFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            currentTaskFloat += dailySchedule[j]['Duration'];
+                            schedArr = schedEnd.split(':');
+                            let schedEndFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
+                            schedArr = taskList[i]['StartTime']['Time'];
+                            schedArr = schedArr.split(':');
+                            let taskStartFloat =  (parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60) + taskList[i]['Duration'];
+                            let taskEndFloat = taskStartFloat ;
+                            if(taskStartFloat >= currentTaskFloat && taskEndFloat <= schedEndFloat){
+                                tempTask['SchedStartTime'] = taskList[i]['StartTime']['Time'];
+                                dailySchedule.push(tempTask);
                                 break;
                             }
                         }
@@ -346,7 +367,7 @@ class TaskHandler{
                             schedArr = schedArr.split(':');
                             let taskStartFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
                             console.log('x==0 compare', schedStartFloat, taskStartFloat);
-                            if(tempTask["Duration"] < taskStartFloat - schedStartFloat){
+                            if(tempTask["Duration"] <= taskStartFloat - schedStartFloat){
                                 console.log('in x==0 if');
                                 tempTask['SchedStartTime'] = schedStart;
                                 dailySchedule.splice(x,0,tempTask);
@@ -362,16 +383,16 @@ class TaskHandler{
                             prevTaskFloat += dailySchedule[x-1]['Duration'];
                             schedArr = dailySchedule[x]['SchedStartTime'].split(':');
                             let currentTaskFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
-                            if(tempTask["Duration"] < currentTaskFloat - prevTaskFloat){
+                            if(tempTask["Duration"] <= currentTaskFloat - prevTaskFloat){
                                 let tempTime = parseInt(prevTaskFloat * 60);
                                 let tempHours = String(Math.floor(prevTaskFloat));
+                                let tempMinutes = String(tempTime % 60);
                                 if(tempHours.length == 1){
                                     tempHours = '0' + tempHours;
                                 }
                                 if(tempMinutes.length == 1){
                                     tempMinutes = '0' + tempMinutes;
-                                }
-                                let tempMinutes = String(tempTime % 60);
+                                }                                
                                 let tempStr = tempHours + ':' + tempMinutes;
                                 tempTask['SchedStartTime'] = tempStr;
                                 dailySchedule.splice(x,0,tempTask);
@@ -387,7 +408,7 @@ class TaskHandler{
                             currentTaskFloat += dailySchedule[x]['Duration'];
                             schedArr = schedEnd.split(':');
                             let schedEndFloat = parseFloat(schedArr[0]) + parseFloat(schedArr[1])/60;
-                            if(tempTask["Duration"] < schedEndFloat - currentTaskFloat){
+                            if(tempTask["Duration"] <= schedEndFloat - currentTaskFloat){
                                 let tempTime = parseInt(currentTaskFloat * 60);
                                 let tempHours = String(Math.floor(currentTaskFloat));
                                 if(tempHours.length == 1){
