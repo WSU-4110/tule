@@ -6,8 +6,7 @@ import Navbar from './components/Navbar';
 import banner from "./pics/sky.png";
 import addIconLight from "./pics/addIcon-light.png";
 import addIconDark from "./pics/addIcon-dark.png";
-import DropDownMenu from './components/DropDownMenu';
-
+import progressTracker from './components/progressTracker';
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -53,35 +52,38 @@ const Tasks = (props) => {
         ,[]
     )
 
+    const myImageStyle = {width: "2000px", height: "343.3px"};
     const [over, setOver] = useState(false);
 
-    const myImageStyle = {width: '2000px', height: '300.3px'}
+    
     return(
         <>
         {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}
         <div>
             <Navbar text='Tule'/>
-            <DropDownMenu/>
-            <div className="">
+            <div>
                 <img style={myImageStyle} src={banner} />
             </div>
-            <form className='mt-4' onSubmit={handleSubmit}>
+            <div className='mt-4' onSubmit={handleSubmit}>
                 <div className='container'>
                     <h1 className='mb-5'>Tasks</h1>
                 </div>
+                
+                <progressTracker/>
 
                 <section >
                     <TaskList ListOfTasks={currentTasks} currentTasks={currentTasks} update={setCurrentTasks}/>
                 </section>
 
-                <div onMouseOver={() => setOver(true)}
-      onMouseOut={() => setOver(false)} className='container'>
-                    {/*<button className='btn btn-primary mb-5 mt-5' type="submit">Add task</button>*/}
-                <img src={over ? addIconDark : addIconLight} onClick={handleSubmit}/>
+
+
+                <div onMouseOver={() => setOver(true)} onMouseOut={() => setOver(false)} className='container'>
+                    <img title="Add Task" src={over ? addIconDark : addIconLight} onClick={handleSubmit}/>
                     <br />
                 </div> 
+
                 <button className='btn btn-primary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
-            </form>
+            </div>
         </div>
         </>
     )
