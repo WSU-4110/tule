@@ -325,20 +325,20 @@ class DbHandler {
                 let tempDate = new Date(req.body.Date);
                 let key = this.#dateHandler.dateToSchedKey(tempDate);
                 this.getUserTasksVerbose(req).then(user => {
-                    console.log(user);
                     if(Object.keys(user['Schedules']).includes(key)){
                         user = this.#taskHandler.deleteSchedAndClean(user,key);
                     }
                     let newSched = this.#taskHandler.generateSchedule(user,tempDate, req.body.SchedStart, req.body.SchedEnd);
-
                     let newUser = this.#taskHandler.newSchedUserClean(user, tempDate, newSched);
                     this.getUserTasks(req).then(data => {
                         newUser = this.#taskHandler.addTasksAndSchedToUser(data[0],newUser);
                         console.log('createSched user', data);
                         console.log(newUser);
-                        this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
+                        console.log(newUser)
+                        /*this.#usersCollection.replaceOne({"_id":newUser["_id"]}, newUser).then(info => {
                             resolve(newUser);
-                        })
+                        })*/
+                        resolve(newUser);
                     })                  
                 })
             }catch(err){
