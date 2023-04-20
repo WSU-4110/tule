@@ -372,6 +372,63 @@ class DbHandler {
             console.log('getTaskById', data);
         })  
     }
+
+    finishedTaskEarly(req) {
+        return new Promise((resolve, reject) => {
+            try{
+
+                // delete from user's active, schedules
+                // add to task archive
+                // change task.complete to True 
+                // change task.StartTime.active to false
+
+                this.#usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
+                var finishedEarlyTask = req.body.Task;
+                user['TaskArchive'].push(finishedEarlyTask._id); // move task to archive
+        
+                for (var i = 0; i < user[ActiveTasks].length; i++) {    // remove the task from user[ActiveTasks] array
+                if (String(user['ActiveTasks'][i]) == String(finishedEarlyTask._id)) {
+                    user['ActiveTasks'].splice(i, 1);
+                }
+                break;
+                }
+
+                scheduleidKey = Object.keys(user['Schedules']);
+                scheduleID = scheduleidKey[0];
+                sceduleinfoKeys = Object.keys(user['Schedules'][scheduleID]);   // using keys to access users Schedules tasks below
+    
+                for (var i = 0; i < (user['Schedules'][scheduleID][scheduleinfoKeys[1]]).length; i++) { /// remove the task from user[Schedules] tasks array
+                if (String(user['Schedules'][scheduleID][scheduleinfoKeys[1]][i]) == String(finishedEarlyTask)) {
+                    user['Schedules'].splice(i, 1);
+                }
+                break;
+                }
+
+                this.#usersCollection.replaceOne({"_id":user["_id"]},user); //update userscollection with above changes
+
+                this.#tasksCollection.updateOne({ "_id": finishedEarlyTask._id } , // change Active value of task under "StartTime" to false
+                {
+                "$set": {
+                    "StartTime.Active" : false
+                    }
+                }
+                )
+
+                this.#tasksCollection.updateOne({ "_id": finishedEarlyTask._id } , // change completed value of task to True
+                {
+                "$set": {
+                    "Complete" : true
+                    }
+                }
+                )
+                resolve(user);
+        })
+            }catch(err) {
+                reject(err);
+            }
+        })
+    }
+
 }
 
 module.exports = DbHandler;
