@@ -6,11 +6,12 @@ import Navbar from './components/Navbar';
 import banner from "./pics/sky.png";
 import addIconLight from "./pics/addIcon-light.png";
 import addIconDark from "./pics/addIcon-dark.png";
-//import ProgressTracker from './components/ProgressTracker';
+import ProgressTracker from './components/ProgressTracker';
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    
+    const [user, setUser] = useState();
+
     //Should return all of the tasks from database associated with the user.
     async function getAllTasks(){
         try{
@@ -47,14 +48,21 @@ const Tasks = (props) => {
         var result = getAllTasks();
         result.then((value) => {
             setCurrentTasks(value.InactiveTasks);
+            setUser(value);
+            console.log(value);
         })
     }
         ,[]
     )
 
+    const printUser = () => {
+        console.log("user");
+        console.log(user);
+        console.log(user['InactiveTasks']);
+    }
+
     const myImageStyle = {width: "2000px", height: "343.3px"};
     const [over, setOver] = useState(false);
-
     
     return(
         <>
@@ -69,13 +77,11 @@ const Tasks = (props) => {
                     <h1 className='mb-5'>Tasks</h1>
                 </div>
                 
-                {/*<ProgressTracker/>*/}
+                <ProgressTracker/>
 
                 <section >
                     <TaskList ListOfTasks={currentTasks} currentTasks={currentTasks} update={setCurrentTasks}/>
                 </section>
-
-
 
                 <div onMouseOver={() => setOver(true)} onMouseOut={() => setOver(false)} className='container'>
                     <img title="Add Task" src={over ? addIconDark : addIconLight} onClick={handleSubmit}/>
@@ -83,6 +89,8 @@ const Tasks = (props) => {
                 </div> 
 
                 <button className='btn btn-primary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
+
+               
             </div>
         </div>
         </>
