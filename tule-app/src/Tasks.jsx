@@ -49,7 +49,6 @@ const Tasks = (props) => {
         result.then((value) => {
             setCurrentTasks(value.InactiveTasks);
             setUser(value);
-            console.log(value);
         })
     }
         ,[]

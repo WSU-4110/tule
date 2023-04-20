@@ -74,7 +74,7 @@ useEffect(() => {
 )
 
 const castDuration=(task) =>{
-    return(Array.from({ length: Math.round(task.Duration*4) }, (_,i) => parseInt(task.StartTime.Time.split(":")[0])+i*0.25))
+    return(Array.from({ length: Math.round(findTask(task['_id']).Duration*4) }, (_,i) => parseInt(task.SchedStartTime.split(":")[0])+i*0.25))
 }
 
 const checkDate =(compareDate, date) => {
@@ -221,8 +221,8 @@ const editSchedule = () =>{
                         {todaySchedule().map((task) => (
                             checkTime(changeToMinutes(task.SchedStartTime), changeToMinutes(time + ":" + minute)) &&
                             <div className={"task" + findTask(task._id).Priority} key={findTask(task._id).Name + findTask(task._id).Priority}>
-                                {castDuration(findTask(task._id)).map((index) => (
-                                (index===castDuration(findTask(task._id))[0] &&
+                                {castDuration(task).map((index) => (
+                                (index===castDuration(task)[0] &&
                                     <div className={(!findTask(task._id).Complete && "task" +findTask(task._id).Priority) || (findTask(task._id).Complete && "taskComplete")} key={time+minute+index+"button"}>
                                         <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={findTask(task._id).Name} onClick={()=> handleTaskButton(findTask(task._id))}>{findTask(task._id).Name}</Button>
                                     </div>)

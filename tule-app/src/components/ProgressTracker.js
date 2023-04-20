@@ -46,12 +46,8 @@ function ProgressTracker(){
     )
    
     //This component displays the user's task completion progress
-
-    console.log(user);
     if(user != null){
-    console.log("User string");
     const totalTasks = user['ActiveTasks'].length + user['InactiveTasks'].length;
-
 
     var numOfCompleteTasks = 0;
 
@@ -71,7 +67,7 @@ function ProgressTracker(){
 
     var percentage = ((numOfCompleteTasks/totalTasks) * 100);
     }
-    
+
     return(
             <div>
                <CircularProgressbar value={percentage} text={`${percentage}%`} strokeWidth={5}
