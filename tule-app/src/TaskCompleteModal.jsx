@@ -44,7 +44,7 @@ export default function TaskCompleteModal(props) {
                 </Modal.Header>
                 <Modal.Body>
                     <Button onClick={() => completeTask()}>Mark as done</Button>
-                    <Button onClick={() => addTime()}>Add 15 min</Button>
+                    {/*<Button onClick={() => addTime()}>Add 15 min</Button>*/}
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={props.resetModal}>
