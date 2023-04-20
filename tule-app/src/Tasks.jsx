@@ -47,9 +47,8 @@ const Tasks = (props) => {
     useEffect(() => {
         var result = getAllTasks();
         result.then((value) => {
-            setCurrentTasks(value.InactiveTasks);
+            setCurrentTasks(value.InactiveTasks.concat(value.ActiveTasks));
             setUser(value);
-            console.log(value);
         })
     }
         ,[]
@@ -93,7 +92,6 @@ const Tasks = (props) => {
                     <img title="Add Task" src={over ? addIconDark : addIconLight} onClick={handleSubmit}/>
                     <br/>
                 </div> 
-
                 <button className='btn btn-primary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
             </div>
         </div>

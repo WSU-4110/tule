@@ -74,7 +74,7 @@ useEffect(() => {
 )
 
 const castDuration=(task) =>{
-    return(Array.from({ length: Math.round(task.Duration*4) }, (_,i) => parseInt(task.StartTime.Time.split(":")[0])+i*0.25))
+    return(Array.from({ length: Math.round(findTask(task['_id']).Duration*4) }, (_,i) => parseInt(task.SchedStartTime.split(":")[0])+i*0.25))
 }
 
 const checkDate =(compareDate, date) => {
@@ -188,17 +188,23 @@ const editSchedule = () =>{
                     />}
             {showTCModal && <TaskCompleteModal resetModal={resetModal}  task={selectedTask}/>}
             <div>
-            <Navbar text='Tule'/>
+                <Navbar text='Tule'/>
             
-            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('tasks')}>
-                Back
-            </button>
-            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
-               Logout
-            </button>
-            <button className="btn btn-primary mt-5" onClick={editSchedule}>
-               Edit Schedule
-            </button>
+                <div className="container mb-1">
+                    <div className="row">
+                        <div className="col-8 center offset-1">
+                            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('tasks')}>
+                                Back
+                            </button>
+                            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
+                            Logout
+                            </button>
+                            <button className="btn btn-primary mt-5" onClick={editSchedule}>
+                            Edit Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="dayDisplay">
             <Button onClick={() =>prevDay()}>{String.fromCharCode(8592)}</Button>
@@ -221,8 +227,8 @@ const editSchedule = () =>{
                         {todaySchedule().map((task) => (
                             checkTime(changeToMinutes(task.SchedStartTime), changeToMinutes(time + ":" + minute)) &&
                             <div className={"task" + findTask(task._id).Priority} key={findTask(task._id).Name + findTask(task._id).Priority}>
-                                {castDuration(findTask(task._id)).map((index) => (
-                                (index===castDuration(findTask(task._id))[0] &&
+                                {castDuration(task).map((index) => (
+                                (index===castDuration(task)[0] &&
                                     <div className={(!findTask(task._id).Complete && "task" +findTask(task._id).Priority) || (findTask(task._id).Complete && "taskComplete")} key={time+minute+index+"button"}>
                                         <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={findTask(task._id).Name} onClick={()=> handleTaskButton(findTask(task._id))}>{findTask(task._id).Name}</Button>
                                     </div>)

@@ -59,6 +59,7 @@ class TaskHandler{
         var newIdList = [];
         var delArr = [];
         var index = 0;
+        console.log("tasklist : ", taskList);
         for(var i = 0; i < taskList.length; i++){
             newIdList.push(taskList[i]["_id"]);
         }
@@ -69,10 +70,11 @@ class TaskHandler{
         for(let i = 0; i < newIdList.length; i++){
             user['ActiveTasks'].push(newIdList[i]);
             let inactive = user['InactiveTasks'];
-            index = 0;
-            while(String(inactive[index]['_id']) != String(newIdList[i])){
-                delArr.push(index);
-                index++
+            for(let index = 0; index<inactive.length; index++){
+                if(String(inactive[index]['_id']) == String(newIdList[i])){
+                    delArr.push(index);
+                    break;
+                }
             }
         }
         //iterate backwards over delArr to remove tasks from inactive
@@ -84,15 +86,18 @@ class TaskHandler{
         }
         user['Schedules'][schedId] = newSched[schedId];
         console.log('newSchedUserClean',user);
+        console.log(user['ActiveTasks']);
         for (let i = 0; i < user['ActiveTasks'].length; i++){
             console.log('resetting active tasks')
+            console.log(Object.keys(user['ActiveTasks'][i]));
             if(Object.keys(user['ActiveTasks'][i]).length > 1){
                 console.log('deeper reset');
                 user['ActiveTasks'][i] = user['ActiveTasks'][i]['_id'];
             }
         }
         for (let i = 0; i < user['InactiveTasks'].length; i++){
-            if(Object.keys(user['ActiveTasks'][i]).length > 1){
+            if(Object.keys(user['InactiveTasks'][i]).length > 1){
+                console.log("inactive if");
                 user['InactiveTasks'][i] = user['InactiveTasks'][i]['_id'];
             }
         }
