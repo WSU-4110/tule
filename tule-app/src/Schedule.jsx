@@ -188,17 +188,23 @@ const editSchedule = () =>{
                     />}
             {showTCModal && <TaskCompleteModal resetModal={resetModal}  task={selectedTask}/>}
             <div>
-            <Navbar text='Tule'/>
+                <Navbar text='Tule'/>
             
-            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('tasks')}>
-                Back
-            </button>
-            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
-               Logout
-            </button>
-            <button className="btn btn-primary mt-5" onClick={editSchedule}>
-               Edit Schedule
-            </button>
+                <div className="container mb-1">
+                    <div className="row">
+                        <div className="col-8 center offset-1">
+                            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('tasks')}>
+                                Back
+                            </button>
+                            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
+                            Logout
+                            </button>
+                            <button className="btn btn-primary mt-5" onClick={editSchedule}>
+                            Edit Schedule
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div className="dayDisplay">
             <Button onClick={() =>prevDay()}>{String.fromCharCode(8592)}</Button>

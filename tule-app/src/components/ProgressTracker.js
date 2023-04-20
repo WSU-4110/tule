@@ -9,7 +9,6 @@ import { EditTaskModal } from "../EditTaskModal";
 
 
 
-
 function ProgressTracker(){
 
     const [user, setUser] = useState();
@@ -65,7 +64,7 @@ function ProgressTracker(){
         }
     }
 
-    var percentage = ((numOfCompleteTasks/totalTasks) * 100);
+    var percentage = Math.round(((numOfCompleteTasks/totalTasks) * 100));
     }
 
     return(
