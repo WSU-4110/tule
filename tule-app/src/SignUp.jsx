@@ -57,7 +57,7 @@ export const SignUp = (props) => {
             }
             console.log(data)
             if (data['AccountCreate'] == "True"){
-                props.onChangeScreen('tasks'); 
+                props.onChangeScreen(''); 
             }
             else {
                 setUsernameError('Username already in use. Select new username.');
