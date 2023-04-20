@@ -262,45 +262,43 @@ class DbHandler {
             try{
                 this.#usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
 
-
                     var tasktobeDeleted = req.body.Task;
             
-                    // use POSTman
-            
-            
-            
                     for (var i = 0; i < user[InactiveTasks].length; i++) {
-                        if (user['InactiveTasks'][i] == tasktobeDeleted) { // how to compare only the "_id" info from the Task passed in the req?
+                        if (String(user['InactiveTasks'][i]) == String(tasktobeDeleted._id)) { 
                             user['InactiveTasks'].splice(i, 1);
                         }
                         break;
                     }
             
-            
                     for (var i = 0; i < user[ActiveTasks].length; i++) {
-                        if (user['ActiveTasks'][i] == tasktobeDeleted) {
+                        if (String(user['ActiveTasks'][i]) == String(tasktobeDeleted._id)) {
                             user['ActiveTasks'].splice(i, 1);
                         }
                         break;
                     }
             
-            
                     for (var i = 0; i < user[RecurringTasks].length; i++) {
-                        if (user['RecurringTasks'][i] == tasktobeDeleted) {
+                        if (String(user['RecurringTasks'][i]) == String(tasktobeDeleted._id)) {
                             user['RecurringTasks'].splice(i, 1);
                         }
                         break;
                     }
             
-            
-                    for (var i = 0; i < user[Schedules].length; i++) {
-                        if (user['Schedules'][i] == tasktobeDeleted) {
+                    scheduleidKey = Object.keys(user['Schedules']);
+                    scheduleID = scheduleidKey[0];
+                    sceduleinfoKeys = Object.keys(user['Schedules'][scheduleID]);   // using keys to access users Schedules tasks below
+
+                    for (var i = 0; i < (user['Schedules'][scheduleID][scheduleinfoKeys[1]]).length; i++) { 
+                       if (String(user['Schedules'][scheduleID][scheduleinfoKeys[1]][i]) == String(tasktobeDeleted)) {
                             user['Schedules'].splice(i, 1);
-                        }
-                        break;
+                       }
+                       break;
                     }
+
+                    this.#usersCollection.replaceOne({"_id":user["_id"]},user); //update users collection with above changes
             
-                    this.#tasksCollection.deleteOne({"_id":tasktobeDeleted._id});
+                    this.#tasksCollection.deleteOne({"_id":tasktobeDeleted._id}); // update tasks collection
                     resolve(user);
                 })
             }catch(err){
