@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "@iconscout/react-unicons": "^2.0.2",
     "bootstrap": "^5.2.3",
+    "mdb-react-ui-kit": "^6.0.0",
     "react-bootstrap": "^2.7.2",
     "react-bootstrap-validation": "^0.1.11",
     "reactstrap": "^9.1.6"

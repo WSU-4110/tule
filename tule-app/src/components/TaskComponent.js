@@ -1,14 +1,18 @@
 import { EditTaskModal } from "../EditTaskModal";
-import { useState } from "react";
-import Button from 'react-bootstrap/Button';
+import { useState, setOver} from "react";
+import editIcon from '../pics/editPencil.png';
+import checkIconLight from '../pics/checkmark-light.png';
+import checkIconDark from '../pics/checkmark-dark.png';
 
 function TaskComponent(props) {
    const [showModal, setShowModal] = useState(false);
    const [task, setTask] = useState(props.task);
+    var complete = props.task.Complete;
 
     return(
         <>
-            {showModal && (
+
+{showModal && (
                 <EditTaskModal
                     key={props._id}
                     resetModal={setShowModal}
@@ -16,19 +20,18 @@ function TaskComponent(props) {
                     task={task}
                     update={props.update}/>
             )}
-                <div className="mb-2 mt-5">
-                    <h3>{props.task.Name}</h3>
-                    {/*<p key={0}>{"Duration: " +props.task.Duration}</p>
-                    <p key={1}>{"Priority: "+props.task.Priority}</p>*/}
-                </div>
-                <div className="mt-3 position-relative right-1">
-                    <Button
-                        className=''
-                        type='reset'
-                        onClick={() => setShowModal(true)}
-                        >
-                        Edit Task
-                    </Button>
+            {/*Task display*/}
+                <div className="mb-3">
+                    <div className="container">
+                        <div className="row align-items-start">
+                            <div className="col-md-6 offset-md-5">
+                                <img style={{width:30, height: 30}} className="float-start" src={complete ? checkIconDark : checkIconLight}/>
+                                <img title="Edit Task" onClick={() => setShowModal(true)} className="float-start task-icon" style={{width:30, height: 30}} src={editIcon} alt="edit-pencil icon"/>
+                                <h3 className="float-start">{props.task.Name}</h3>
+                                <br/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
         </>
     )
