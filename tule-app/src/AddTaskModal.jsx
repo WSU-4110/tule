@@ -76,7 +76,6 @@ export function AddTaskModal(props) {
                     }
             }
         }
-        locations.pop("-----");
         return locations;
     }
 
@@ -123,7 +122,6 @@ export function AddTaskModal(props) {
     // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
-        locations.pop("-----");
 
         if (taskBreakDurationHours < 10) {
             setTaskBreakDurationHours('0' + taskBreakDurationHours.toString());
