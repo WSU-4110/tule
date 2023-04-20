@@ -114,6 +114,7 @@ export function EditTaskModal(props) {
                     }
             }
         }
+        locations.pop('-----');
         return locations;
     }
 
@@ -155,6 +156,7 @@ export function EditTaskModal(props) {
     // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
+        locations.pop('-----');
 
         if (taskDurationHoursConst < 10) {
             taskDurationHoursConst = ('0' + taskDurationHoursConst.toString());
@@ -473,7 +475,6 @@ export function EditTaskModal(props) {
 
                     </Form>
 
-
                 </Modal.Body>
                 <Modal.Footer
                     style={{
@@ -494,10 +495,6 @@ export function EditTaskModal(props) {
                     </Button>
                 </Modal.Footer>
             </Modal>
-
-            <form onSubmit={handleSubmit}>
-
-            </form>
         </>
     )
 }
