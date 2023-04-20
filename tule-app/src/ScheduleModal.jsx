@@ -42,6 +42,7 @@ export function ScheduleModal(props) {
             //console.log(Array.from({length:(parseInt(activeEnd.split(":")[0])-parseInt(activeStart.split(":")[0])+ 1)}, (_,i) => parseInt(activeStart.split(":")[0])+i));
             props.setActiveHours(Array.from({length:(parseInt(activeEnd.split(":")[0])-parseInt(activeStart.split(":")[0])+ 1)}, (_,i) => parseInt(activeStart.split(":")[0])+i))
             setShow(false);
+            createSched();
         }
     }
 
@@ -77,6 +78,32 @@ export function ScheduleModal(props) {
             }
         }
         return true;
+    }
+
+    async function createSched(){
+        try{
+            const response = await fetch("http://localhost:3001/CreateSchedule",{
+                method:'POST',
+                mode:'cors',
+                headers:{
+                "Access-Control-Allow-Origin":'http://localhost:3000',
+                "Content-Type":'application/json' 
+                },
+                body:JSON.stringify({
+                    "Username":sessionStorage["Username"],
+                    "Password":sessionStorage["Password"],
+                    "Date": props.displayedDay,
+                    "SchedStart":activeStart,
+                    "SchedEnd": activeEnd
+                })
+            })
+            
+            return response.json(); 
+        }
+
+        catch(err){
+            console.log(err);
+        }
     }
 
     return (
