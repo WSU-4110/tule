@@ -1,5 +1,5 @@
 import TaskComponent from './TaskComponent';
-
+import ProgressTracker from './ProgressTracker';
 function TaskList(props){
     
     return (

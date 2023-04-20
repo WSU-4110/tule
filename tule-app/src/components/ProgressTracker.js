@@ -71,6 +71,7 @@ function ProgressTracker(){
 
     var percentage = ((numOfCompleteTasks/totalTasks) * 100);
     }
+    
     return(
             <div>
                <CircularProgressbar value={percentage} text={`${percentage}%`} strokeWidth={5}
