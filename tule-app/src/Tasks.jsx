@@ -73,6 +73,14 @@ const Tasks = (props) => {
                 <img style={myImageStyle} src={banner} />
             </div>
             <div className='mt-4' onSubmit={handleSubmit}>
+            <div className='container float-end'>
+                    <div className='row'>
+                    <div className='col-3 offset-8'>
+                    <ProgressTracker/>
+                    </div>
+                    </div>
+                </div>
+
                 <div className='container'>
                     <h1 className='mb-5'>Tasks</h1>
                 </div>
@@ -87,9 +95,6 @@ const Tasks = (props) => {
                 </div> 
 
                 <button className='btn btn-primary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
-
-               
-                
             </div>
         </div>
         </>
