@@ -167,78 +167,69 @@ class DbHandler {
         })
     }
 
-    pauseTask(req){
-        return new Promise((resolve,reject) => {
+    pauseTask(req) {
+        return new Promise((resolve, reject) => {
             try{
                 this.#usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
-
-
-                    var pausedTask = req.body.Task;
-                
-                
-                    var today = new Date();
-                    var currentTime = today.getHours() + ":" + today.getMinutes(); // retrieve the current time
-                
-                
-                    let taskStartTimeKeys = Object.keys(pausedTask['StartTime']); // set keys of task's StartTime (its boolean 'Active' status & its starting time) to a variable
-                
-                
-                    var pausedtaskStartTimeHour = (pausedTask['StartTime'][taskStartTimeKeys[1]]).slice(0,2); // set  hour value of start time of pausedTask as a var
+                var pausedTask = req.body.Task;
+                var today = new Date();
+                var currentTime = today.getHours() + ":" + today.getMinutes(); // retrieve the current time
+                let taskStartTimeKeys = Object.keys(pausedTask['StartTime']); // set keys of task's StartTime (its boolean 'Active' status & its starting time) to a variable
+                var pausedtaskStartTimeHour = (pausedTask['StartTime'][taskStartTimeKeys[1]]).slice(0,2); // set  hour value of start time of pausedTask as a var
                     // ^ I sliced above so i could keep only the first 2 characters of the Start Time string (the hour value)
-                
-                
-                    var pausedtaskStartTimeMinute = (pausedTask['StartTime'][taskStartTimeKeys[1]]).slice(-2); // set minute value of start time of pausedTask as a var
+                var pausedtaskStartTimeMinute = (pausedTask['StartTime'][taskStartTimeKeys[1]]).slice(-2); // set minute value of start time of pausedTask as a var
                     // ^ I sliced above so i could keep only the last 2 characters of the Start Time string (the minute value)
-                
-                
-                    var newDurationHour = pausedTask['Duration'] - (today.getHours() - parseInt(pausedtaskStartTimeHour)); // previous duration hours Minus how much hours was spent on task
+                var newDurationHour = pausedTask['Duration'] - (today.getHours() - parseInt(pausedtaskStartTimeHour)); // previous duration hours Minus how much hours was spent on task
                     // take current minute(). subtract starttime minutes from this. divide by 60. add to newduration hour
-                
-                
-                    var newDurationMinutestoHours = (today.getMinutes() - parseInt(pausedtaskStartTimeMinute)) / 60;
-
-
-                    newDurationHour = newDurationHour + newDurationMinutestoHours;
+                var newDurationMinutestoHours = (today.getMinutes() - parseInt(pausedtaskStartTimeMinute)) / 60;
+                newDurationHour = newDurationHour + newDurationMinutestoHours;
                     // ^ example for above lines of code: StartTime 4:30. Current time 6:15. (Line 282): Duration 4 hours. 4 - (6 - 4) = 2. (Line 286): 15 - 30 = -15. divide 60 = -15/60. 2 + -15/60 = 1.75 => 4 - 1.75 hours = 2.25 hours new remaining duration.
-            
+                
                     for (var i = 0; i < user[ActiveTasks].length; i++) { // delete task from active
-                        if (user['ActiveTasks'][i] == pausedTask._id) {
+                        if (String(user['ActiveTasks'][i]) == String(pausedTask._id)) {
                             user['ActiveTasks'].splice(i, 1);
                         }
                         break;
-                    }
-                
-                    for (var i = 0; i < user[Schedules].length; i++) { // delete task from schedule
-                        if (user['Schedules'][i] == pausedTask._id) {
-                            user['Schedules'].splice(i, 1);
+                }
+                   
+                scheduleidKey = Object.keys(user['Schedules']);
+                scheduleID = scheduleidKey[0];
+                sceduleinfoKeys = Object.keys(user['Schedules'][scheduleID]);   // using keys to access users Schedules tasks below
+        
+                for (var i = 0; i < (user['Schedules'][scheduleID][scheduleinfoKeys[1]]).length; i++) { //delete task from schedule
+                         if (String(user['Schedules'][scheduleID][scheduleinfoKeys[1]][i]) == String(pausedTask)) {
+                        user['Schedules'].splice(i, 1);
                         }
                         break;
-                    }
+                }
+                   
+                user['InactiveTasks'].push(pausedTask._id); // move task to inactive
 
-
-                
-                    user['InactiveTasks'].push(pausedTask._id); // move task to inactive
-
-
-                
-                    // pausedTask['StartTime']['Active'] = false; <-- i didn't think this was right so i went with the below implementation
-
-
-                    this.#tasksCollection.updateOne({ "_id": pausedTask._id } , // change Active value of task under "StartTime" to false
+                this.#usersCollection.replaceOne({"_id":user["_id"]},user); // to put the above changes into usersCollection
+                              
+                this.#tasksCollection.updateOne({ "_id": pausedTask._id } , // change Active value of task under "StartTime" to false
                     {
                         "$set": {
                             "StartTime.Active" : false
                         }
                     }
                     )
-
-
-                    // Change "Location"??
-                    resolve('return info here');
+        
+                this.#tasksCollection.updateOne({ "_id": pausedTask._id } , // change Duration value of task to new duration
+                    {
+                        "$set": {
+                            "Duration" : newDurationHour
+                        }
+                    }
+                    )
+                    resolve(user);
                 })
-            }catch(err){
-                reject(err)
+
+            }catch(err) {
+                reject(err);
             }
+
+
         })
     }
 
@@ -271,45 +262,43 @@ class DbHandler {
             try{
                 this.#usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
 
-
                     var tasktobeDeleted = req.body.Task;
             
-                    // use POSTman
-            
-            
-            
                     for (var i = 0; i < user[InactiveTasks].length; i++) {
-                        if (user['InactiveTasks'][i] == tasktobeDeleted) { // how to compare only the "_id" info from the Task passed in the req?
+                        if (String(user['InactiveTasks'][i]) == String(tasktobeDeleted._id)) { 
                             user['InactiveTasks'].splice(i, 1);
                         }
                         break;
                     }
             
-            
                     for (var i = 0; i < user[ActiveTasks].length; i++) {
-                        if (user['ActiveTasks'][i] == tasktobeDeleted) {
+                        if (String(user['ActiveTasks'][i]) == String(tasktobeDeleted._id)) {
                             user['ActiveTasks'].splice(i, 1);
                         }
                         break;
                     }
             
-            
                     for (var i = 0; i < user[RecurringTasks].length; i++) {
-                        if (user['RecurringTasks'][i] == tasktobeDeleted) {
+                        if (String(user['RecurringTasks'][i]) == String(tasktobeDeleted._id)) {
                             user['RecurringTasks'].splice(i, 1);
                         }
                         break;
                     }
             
-            
-                    for (var i = 0; i < user[Schedules].length; i++) {
-                        if (user['Schedules'][i] == tasktobeDeleted) {
+                    scheduleidKey = Object.keys(user['Schedules']);
+                    scheduleID = scheduleidKey[0];
+                    sceduleinfoKeys = Object.keys(user['Schedules'][scheduleID]);   // using keys to access users Schedules tasks below
+
+                    for (var i = 0; i < (user['Schedules'][scheduleID][scheduleinfoKeys[1]]).length; i++) { 
+                       if (String(user['Schedules'][scheduleID][scheduleinfoKeys[1]][i]) == String(tasktobeDeleted)) {
                             user['Schedules'].splice(i, 1);
-                        }
-                        break;
+                       }
+                       break;
                     }
+
+                    this.#usersCollection.replaceOne({"_id":user["_id"]},user); //update users collection with above changes
             
-                    this.#tasksCollection.deleteOne({"_id":tasktobeDeleted._id});
+                    this.#tasksCollection.deleteOne({"_id":tasktobeDeleted._id}); // update tasks collection
                     resolve(user);
                 })
             }catch(err){
@@ -383,6 +372,63 @@ class DbHandler {
             console.log('getTaskById', data);
         })  
     }
+
+    finishedTaskEarly(req) {
+        return new Promise((resolve, reject) => {
+            try{
+
+                // delete from user's active, schedules
+                // add to task archive
+                // change task.complete to True 
+                // change task.StartTime.active to false
+
+                this.#usersCollection.find({ Username: req.body.Username }).toArray().then(user => {
+                var finishedEarlyTask = req.body.Task;
+                user['TaskArchive'].push(finishedEarlyTask._id); // move task to archive
+        
+                for (var i = 0; i < user[ActiveTasks].length; i++) {    // remove the task from user[ActiveTasks] array
+                if (String(user['ActiveTasks'][i]) == String(finishedEarlyTask._id)) {
+                    user['ActiveTasks'].splice(i, 1);
+                }
+                break;
+                }
+
+                scheduleidKey = Object.keys(user['Schedules']);
+                scheduleID = scheduleidKey[0];
+                sceduleinfoKeys = Object.keys(user['Schedules'][scheduleID]);   // using keys to access users Schedules tasks below
+    
+                for (var i = 0; i < (user['Schedules'][scheduleID][scheduleinfoKeys[1]]).length; i++) { /// remove the task from user[Schedules] tasks array
+                if (String(user['Schedules'][scheduleID][scheduleinfoKeys[1]][i]) == String(finishedEarlyTask)) {
+                    user['Schedules'].splice(i, 1);
+                }
+                break;
+                }
+
+                this.#usersCollection.replaceOne({"_id":user["_id"]},user); //update userscollection with above changes
+
+                this.#tasksCollection.updateOne({ "_id": finishedEarlyTask._id } , // change Active value of task under "StartTime" to false
+                {
+                "$set": {
+                    "StartTime.Active" : false
+                    }
+                }
+                )
+
+                this.#tasksCollection.updateOne({ "_id": finishedEarlyTask._id } , // change completed value of task to True
+                {
+                "$set": {
+                    "Complete" : true
+                    }
+                }
+                )
+                resolve(user);
+        })
+            }catch(err) {
+                reject(err);
+            }
+        })
+    }
+
 }
 
 module.exports = DbHandler;

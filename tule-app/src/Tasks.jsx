@@ -1,15 +1,17 @@
 import TaskList from './components/TaskList'
 import { AddTaskModal } from './AddTaskModal';
-import React, { useState, useEffect, setUsers, fetchUserData } from "react"
+import React, { useState, useEffect, setOver, setUsers, fetchUserData } from "react"
 import Button from 'react-bootstrap/Button';
 import Navbar from './components/Navbar';
-import banner from "./pics/sky.png"
-import DropDownMenu from './components/DropDownMenu';
-
+import banner from "./pics/sky.png";
+import addIconLight from "./pics/addIcon-light.png";
+import addIconDark from "./pics/addIcon-dark.png";
+import ProgressTracker from './components/ProgressTracker';
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    
+    const [user, setUser] = useState();
+
     //Should return all of the tasks from database associated with the user.
     async function getAllTasks(){
         try{
@@ -45,34 +47,53 @@ const Tasks = (props) => {
     useEffect(() => {
         var result = getAllTasks();
         result.then((value) => {
-            setCurrentTasks(value.InactiveTasks);
+            setCurrentTasks(value.InactiveTasks.concat(value.ActiveTasks));
+            setUser(value);
         })
     }
         ,[]
     )
+
+    const printUser = () => {
+        console.log("user");
+        console.log(user);
+        console.log(user['InactiveTasks']);
+    }
+
+    const myImageStyle = {width: "2000px", height: "343.3px"};
+    const [over, setOver] = useState(false);
+    
     return(
         <>
         {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}
         <div>
             <Navbar text='Tule'/>
-            <DropDownMenu/>
-            <div className="container">
-                <img className="width-100" src={banner} />
+            <div>
+                <img style={myImageStyle} src={banner} />
             </div>
-            <form className='mt-5' onSubmit={handleSubmit}>
-                <h1>Tasks</h1>
-                <section >
+            <div className='mt-4' onSubmit={handleSubmit}>
+            <div className='container float-end'>
+                    <div className='row'>
+                    <div className='col-3 offset-8'>
+                    <ProgressTracker/>
+                    </div>
+                    </div>
+                </div>
+
+                <div className='container'>
+                    <h1 className='mb-5'>Tasks</h1>
+                </div>
+
+                <section>
                     <TaskList ListOfTasks={currentTasks} currentTasks={currentTasks} update={setCurrentTasks}/>
                 </section>
 
-                <div className=''>
-                    {/*<button className='btn btn-primary mb-5 mt-5' type="submit">Add task</button>*/}
-                    <Button variant="danger" className='mb-5 mt-5' type="submit" >Add task</Button>
-                    
-                    <br />
-                    <button className='btn btn-secondary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
+                <div onMouseOver={() => setOver(true)} onMouseOut={() => setOver(false)} className='container'>
+                    <img title="Add Task" src={over ? addIconDark : addIconLight} onClick={handleSubmit}/>
+                    <br/>
                 </div> 
-            </form>
+                <button className='btn btn-primary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
+            </div>
         </div>
         </>
     )
