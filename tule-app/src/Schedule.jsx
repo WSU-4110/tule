@@ -43,7 +43,7 @@ const exampleTasks = [{
 
 async function getAllTasks(){
     try{
-        const response = await fetch("http://localhost:3001/GetAllTasksAndSched",{
+        const response = await fetch("http://localhost:3001/GetAllTasks",{
             method:'POST',
             mode:'cors',
             headers:{
@@ -74,7 +74,7 @@ useEffect(() => {
 )
 
 const castDuration=(task) =>{
-    return(Array.from({ length: Math.round(task.Duration*4) }, (_,i) => parseInt(task.StartTime.split(":")[0])+i*0.25))
+    return(Array.from({ length: Math.round(task.Duration*4) }, (_,i) => parseInt(task.StartTime.Time.split(":")[0])+i*0.25))
 }
 
 const checkDate =(compareDate, date) => {
@@ -140,11 +140,23 @@ const todaySchedule = () =>{
         if(dateHandler.schedKeyToDate(Object.keys(createdSchedules)[i]).getDate() === displayedDay.getDate()
         && dateHandler.schedKeyToDate(Object.keys(createdSchedules)[i]).getFullYear() === displayedDay.getFullYear()
         && dateHandler.schedKeyToDate(Object.keys(createdSchedules)[i]).getMonth() === displayedDay.getMonth()){
-            return(createdSchedules[Object.keys(createdSchedules)[i]]);
+            
+            return(createdSchedules[Object.keys(createdSchedules)[i]]["Tasks"]);
+            break;
         }
     }
     return([]);
 }
+const findTask = (id) =>{
+    for(let i= 0; i<taskList.length; i++){
+        if(String(taskList[i]._id) === String(id)){
+            console.log(taskList);
+            console.log(taskList[i]);
+            return taskList[i];
+        }
+    }
+}
+
 const roundDown15 = (start) =>{
     return start - (start %15);
 }
@@ -172,6 +184,7 @@ const editSchedule = () =>{
                     setActiveHours={setActiveHours} 
                     activeHours={activeHours}
                     title={modalTitle}
+                    displayedDay={displayedDay}
                     />}
             {showTCModal && <TaskCompleteModal resetModal={resetModal}  task={selectedTask}/>}
             <div>
@@ -189,8 +202,8 @@ const editSchedule = () =>{
             </div>
             <div className="dayDisplay">
             <Button onClick={() =>prevDay()}>{String.fromCharCode(8592)}</Button>
-            {(!checkDate(displayedDay, today) && <h1>{DAYS[displayedDay.getDay()]}</h1>) 
-            || (checkDate(displayedDay, today) && <h1>Today</h1>)}
+            {(!checkDate(displayedDay, today) && <h1>{DAYS[displayedDay.getDay()]} {displayedDay.getMonth() +1}/{displayedDay.getDate()}</h1>) 
+            || (checkDate(displayedDay, today) && <h1>Today {displayedDay.getMonth() +1}/{displayedDay.getDate()}</h1>)}
             <Button onClick={() =>nextDay()}>{String.fromCharCode(8594)}</Button>
             </div>
             <div className="grid3">
@@ -206,15 +219,15 @@ const editSchedule = () =>{
                 {activeHours.map((time) => <div className="gridData" key={"d"+time}>
                     {["00", "15", "30", "45"].map((minute) => <div  className="gridDataHeader" key={"d"+time+minute}>
                         {todaySchedule().map((task) => (
-                            checkTime(changeToMinutes(task.StartTime), changeToMinutes(time + ":" + minute)) &&
-                            <div className={"task" + task.Priority} key={task.Name + task.Priority}>
-                                {castDuration(task).map((index) => (
-                                (index===castDuration(task)[0] &&
-                                    <div className={(!task.Complete && "task" +task.Priority) || (task.Complete && "taskComplete")} key={time+minute+index+"button"}>
-                                        <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={task.Name} onClick={()=> handleTaskButton(task)}>{task.Name}</Button>
+                            checkTime(changeToMinutes(task.SchedStartTime), changeToMinutes(time + ":" + minute)) &&
+                            <div className={"task" + findTask(task._id).Priority} key={findTask(task._id).Name + findTask(task._id).Priority}>
+                                {castDuration(findTask(task._id)).map((index) => (
+                                (index===castDuration(findTask(task._id))[0] &&
+                                    <div className={(!findTask(task._id).Complete && "task" +findTask(task._id).Priority) || (findTask(task._id).Complete && "taskComplete")} key={time+minute+index+"button"}>
+                                        <Button className="taskButton" variant="outline-dark" vertical="true" size = "sm" key={findTask(task._id).Name} onClick={()=> handleTaskButton(findTask(task._id))}>{findTask(task._id).Name}</Button>
                                     </div>)
                                 ||
-                                    <div className={(!task.Complete && "task" +task.Priority) || (task.Complete && "taskComplete")} key={time+minute+index}>
+                                    <div className={(!findTask(task._id).Complete && "task" +findTask(task._id).Priority) || (findTask(task._id).Complete && "taskComplete")} key={time+minute+index}>
                                     </div>))}
                             </div>
                             ))}
