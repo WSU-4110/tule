@@ -76,21 +76,20 @@ const Tasks = (props) => {
                 <div className='container'>
                     <h1 className='mb-5'>Tasks</h1>
                 </div>
-                
-                <ProgressTracker/>
 
-                <section >
+                <section>
                     <TaskList ListOfTasks={currentTasks} currentTasks={currentTasks} update={setCurrentTasks}/>
                 </section>
 
                 <div onMouseOver={() => setOver(true)} onMouseOut={() => setOver(false)} className='container'>
                     <img title="Add Task" src={over ? addIconDark : addIconLight} onClick={handleSubmit}/>
-                    <br />
+                    <br/>
                 </div> 
 
                 <button className='btn btn-primary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
 
                
+                
             </div>
         </div>
         </>
