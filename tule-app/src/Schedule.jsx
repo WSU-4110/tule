@@ -193,27 +193,27 @@ const editSchedule = () =>{
                 <div className="container mb-1">
                     <div className="row">
                         <div className="col-8 center offset-1">
-                            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('tasks')}>
+                            <button data-testid="backBtn" className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('tasks')}>
                                 Back
                             </button>
-                            <button className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
+                            <button data-testid="logBtn" className="btn btn-primary mt-5" onClick={() => props.onChangeScreen('')}>
                             Logout
                             </button>
-                            <button className="btn btn-primary mt-5" onClick={editSchedule}>
+                            <button data-testid="activeBtn" className="btn btn-primary mt-5" onClick={editSchedule}>
                             Edit Schedule
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="dayDisplay">
+            <div data-testid="dayDisplay" className="dayDisplay">
             <Button onClick={() =>prevDay()}>{String.fromCharCode(8592)}</Button>
             {(!checkDate(displayedDay, today) && <h1>{DAYS[displayedDay.getDay()]} {displayedDay.getMonth() +1}/{displayedDay.getDate()}</h1>) 
             || (checkDate(displayedDay, today) && <h1>Today {displayedDay.getMonth() +1}/{displayedDay.getDate()}</h1>)}
             <Button onClick={() =>nextDay()}>{String.fromCharCode(8594)}</Button>
             </div>
             <div className="grid3">
-            <div className="grid2">
+            <div data-testid="timeScale" className="grid2">
                 {activeHours.map((time) =>
                     <div className="gridSide" key={time}>
                         {[0, 15, 30, 45].map((minute) => <div  className="gridSide" key={"h"+time+minute}>
@@ -221,7 +221,7 @@ const editSchedule = () =>{
                         </div>)}
                     </div>)}
             </div>
-            <div className="grid2">
+            <div data-testid="taskEntries" className="grid2">
                 {activeHours.map((time) => <div className="gridData" key={"d"+time}>
                     {["00", "15", "30", "45"].map((minute) => <div  className="gridDataHeader" key={"d"+time+minute}>
                         {todaySchedule().map((task) => (

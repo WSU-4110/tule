@@ -2,9 +2,15 @@
   "dependencies": {
     "@iconscout/react-unicons": "^2.0.2",
     "bootstrap": "^5.2.3",
+    "jest": "^27.5.1",
     "mdb-react-ui-kit": "^6.0.0",
     "react-bootstrap": "^2.7.2",
     "react-bootstrap-validation": "^0.1.11",
-    "reactstrap": "^9.1.6"
+    "reactstrap": "^9.1.6",
+    "unicons": "^0.0.3"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.0.0",
+    "react-test-renderer": "^18.2.0"
   }
 }
