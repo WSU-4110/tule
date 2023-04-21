@@ -173,20 +173,8 @@ export function ScheduleModal(props) {
                             </Form.Group>
                         </Row>
                         <br></br>
-                        <Row>
-                            <Form.Group as={Col} controlId="ActiveDays">
-                                <Form.Label>Active Days</Form.Label>
-                                <Multiselect
-                                    options={daysOfWeek} // Options to display in the dropdown
-                                    onSelect={onSelect} // Function will trigger on select event
-                                    onRemove={onRemove} // Function will trigger on remove event
-                                    displayValue="name" // Property name to display in the dropdown options
-                                    placeholder="Select Days"
-                                />
-                            </Form.Group>
-                        </Row>
                         <br></br>
-                        <Row>
+                       { /*<Row>
                             {(props.title === "Edit Schedule") &&
                                 <Form.Group as={Col} controlId="Regenerate">
                                     <Button variant="primary" type="submit" onClick={handleRegen}>
@@ -195,6 +183,7 @@ export function ScheduleModal(props) {
                                 </Form.Group>
                             }
                         </Row>
+                        */}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>

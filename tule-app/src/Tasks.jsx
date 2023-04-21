@@ -72,12 +72,12 @@ const Tasks = (props) => {
                 <img style={myImageStyle} src={banner} />
             </div>
             <div className='mt-4' onSubmit={handleSubmit}>
-            <div className='container float-end'>
-                    <div className='row'>
-                    <div className='col-3 offset-8'>
-                    <ProgressTracker/>
-                    </div>
-                    </div>
+                <div className='container'>
+                        <div className='row'>
+                        <div className='col-4 offset-8'>
+                        <ProgressTracker/>
+                        </div>
+                        </div>
                 </div>
 
                 <div className='container'>

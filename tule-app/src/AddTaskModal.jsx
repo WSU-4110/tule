@@ -449,7 +449,6 @@ export function AddTaskModal(props) {
                                 </Form.Text>
                             </Form.Group>
                         </Row>
-                        
                     </Form>
 
                 </Modal.Body>
@@ -470,9 +469,6 @@ export function AddTaskModal(props) {
                 </Modal.Footer>
             </Modal>
 
-            <form onSubmit={handleSubmit}>
-
-            </form>
         </>
     )
 }
