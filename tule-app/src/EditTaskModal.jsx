@@ -65,7 +65,7 @@ export function EditTaskModal(props) {
 
     try {
         const task = props.task;
-        console.log(props.task._id)
+        console.log(props.task._id);
         console.log(task);
         console.log(task.Name);
         console.log(task.Duration);
@@ -270,6 +270,7 @@ export function EditTaskModal(props) {
                                 <Form.Control
                                     defaultValue = {taskNameConst}
                                     type="text"
+                                    data-testid="taskName"
                                     placeholder="Enter task name"
                                     onChange={(u) => (taskNameConst = u.target.value)}
                                     autoFocus
@@ -284,7 +285,7 @@ export function EditTaskModal(props) {
                                 <Form.Control
                                     defaultValue = {taskStartTimeConst}
                                     type="time"
-                                    
+                                    data-testid="taskStartTime"
                                     onChange={(u) => (taskStartTimeConst = u.target.value)}
                                     required
                                     />
@@ -302,6 +303,7 @@ export function EditTaskModal(props) {
                                         <Form.Control
                                         defaultValue = {taskDurationHoursConst}
                                         type='number'
+                                        data-testid="taskDurationHours"
                                         min='0'
                                         max='24'
                                         onChange={(u) => (taskDurationHoursConst = u.target.value)}
@@ -320,6 +322,7 @@ export function EditTaskModal(props) {
                                         <Form.Control
                                             defaultValue = {taskDurationMinutesConst}
                                             type='number'
+                                            data-testid="taskDurationMinutes"
                                             min='0'
                                             max='60'
                                             onChange={(u) => (taskDurationMinutesConst = u.target.value)}
@@ -338,6 +341,7 @@ export function EditTaskModal(props) {
                                     <Form.Control
                                     defaultValue = {taskBreakDurationHoursConst}
                                     type='number'
+                                    data-testid="taskBreakDurationHours"
                                     min='0'
                                     max='24'
                                     onChange={(u) => (taskBreakDurationHoursConst = u.target.value)}
@@ -355,6 +359,7 @@ export function EditTaskModal(props) {
                                     <Form.Control
                                         defaultValue = {taskBreakDurationMinutesConst}
                                         type='number'
+                                        data-testid="taskBreakDurationMinutes"
                                         min='0'
                                         max='60'
                                         onChange={(u) => (taskBreakDurationMinutesConst = u.target.value)}
@@ -376,6 +381,7 @@ export function EditTaskModal(props) {
                                 <Form.Control
                                     defaultValue = {taskDateConst}
                                     type="date"
+                                    data-testid="taskDate"
                                     onChange={(u) => (taskDateConst = u.target.value)}
                                     />
                             </Form.Group>
@@ -402,11 +408,12 @@ export function EditTaskModal(props) {
                                     <Form.Label>Location</Form.Label>
                                     <DropdownButton
                                         id="dropdown-basic-button"
+                                        data-testid="taskLocation"
                                         title={taskLocationConst}>
                                             <ul>
                                                 {(locationsList() !== undefined) && locations && locations.map && locations.map((location) => (
-                                                    <Dropdown.Item onClick={() => changeLocation(location)}>{location}</Dropdown.Item>
-                                                ))}
+                                                        <Dropdown.Item onClick={() => changeLocation(location)}>{location}</Dropdown.Item>
+                                                    ))}
                                             </ul>
                                             <Dropdown.Item onClick={() => addNewLocation()}>
                                                 Add new location
@@ -453,6 +460,7 @@ export function EditTaskModal(props) {
                                 <Form.Label>Priority</Form.Label>
                                 <DropdownButton
                                     id="dropdown-basic-button"
+                                    data-testid="taskPriority"
                                     title={taskPriorityConst}>
                                     <Dropdown.Item onClick={() => (taskPriorityConst = 3)}>
                                         3 (Highest Priority)
