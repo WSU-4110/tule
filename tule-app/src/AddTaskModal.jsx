@@ -252,6 +252,7 @@ export function AddTaskModal(props) {
                             <Form.Group as={Col} controlId="formTaskName">
                                 <Form.Label>Task Name</Form.Label>
                                 <Form.Control
+                                    data-testid="taskName"
                                     type="text"
                                     placeholder="Enter task name"
                                     onChange={(u) => setTaskName(u.target.value)}
@@ -282,6 +283,7 @@ export function AddTaskModal(props) {
                                 <Row className="taskDurationRow">
                                     <Col className='durationInput' >
                                         <Form.Control
+                                        data-testid="taskDurationMinutes"
                                         type='number'
                                         min='0'
                                         max='24'
@@ -318,6 +320,7 @@ export function AddTaskModal(props) {
                                 <Row className="break duration">
                                     <Col sm={5} >
                                     <Form.Control
+                                    data-testid="taskBreakDurationMinutes"
                                     type='number'
                                     min='0'
                                     max='24'
@@ -356,6 +359,7 @@ export function AddTaskModal(props) {
                             <Form.Group as={Col} controlId="formDate">
                                 <Form.Label>Date</Form.Label>
                                 <Form.Control
+                                    data-testid="taskDate"
                                     type="date"
                                     onChange={(u) => setTaskDate(u.target.value)}
                                     />
@@ -429,6 +433,7 @@ export function AddTaskModal(props) {
                             <Form.Group className="mb-3" controlId="formTaskPriority">
                                 <Form.Label>Priority</Form.Label>
                                 <DropdownButton
+                                    data-testid="taskPriority"
                                     id="dropdown-basic-button"
                                     title={taskPriority}>
                                     <Dropdown.Item onClick={() => setTaskPriority("3")}>
