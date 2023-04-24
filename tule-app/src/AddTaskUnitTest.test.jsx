@@ -28,35 +28,41 @@ const newTask = {
 }
 const currentTasks = [newTask];
 
-test("Testing if 'Task Name' is the task's name.", () =>{
+test("Test if taskName field is in the document", () =>{
     render(<AddTaskModal task={newTask} task_id={newTaskID} currentTasks={currentTasks} />);
     var nameField = screen.getByTestId("taskName");
     expect(nameField).toBeInTheDocument();
 })
 
 
-test("Testing if '0' is in the minute's field for the task's duration.", () =>{
+test("Test if taskDurationMinutes field is in the document", () =>{
     render(<AddTaskModal task={newTask} task_id={newTaskID} currentTasks={currentTasks} />);
     var durationField = screen.getByTestId("taskDurationMinutes");
     expect(durationField).toBeInTheDocument();
 })
 
 
-test("Testing if '0' is in the minute's field for the task's break.", () =>{
+test("Test if taskBreakDurationMinutes is in the document", () =>{
     render(<AddTaskModal task={newTask} task_id={newTaskID} currentTasks={currentTasks} />);
     var breakField = screen.getByTestId("taskBreakDurationMinutes");
     expect(breakField).toBeInTheDocument();
 })
 
-test("Testing if '2023-04-23' is the task's date.", () =>{
+test("Test if taskDate field is in the document", () =>{
     render(<AddTaskModal task={newTask} task_id={newTaskID} currentTasks={currentTasks} />);
     var dateField = screen.getByTestId("taskDate");
     expect(dateField).toBeInTheDocument();
 })
 
-test("Testing if '3' is the task's priority.", () =>{
+test("test if taskPriority field is in the document", () =>{
     render(<AddTaskModal task={newTask} task_id={newTaskID} currentTasks={currentTasks} />);
     var priorityField = screen.getByTestId("taskPriority");
     expect(priorityField).toBeInTheDocument();
+})
+
+test('Test if the location dropdown is in the modal', () => {
+    render(<AddTaskModal task={newTask} task_id={newTaskID} currentTasks={currentTasks} />);
+    var locationField = screen.getByTestId("taskLocation");
+    expect(locationField).toBeInTheDocument();
 })
 

@@ -407,6 +407,7 @@ export function AddTaskModal(props) {
                                     <Form.Group className="mb-3" controlId="formTaskLocation">
                                         <Form.Label>Add Location</Form.Label>
                                         <Form.Control
+                                            data-testid="taskLocation"
                                             type="text"
                                             placeholder="Enter location"
                                             onChange={(u) => setTaskLocation(u.target.value)}
