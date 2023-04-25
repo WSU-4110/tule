@@ -6,5 +6,8 @@
     "react-bootstrap": "^2.7.2",
     "react-bootstrap-validation": "^0.1.11",
     "reactstrap": "^9.1.6"
+  },
+  "devDependencies": {
+    "jest": "^29.5.0"
   }
 }
