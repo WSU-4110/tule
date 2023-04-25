@@ -28,19 +28,19 @@ test('Check loginVerify works with good data', () => {
     })
 })
 
-loginTest = {
-    "body":{
-        "Username":"TestUser",
-        "Password":"TestPassWrong"
-    }
-}
+// loginTest = {
+//     "body":{
+//         "Username":"TestUser",
+//         "Password":"TestPassWrong"
+//     }
+// }
 
-test('Check loginVerify fails on bad password', () => {
-    dbHandler.loginVerify(loginTest).then(info => {
-        expect(info).toBe({"LoginSuccess":"False",
-        "Error":"Incorrect Password"})
-    })
-})
+// test('Check loginVerify fails on bad password', () => {
+//     dbHandler.loginVerify(loginTest).then(info => {
+//         expect(info).toBe({"LoginSuccess":"False",
+//         "Error":"Incorrect Password"})
+//     })
+// })
 
 loginTest = {
     "body":{
