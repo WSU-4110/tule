@@ -33,7 +33,8 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "cd server && jest && cd .. && cd tule-app && npm test"
+    "test": "cd server && jest && cd .. && cd tule-app && npm test",
+    "build": "cd server && jest && cd .. && cd tule-app && npm test"
   },
   "jest": {
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(js|jsx)$",
