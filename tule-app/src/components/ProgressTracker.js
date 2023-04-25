@@ -68,10 +68,11 @@ function ProgressTracker(){
     }
 
     return(
-            <div>
-               <CircularProgressbar data-testid="progress" value={percentage} text={`${percentage}%`} strokeWidth={5}
-               buildStyles/>
+        <div>
+            <div data-testid="progress">
+               <CircularProgressbar value={percentage} text={`${percentage}%`} strokeWidth={5}/>
             </div>
+        </div>
     );
 
 

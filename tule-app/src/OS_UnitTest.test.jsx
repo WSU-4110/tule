@@ -1,5 +1,4 @@
 import {render, fireEvent, screen} from "@testing-library/react";
-import renderer from "react-test-renderer";
 import Schedule from "./Schedule";
 import "@testing-library/jest-dom"
 

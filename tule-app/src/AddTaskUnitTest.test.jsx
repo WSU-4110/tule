@@ -1,6 +1,5 @@
 
 import {render, fireEvent, screen} from "@testing-library/react";
-import renderer from "react-test-renderer";
 import { AddTaskModal } from "./AddTaskModal";
 import "@testing-library/jest-dom"
 
