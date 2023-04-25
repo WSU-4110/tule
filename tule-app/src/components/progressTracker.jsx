@@ -19,8 +19,8 @@ function progressTracker(props){
     var percentage = ((numOfCompleteTasks/numOfActiveTasks) * 100);
 
     return(
-            <div>
-               <CircularProgressbar data-testid="progress" value={percentage} text={`${percentage}%`} strokeWidth={5}/>
+            <div data-testid="progress">
+               <CircularProgressbar  value={percentage} text={`${percentage}%`} strokeWidth={5}/>
             </div>
     );
 

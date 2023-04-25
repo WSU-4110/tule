@@ -125,6 +125,4 @@ test('Make sure non recurring task from recurring tasks gets sent to inactive ta
 //     new ObjectId('555555555555555555555555')
 // ]
 
-/*test('testing newSched user clean for expected behavior', () => {
-    expect(taskHandler.newSchedUserClean(testUser,'mmddyyyy', testSched)).toStrictEqual(testResult);
-})*/
+
