@@ -1,5 +1,5 @@
-import {render, screen} from '@testing-library/jest-dom';
-import '@testing-library/react';
+import {render, screen} from '@testing-library/react';
+import '@testing-library/jest-dom';
 import Task from './components/TaskComponent';
 import Init from './Init';
 {/*
@@ -12,37 +12,37 @@ import Init from './Init';
 */}
 
 test('Task checkmark rendering' , () => {
-    var test = screen.getByTestId('checkmark');
     render(<Task/>);
+    var test = screen.getByTestId('checkmark');
     expect(test).toBeInTheDocument();
 })
 
 test('Edit button on the task page' , () => {
-    var test = screen.getByTestId('edit-btn');
     render(<Task/>);
+    var test = screen.getByTestId('edit-btn');
     expect(test).toBeInTheDocument();
 })
 
 test('Progress tracker' , () => {
-    var test = screen.getByTestId('progress');
     render(<Task/>);
+    var test = screen.getByTestId('progress');
     expect(test).toBeInTheDocument();
 })
 
 test('Task Name Rendering' , () => {
-    var test = screen.getByTestId('name');
     render(<Task/>);
+    var test = screen.getByTestId('name');
     expect(test).toBeInTheDocument();
 })
 
 test('Inital Pages login button' , () => {
-    var test = screen.getByTestId('login-btn');
     render(<Init/>);
+    var test = screen.getByTestId('login-btn');
     expect(test).toBeInTheDocument();
 })
 
 test('Initial Pages Signup button' , () => {
-    var test = screen.getByTestId('signup-btn');
     render(<Init/>);
+    var test = screen.getByTestId('signup-btn');
     expect(test).toBeInTheDocument();
 })

@@ -125,6 +125,4 @@ testResult['InactiveTasks'] = [
     new ObjectId('555555555555555555555555')
 ]
 
-/*test('testing newSched user clean for expected behavior', () => {
-    expect(taskHandler.newSchedUserClean(testUser,'mmddyyyy', testSched)).toStrictEqual(testResult);
-})*/
+
