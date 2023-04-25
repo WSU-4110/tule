@@ -85,46 +85,44 @@ test('Make sure non recurring task from recurring tasks gets sent to inactive ta
     expect(taskHandler.updateTaskOnUser(testUser,testTask)).toStrictEqual(testResult);
 })
 
-testUser = userTemplate;
-testResult = userTemplate;
-testSched = {
-    'mmddyyyy': {
-        "Tasks":[
-            {"Id":"111111111111111111111111"},
-            {"Id":"222222222222222222222222"},
-            {"Id":"333333333333333333333333"}
-        ]
-    }
-};
-testUser['ActiveTasks'] = [
-    new ObjectId('333333333333333333333333'),
-    new ObjectId('444444444444444444444444'),
-    new ObjectId('555555555555555555555555')
-];
-testUser['InactiveTasks'] = [
-    new ObjectId('111111111111111111111111'),
-    new ObjectId('222222222222222222222222')
-];
-testUser['Schedules'] = {
-    "mmddyyyy": {
-        "Tasks":[
-            {"Id":'333333333333333333333333'},
-            {"Id":'444444444444444444444444'},
-            {"Id":'555555555555555555555555'}
-        ]
-    }
-};
-testResult['Schedules'] = testSched;
-testResult['ActiveTasks'] = [
-    new ObjectId('333333333333333333333333'),
-    new ObjectId('111111111111111111111111'),
-    new ObjectId('222222222222222222222222')
-];
-testResult['InactiveTasks'] = [
-    new ObjectId('444444444444444444444444'),
-    new ObjectId('555555555555555555555555')
-]
+// testUser = userTemplate;
+// testResult = userTemplate;
+// testSched = {
+//     'mmddyyyy': {
+//         "Tasks":[
+//             {"Id":"111111111111111111111111"},
+//             {"Id":"222222222222222222222222"},
+//             {"Id":"333333333333333333333333"}
+//         ]
+//     }
+// };
+// testUser['ActiveTasks'] = [
+//     new ObjectId('333333333333333333333333'),
+//     new ObjectId('444444444444444444444444'),
+//     new ObjectId('555555555555555555555555')
+// ];
+// testUser['InactiveTasks'] = [
+//     new ObjectId('111111111111111111111111'),
+//     new ObjectId('222222222222222222222222')
+// ];
+// testUser['Schedules'] = {
+//     "mmddyyyy": {
+//         "Tasks":[
+//             {"Id":'333333333333333333333333'},
+//             {"Id":'444444444444444444444444'},
+//             {"Id":'555555555555555555555555'}
+//         ]
+//     }
+// };
+// testResult['Schedules'] = testSched;
+// testResult['ActiveTasks'] = [
+//     new ObjectId('333333333333333333333333'),
+//     new ObjectId('111111111111111111111111'),
+//     new ObjectId('222222222222222222222222')
+// ];
+// testResult['InactiveTasks'] = [
+//     new ObjectId('444444444444444444444444'),
+//     new ObjectId('555555555555555555555555')
+// ]
 
-/*test('testing newSched user clean for expected behavior', () => {
-    expect(taskHandler.newSchedUserClean(testUser,'mmddyyyy', testSched)).toStrictEqual(testResult);
-})*/
+
