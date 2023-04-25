@@ -2,7 +2,7 @@ import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Task from './components/TaskComponent';
 import Init from './Init';
-import progressTracker from './components/progressTracker.jsx';
+import ProgressTracker from './components/ProgressTracker.jsx';
 {/*
 1. Completion checkmark
 2. Edit button on task page
@@ -25,7 +25,7 @@ test('Edit button on the task page' , () => {
 })
 
 test('Progress tracker' , () => {
-    render(<progressTracker ActiveTasks={[]}/>);
+    render(<ProgressTracker ActiveTasks={[]}/>);
     var test = screen.getByTestId('progress');
     expect(test).toBeInTheDocument();
 })
