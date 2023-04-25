@@ -1,12 +1,12 @@
-import TaskList from './components/TaskList'
+import TaskList from './components/TaskList';
 import { AddTaskModal } from './AddTaskModal';
-import React, { useState, useEffect, setOver, setUsers, fetchUserData } from "react"
-import Button from 'react-bootstrap/Button';
+import React, { useState, useEffect} from "react";
 import Navbar from './components/Navbar';
 import banner from "./pics/sky.png";
 import addIconLight from "./pics/addIcon-light.png";
 import addIconDark from "./pics/addIcon-dark.png";
 import ProgressTracker from './components/ProgressTracker';
+
 const Tasks = (props) => {
     const [currentTasks, setCurrentTasks] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -65,7 +65,13 @@ const Tasks = (props) => {
     
     return(
         <>
-        {showModal && <AddTaskModal key={currentTasks.length} id={'task'+currentTasks.length} resetModal={setShowModal} currentTasks={currentTasks} update={setCurrentTasks}/>}
+        {showModal && (
+            <AddTaskModal
+                key={currentTasks.length}
+                id={'task'+currentTasks.length}
+                resetModal={setShowModal}
+                currentTasks={currentTasks}
+                update={setCurrentTasks}/>)}
         <div>
             <Navbar text='Tule'/>
             <div>
@@ -85,14 +91,30 @@ const Tasks = (props) => {
                 </div>
 
                 <section>
-                    <TaskList ListOfTasks={currentTasks} currentTasks={currentTasks} update={setCurrentTasks}/>
+                    <TaskList
+                        ListOfTasks={currentTasks}
+                        currentTasks={currentTasks}
+                        update={setCurrentTasks}/>
                 </section>
 
-                <div onMouseOver={() => setOver(true)} onMouseOut={() => setOver(false)} className='container'>
-                    <img title="Add Task" src={over ? addIconDark : addIconLight} onClick={handleSubmit}/>
+                <div
+                    onMouseOver={() => setOver(true)}
+                    onMouseOut={() => setOver(false)}
+                    className='container'
+                    >
+                    <img
+                        title="Add Task"
+                        src={over ? addIconDark : addIconLight}
+                        onClick={handleSubmit}
+                        />
                     <br/>
                 </div> 
-                <button className='btn btn-primary mt-5 mb-10' onClick={() => props.onChangeScreen('schedule')}>Create Schedule</button>
+                <button
+                    className='btn btn-primary mt-5 mb-10'
+                    onClick={() => props.onChangeScreen('schedule')}
+                    >
+                        Create Schedule
+                    </button>
             </div>
         </div>
         </>

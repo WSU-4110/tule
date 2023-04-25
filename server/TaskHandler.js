@@ -11,6 +11,7 @@ class TaskHandler{
     //a new user object with the appropriate tasks
     updateTaskOnUser(user,task){
         try{
+            let tempId = task['_id'];
             let recKeyList = Object.keys(task['Recurrence']);
             let recFlag = false;
             for (var i = 0; i < user['RecurringTasks'].length; i++){
@@ -41,7 +42,7 @@ class TaskHandler{
             if (recFlag == false){
                 user['InactiveTasks'].push(tempId);
             }
-            return err;
+            return user;
         }catch(err){
             return(err);
         }

@@ -10,6 +10,7 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import './EditTaskModal.css'
 
+// This function is used to save the task to the database.
 async function saveTask(task){
     try{
         const response = await fetch('http://localhost:3001/SaveTask',{
@@ -32,6 +33,8 @@ async function saveTask(task){
         return false;
     }
 }
+
+// This function creates and initializes the 'Add Task' modal.
 export function AddTaskModal(props) {
     const [taskName, setTaskName] = useState('');
     const [taskDuration, setTaskDuration] = useState('');
@@ -66,17 +69,65 @@ export function AddTaskModal(props) {
         for (var i = 0; i < props.currentTasks.length; i++) {
             if (props.currentTasks[i].Location !== ''
                 && props.currentTasks[i].Location !== undefined) {
-                    try{
-                        if(!locations.includes(props.currentTasks[i].Location)){
-                            locations.push(props.currentTasks[i].Location);
-                        }
-                    } catch(err){
-                        console.log(err);
-                        locations = [props.currentTasks[i].Location];
+                    if(!locations.includes(props.currentTasks[i].Location)){
+                        locations.push(props.currentTasks[i].Location);
                     }
             }
         }
         return locations;
+    }
+
+    // Converts the task duration and break duration into the correct format.
+    const formatDuration = () => {
+        if (taskDurationHours < 10) {
+            setTaskDurationHours('0' + taskDurationHours);
+        } else {
+            setTaskDurationHours(taskDurationHours);
+        }
+        if (taskDurationMinutes < 10) {
+            setTaskDurationMinutes('0' + taskDurationMinutes);
+        } else {
+            setTaskDurationMinutes(taskDurationMinutes);
+        }
+        if (taskBreakDurationHours < 10) {
+            setTaskBreakDurationHours('0' + taskBreakDurationHours);
+        } else {
+            setTaskBreakDurationHours(taskBreakDurationHours);
+        }
+        if (taskBreakDurationMinutes < 10) {
+            setTaskBreakDurationMinutes('0' + taskBreakDurationMinutes);
+        } else {
+            setTaskBreakDurationMinutes(taskBreakDurationMinutes);
+        }
+    }
+
+    // Formats the fields to be sent to the database.
+    const formatFields = () => {
+        if (reccuringDays === undefined) {
+            setReccuringDays([]);
+        }
+        if (taskLocation === '-----') {
+            setTaskLocation('');
+        }
+        if (taskPriority === 'None') {
+            setTaskPriority(0);
+        }
+        if (taskName !== '') {
+            if (taskDuration !== '') {
+                if (taskDate !== '') {
+                    handleClose();
+                } else {
+                    setErrorMessage('Please enter date');
+                    setShowAlert(true);
+                }
+            } else {
+                setErrorMessage('Please enter duration');
+                setShowAlert(true);
+            }
+        } else {
+            setErrorMessage('Please enter task name');
+            setShowAlert(true);
+        }
     }
 
     const addNewLocation = () => {
@@ -91,7 +142,6 @@ export function AddTaskModal(props) {
 
     const handleClose = () => {
         setShowModal(false);
-        console.log(taskStartTime);
         props.resetModal(false);
     }
 
@@ -100,6 +150,7 @@ export function AddTaskModal(props) {
         props.resetModal(true);
     }
 
+    // Handles the recuring days multiselect menu.
     const onSelect = (selectedItem) => {
         try {
             reccuringDays.push(selectedItem);
@@ -109,6 +160,7 @@ export function AddTaskModal(props) {
         }
     }
 
+    // Handles the recuring days multiselect menu.
     const onRemove = (selectedItem) => {
         try {
             reccuringDays.pop(selectedItem);
@@ -122,64 +174,21 @@ export function AddTaskModal(props) {
     // Checks if all conditions are met.
     const handleSubmit = (e) => {
         e.preventDefault();
+        formatDuration();
+        formatFields();
 
-        if (taskBreakDurationHours < 10) {
-            setTaskBreakDurationHours('0' + taskBreakDurationHours.toString());
-        } else {
-            setTaskBreakDurationHours(taskBreakDurationHours.toString());
-        }
-        if (taskBreakDurationMinutes < 10) {
-            setTaskBreakDurationMinutes('0' + taskBreakDurationMinutes.toString());
-        } else {
-            setTaskBreakDurationMinutes(taskBreakDurationMinutes.toString());
-        }
-        if (taskDurationHours < 10) {
-            setTaskDurationHours('0' + taskDurationHours.toString());
-        } else {
-            setTaskDurationHours(taskDurationHours.toString());
-        }
-        if (taskDurationMinutes < 10) {
-            setTaskDurationMinutes('0' + taskDurationMinutes.toString());
-        } else {
-            setTaskDurationMinutes(taskDurationMinutes.toString());
-        }
-        setTaskBreakDuration(taskBreakDurationHours + ':' + taskBreakDurationMinutes);
-        setTaskDuration(taskDurationHours + ':' + taskDurationMinutes);
-
-        if (taskPriority === 'None') {
-            setTaskPriority(0);
-        }
-
-        if (taskName !== '') {
-            if (taskDuration !== '') {
-                if (taskDate !== '') {
-                    if (taskPriority === '') {
-                        setTaskPriority(0)
-                    }
-                    setShowModal(false);
-                } else {
-                    setErrorMessage('Please enter date');
-                    setShowAlert(true);
-                }
-            } else {
-                setErrorMessage('Please enter duration');
-                setShowAlert(true);
-            }
-        } else {
-            setErrorMessage('Please enter task name');
-            setShowAlert(true);
-        }
         console.log(taskName);
-        
         console.log(taskDuration);        
         console.log(taskDurationHours + ":" + taskDurationMinutes);
         console.log(props.id);
         console.log(taskDate);
         console.log(taskLocation);
+        console.log(taskPriority);
+
         let tempDate = new Date(taskDate);
         let inputDate = new Date(tempDate.getTime() + tempDate.getTimezoneOffset()*60000);
         const newTask = {
-            _id: "",
+            _id: '',
             Name: taskName,
             StartTime: {
                 Active: taskStartTime != "",
@@ -203,23 +212,7 @@ export function AddTaskModal(props) {
         saveTask(newTask);
         props.resetModal(false);
         props.update([...props.currentTasks, newTask])
-        //console.log(props.currentTasks);
-    }
-
-    function millisecondsToString(milliseconds) {
-        let minutes = (milliseconds / 1000) / 60;
-        let hours = minutes / 60;
-        if (hours < 10) {
-            hours = '0' + hours.toString();
-        } else {
-            hours = hours.toString();
-        }
-        if (minutes < 10) {
-            minutes = '0' + minutes.toString();
-        } else {
-            minutes = minutes.toString();
-        }
-        return (hours + ':' + minutes);
+        console.log(props.currentTasks);
     }
     
     return(
@@ -252,6 +245,7 @@ export function AddTaskModal(props) {
                             <Form.Group as={Col} controlId="formTaskName">
                                 <Form.Label>Task Name</Form.Label>
                                 <Form.Control
+                                    data-testid="taskName"
                                     type="text"
                                     placeholder="Enter task name"
                                     onChange={(u) => setTaskName(u.target.value)}
@@ -282,6 +276,7 @@ export function AddTaskModal(props) {
                                 <Row className="taskDurationRow">
                                     <Col className='durationInput' >
                                         <Form.Control
+                                        data-testid="taskDurationMinutes"
                                         type='number'
                                         min='0'
                                         max='24'
@@ -318,6 +313,7 @@ export function AddTaskModal(props) {
                                 <Row className="break duration">
                                     <Col sm={5} >
                                     <Form.Control
+                                    data-testid="taskBreakDurationMinutes"
                                     type='number'
                                     min='0'
                                     max='24'
@@ -356,6 +352,7 @@ export function AddTaskModal(props) {
                             <Form.Group as={Col} controlId="formDate">
                                 <Form.Label>Date</Form.Label>
                                 <Form.Control
+                                    data-testid="taskDate"
                                     type="date"
                                     onChange={(u) => setTaskDate(u.target.value)}
                                     />
@@ -381,6 +378,7 @@ export function AddTaskModal(props) {
                                 <Form.Group className="mb-3" controlId="formTaskLocation">
                                     <Form.Label>Location</Form.Label>
                                     <DropdownButton
+                                        data-testid="taskLocation"
                                         id="dropdown-basic-button"
                                         title={taskLocation}>
                                             <ul>
@@ -429,15 +427,16 @@ export function AddTaskModal(props) {
                             <Form.Group className="mb-3" controlId="formTaskPriority">
                                 <Form.Label>Priority</Form.Label>
                                 <DropdownButton
+                                    data-testid="taskPriority"
                                     id="dropdown-basic-button"
                                     title={taskPriority}>
-                                    <Dropdown.Item onClick={() => setTaskPriority("3")}>
+                                    <Dropdown.Item onClick={() => setTaskPriority(3)}>
                                         3 (Highest Priority)
                                     </Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("2")}>
+                                    <Dropdown.Item onClick={() => setTaskPriority(2)}>
                                         2
                                     </Dropdown.Item>
-                                    <Dropdown.Item onClick={() => setTaskPriority("1")}>
+                                    <Dropdown.Item onClick={() => setTaskPriority(1)}>
                                         1 (Lowest Priority)
                                     </Dropdown.Item>
                                     <Dropdown.Item onClick={() => setTaskPriority("None")}>
@@ -449,7 +448,6 @@ export function AddTaskModal(props) {
                                 </Form.Text>
                             </Form.Group>
                         </Row>
-                        
                     </Form>
 
                 </Modal.Body>
@@ -470,9 +468,6 @@ export function AddTaskModal(props) {
                 </Modal.Footer>
             </Modal>
 
-            <form onSubmit={handleSubmit}>
-
-            </form>
         </>
     )
 }

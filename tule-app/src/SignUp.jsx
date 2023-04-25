@@ -247,6 +247,16 @@ export const SignUp = (props) => {
                         </Form.Control.Feedback>
                     </Form.Group>
                     <br></br>
+                    <Form.Group controlId="formPasswordRequirements">
+                        <Form.Control
+                            as='textarea'
+                            rows={2}
+                            size="sm"
+                            defaultValue="Password must be at least 8 characters long, contain a capital letter, a number, and have no spaces."
+                            readOnly
+                        />
+                    </Form.Group>
+                    <br></br>
                     <Form.Group controlId="formBasicCheckbox">
                         <Form.Check
                         type="checkbox"
