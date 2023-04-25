@@ -20,7 +20,7 @@ function progressTracker(props){
 
     return(
             <div>
-               <CircularProgressbar value={percentage} text={`${percentage}%`} strokeWidth={5}/>
+               <CircularProgressbar data-testid="progress" value={percentage} text={`${percentage}%`} strokeWidth={5}/>
             </div>
     );
 

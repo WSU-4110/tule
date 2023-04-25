@@ -12,10 +12,10 @@ const Init = (props) => {
                             <p>Welcome to Tule</p>
                             <p>Log in with your account to continue</p>    
                         </div>
-                        <Button onClick={() => props.onChangeScreen('login')}>
+                        <Button data-testid="login-btn" onClick={() => props.onChangeScreen('login')}>
                             Login
                         </Button>
-                        <Button onClick={() => props.onChangeScreen('signup')}>
+                        <Button data-testid="signup-btn" onClick={() => props.onChangeScreen('signup')}>
                             Sign up
                         </Button>
                     </div>
