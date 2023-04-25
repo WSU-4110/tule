@@ -3,7 +3,7 @@ import "react-circular-progressbar/dist/styles.css";
 
 
 
-function progressTracker(props){
+function ProgressTracker(props){
     //This component displays the user's task completion progress
     var numOfActiveTasks = props.ActiveTasks.length;
     var numOfCompleteTasks = 0;
@@ -26,4 +26,4 @@ function progressTracker(props){
 
 }
 
-export default progressTracker;
+export default ProgressTracker;
