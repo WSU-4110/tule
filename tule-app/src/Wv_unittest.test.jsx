@@ -3,14 +3,6 @@ import '@testing-library/jest-dom';
 import Task from './components/TaskComponent';
 import Init from './Init';
 import ProgressTracker from './components/ProgressTracker.jsx';
-{/*
-1. Completion checkmark
-2. Edit button on task page
-3. Progress bar
-4. Task Name Rendering
-5. Init page login button
-6. Init page signup button
-*/}
 
 test('Task checkmark rendering' , () => {
     render(<Task task={[{Name: "", Complete:true}]}/>);
