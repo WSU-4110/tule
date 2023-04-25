@@ -7,7 +7,7 @@ import checkIconDark from '../pics/checkmark-dark.png';
 function TaskComponent(props) {
    const [showModal, setShowModal] = useState(false);
    const [task, setTask] = useState(props.task);
-    var complete = props.task.Complete;
+    var complete =  true;
 
     return(
         <>
