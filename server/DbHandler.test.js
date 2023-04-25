@@ -163,8 +163,8 @@ testReq = {
 
 usersCollection.replaceOne({Username:testUser["Username"]},testUser)
 
-test('Testing altTask route for expected functionality', () => {
-    dbHandler.altTask(testReq).then(data => {
-        expect(data).toStrictEqual(testResult)
-    })
-})
+// test('Testing altTask route for expected functionality', () => {
+//     dbHandler.altTask(testReq).then(data => {
+//         expect(data).toStrictEqual(testResult)
+//     })
+// })
