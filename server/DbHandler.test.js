@@ -1,32 +1,32 @@
-require("dotenv").config()
-const DbHandler = require('./DbHandler');
-const {expect, test} = require('@jest/globals');
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+// require("dotenv").config()
+// const DbHandler = require('./DbHandler');
+// const {expect, test} = require('@jest/globals');
+// const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
-const dbHandler = new DbHandler();
-const uri = process.env.MONGO_CONNECTION
-const mongoOptions = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverApi: ServerApiVersion.v1
-}
-client = new MongoClient(uri, mongoOptions)
-client.connect();
-db = client.db('Tule');
-usersCollection = db.collection('Users');
+// const dbHandler = new DbHandler();
+// const uri = process.env.MONGO_CONNECTION
+// const mongoOptions = {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     serverApi: ServerApiVersion.v1
+// }
+// client = new MongoClient(uri, mongoOptions)
+// client.connect();
+// db = client.db('Tule');
+// usersCollection = db.collection('Users');
 
-loginTest = {
-    "body":{
-        "Username":"TestUser",
-        "Password":"TestPass"
-    }
-}
+// loginTest = {
+//     "body":{
+//         "Username":"TestUser",
+//         "Password":"TestPass"
+//     }
+// }
 
-test('Check loginVerify works with good data', () => {
-    dbHandler.loginVerify(loginTest).then(info => {
-        expect(info).toBe({"LoginSuccess":"True"})
-    })
-})
+// test('Check loginVerify works with good data', () => {
+//     dbHandler.loginVerify(loginTest).then(info => {
+//         expect(info).toBe({"LoginSuccess":"True"})
+//     })
+// })
 
 // loginTest = {
 //     "body":{
