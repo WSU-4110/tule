@@ -2,6 +2,7 @@ import {render, screen} from '@testing-library/react';
 import '@testing-library/jest-dom';
 import Task from './components/TaskComponent';
 import Init from './Init';
+import ProgressTracker from './components/ProgressTracker.jsx';
 {/*
 1. Completion checkmark
 2. Edit button on task page
@@ -12,25 +13,25 @@ import Init from './Init';
 */}
 
 test('Task checkmark rendering' , () => {
-    render(<Task/>);
+    render(<Task task={[{Name: "", Complete:true}]}/>);
     var test = screen.getByTestId('checkmark');
     expect(test).toBeInTheDocument();
 })
 
 test('Edit button on the task page' , () => {
-    render(<Task/>);
+    render(<Task task={[{Name: "", Complete:true}]}/>);
     var test = screen.getByTestId('edit-btn');
     expect(test).toBeInTheDocument();
 })
 
 test('Progress tracker' , () => {
-    render(<Task/>);
+    render(<ProgressTracker ActiveTasks={[]}/>);
     var test = screen.getByTestId('progress');
     expect(test).toBeInTheDocument();
 })
 
 test('Task Name Rendering' , () => {
-    render(<Task/>);
+    render(<Task task={[{Name: "", Complete:true}]}/>);
     var test = screen.getByTestId('name');
     expect(test).toBeInTheDocument();
 })
