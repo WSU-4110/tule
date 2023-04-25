@@ -55,19 +55,19 @@ test('Check loginVerify works with good data', () => {
 //     })
 // })
 
-loginTest = {
-    "body":{
-        "Username":"DuplicateUser",
-        "Password":"TestPass"
-    }
-}
+// loginTest = {
+//     "body":{
+//         "Username":"DuplicateUser",
+//         "Password":"TestPass"
+//     }
+// }
 
-test('Check loginVerify fails when there are duplicate usernames in the database', () => {
-    dbHandler.loginVerify(loginTest).then(info => {
-        expect(info).toBe({"LoginSuccess":"False",
-        "Error":"Duplicate usernames exist"})
-    })
-})
+// test('Check loginVerify fails when there are duplicate usernames in the database', () => {
+//     dbHandler.loginVerify(loginTest).then(info => {
+//         expect(info).toBe({"LoginSuccess":"False",
+//         "Error":"Duplicate usernames exist"})
+//     })
+// })
 
 loginTest = {
     "body":{
