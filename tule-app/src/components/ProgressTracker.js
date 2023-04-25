@@ -68,7 +68,7 @@ function ProgressTracker(){
     }
 
     return(
-            <div>
+            <div data>
                <CircularProgressbar value={percentage} text={`${percentage}%`} strokeWidth={5}
                buildStyles/>
             </div>

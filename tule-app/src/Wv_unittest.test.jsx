@@ -13,25 +13,25 @@ import Init from './Init';
 
 test('Task checkmark rendering' , () => {
     var test = screen.getByTestId('checkmark');
-    render(<Task/>);
+    render(<Task Complete={true}/>);
     expect(test).toBeInTheDocument();
 })
 
 test('Edit button on the task page' , () => {
     var test = screen.getByTestId('edit-btn');
-    render(<Task/>);
+    render(<Task Complete={true}/>);
     expect(test).toBeInTheDocument();
 })
 
 test('Progress tracker' , () => {
     var test = screen.getByTestId('progress');
-    render(<Task/>);
+    render(<Task Complete={true}/>);
     expect(test).toBeInTheDocument();
 })
 
 test('Task Name Rendering' , () => {
     var test = screen.getByTestId('name');
-    render(<Task/>);
+    render(<Task Complete={true}/>);
     expect(test).toBeInTheDocument();
 })
 
